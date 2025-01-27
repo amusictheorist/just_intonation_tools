@@ -22,7 +22,6 @@ class ParToParcTests(TestCase):
             par_to_parc(-5)
         self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
 
-
 class RatioToCentsTests(TestCase):
 
   def test_invalid_type(self):
@@ -71,6 +70,12 @@ class CreateSetTests(unittest.TestCase):
     with patch.object(builtins, 'input', return_value="5 three 7"):
       result = create_set()
       self.assertEqual(result, ERROR_MESSAGES.invalid_set_integers)
+
+  def test_negative_integers(self):
+     """Test that negative integers are rejected."""
+     with patch.object(builtins, 'input', return_value="-1 2 -3 4"):
+        result = create_set()
+        self.assertEqual(result, ERROR_MESSAGES.invalid_set_integers)
 
   def test_valid_input(self):
     """Test that valid integer inputs create a sorted set."""

@@ -48,6 +48,9 @@ def create_set():
     
     try:
         nums = {int(num) for num in user_input.split()}
+        if any(num < 0 for num in nums):
+            return ERROR_MESSAGES.invalid_set_integers
+        
         return nums
     except ValueError:
         return ERROR_MESSAGES.invalid_set_integers
