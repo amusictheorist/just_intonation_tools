@@ -32,7 +32,7 @@ def ratio_to_cents(x, y):
 def create_set():
     user_input = input('Enter integers separated by spaces: ')
     try:
-        nums = [int(num) for num in user_input.split()]
-        return sorted(set(nums))
+        nums = {int(num) for num in user_input.split()}
+        return nums
     except ValueError:
         return set_error

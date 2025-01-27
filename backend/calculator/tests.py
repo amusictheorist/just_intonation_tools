@@ -69,3 +69,9 @@ class CreateSetTests(unittest.TestCase):
     with patch.object(builtins, 'input', return_value="5 three 7"):
       result = create_set()
       self.assertEqual(result, 'Invalid input, please enter only positive integers')
+
+  def test_valid_input(self):
+    """Test that valid integer inputs create a sorted set."""
+    with patch.object(builtins, 'input', return_value="5 3 7 3 2 9"):
+      result = create_set()
+      self.assertEqual(result, {2, 3, 5, 7, 9})
