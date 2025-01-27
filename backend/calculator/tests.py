@@ -11,3 +11,8 @@ class ParToParcTests(TestCase):
     """Test that non-positive integers return an error message."""
     self.assertEqual(par_to_parc(0), 'Invalid input, please enter a positive integer')
     self.assertEqual(par_to_parc(-5), 'Invalid input, please enter a positive integer')
+
+  def test_odd_integer(self):
+    """Test that an odd integer returns the same value. """
+    self.assertEqual(par_to_parc(5), 5)
+    self.assertEqual(par_to_parc(11), 11)
