@@ -83,6 +83,12 @@ class CreateSetTests(unittest.TestCase):
       result = create_set()
       self.assertEqual(result, {2, 3, 5, 7, 9})
 
+  def test_single_input(self):
+      """Test that single-integer input is correctl handled."""
+      with patch.object(builtins, 'input', return_value="42"):
+         result = create_set()
+         self.assertEqual(result, {42})
+
   def test_empty_input(self):
     """Test that empty input returns an error message."""
     with patch.object(builtins, 'input', return_value=""):
