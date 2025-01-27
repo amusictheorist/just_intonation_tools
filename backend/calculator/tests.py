@@ -16,3 +16,9 @@ class ParToParcTests(TestCase):
     """Test that an odd integer returns the same value. """
     self.assertEqual(par_to_parc(5), 5)
     self.assertEqual(par_to_parc(11), 11)
+
+  def test_even_integer(self):
+    """Test that an even intefer is divided by 2 recursively until odd."""
+    self.assertEqual(par_to_parc(8), 1)
+    self.assertEqual(par_to_parc(12), 3)
+    self.assertEqual(par_to_parc(40), 5)
