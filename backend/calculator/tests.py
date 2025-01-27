@@ -43,3 +43,8 @@ class RatioToCentsTests(TestCase):
 
     with self.assertRaises(ValueError):
       ratio_to_cents(0, 2)
+
+  def test_valid_ratio(self):
+    """Test that valid positive integer inputs return the expected result."""
+    self.assertEqual(ratio_to_cents(100, 50), 1200.00)
+    self.assertEqual(ratio_to_cents(200, 100), 1200.00)

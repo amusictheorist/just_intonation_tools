@@ -1,3 +1,4 @@
+import math
 error_message = 'Invalid input, please enter a positive integer'
 value_error = 'Invalid input, both inputs must be positive integers'
 
@@ -21,3 +22,8 @@ def ratio_to_cents(x, y):
     
     if x <= 0 or y <= 0:
         raise ValueError(value_error)
+    
+    log = math.log(x/y)
+    result = log / math.log(2)
+    result *= 1200
+    return round(result, 2)
