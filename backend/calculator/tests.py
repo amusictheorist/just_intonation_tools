@@ -35,3 +35,11 @@ class RatioToCentsTests(TestCase):
 
     with self.assertRaises(ValueError):
       ratio_to_cents(-1, 2)
+
+  def test_invalid_value(self):
+    """Test that non-positive integers raise a ValueError."""
+    with self.assertRaises(ValueError):
+      ratio_to_cents(1, -2)
+
+    with self.assertRaises(ValueError):
+      ratio_to_cents(0, 2)
