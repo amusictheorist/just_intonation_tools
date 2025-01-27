@@ -16,11 +16,11 @@ ERROR_MESSAGES = ErrorMessages(
 )
 
 def par_to_parc(num):
-    if not isinstance(num, int)
-        return ERROR_MESSAGES.invalid_positive_integer
+    if not isinstance(num, int):
+        raise ValueError(ERROR_MESSAGES.invalid_positive_integer)
 
     if num <= 0:
-        return ERROR_MESSAGES.invalid_positive_integer
+        raise ValueError(ERROR_MESSAGES.invalid_positive_integer)
 
     if num % 2 != 0:
         return num

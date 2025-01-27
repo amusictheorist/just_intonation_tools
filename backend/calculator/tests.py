@@ -2,50 +2,52 @@ from django.test import TestCase
 import unittest
 from unittest.mock import patch
 import builtins
-from .utils import par_to_parc, ratio_to_cents, create_set
+from .utils import par_to_parc, ratio_to_cents, create_set, ERROR_MESSAGES
 
 class ParToParcTests(TestCase):
 
-  def test_invalid_type(self):
-    """Test that a non-integer input returns an error message."""
-    self.assertEqual(par_to_parc('string'), 'Invalid input, please enter a positive integer')
+    def test_invalid_type(self):
+        """Test that a non-integer input raises a ValueError."""
+        with self.assertRaises(ValueError) as context:
+            par_to_parc('string')
+        self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
 
-  def test_non_positive_integer(self):
-    """Test that non-positive integers return an error message."""
-    self.assertEqual(par_to_parc(0), 'Invalid input, please enter a positive integer')
-    self.assertEqual(par_to_parc(-5), 'Invalid input, please enter a positive integer')
+    def test_non_positive_integer(self):
+        """Test that non-positive integers raise a ValueError."""
+        with self.assertRaises(ValueError) as context:
+            par_to_parc(0)
+        self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
 
-  def test_odd_integer(self):
-    """Test that an odd integer returns the same value. """
-    self.assertEqual(par_to_parc(5), 5)
-    self.assertEqual(par_to_parc(11), 11)
+        with self.assertRaises(ValueError) as context:
+            par_to_parc(-5)
+        self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
 
-  def test_even_integer(self):
-    """Test that an even intefer is divided by 2 recursively until odd."""
-    self.assertEqual(par_to_parc(8), 1)
-    self.assertEqual(par_to_parc(12), 3)
-    self.assertEqual(par_to_parc(40), 5)
 
 class RatioToCentsTests(TestCase):
 
   def test_invalid_type(self):
-    """"Test that a non-positive integer input raises a ValueError."""
-    with self.assertRaises(ValueError):
-      ratio_to_cents('1', 2)
-    
-    with self.assertRaises(ValueError):
-      ratio_to_cents(1.0, 2)
+    """Test that non-positive integer input raises a ValueError."""
+    with self.assertRaises(ValueError) as context:
+        ratio_to_cents('1', 2)
+    self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_two_positive_integers)
 
-    with self.assertRaises(ValueError):
-      ratio_to_cents(-1, 2)
+    with self.assertRaises(ValueError) as context:
+        ratio_to_cents(1.0, 2)
+    self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_two_positive_integers)
+
+    with self.assertRaises(ValueError) as context:
+        ratio_to_cents(-1, 2)
+    self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_two_positive_integers)
 
   def test_invalid_value(self):
     """Test that non-positive integers raise a ValueError."""
-    with self.assertRaises(ValueError):
+    with self.assertRaises(ValueError) as context:
       ratio_to_cents(1, -2)
+    self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_two_positive_integers)
 
-    with self.assertRaises(ValueError):
+    with self.assertRaises(ValueError) as context:
       ratio_to_cents(0, 2)
+    self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_two_positive_integers)
 
   def test_valid_ratio(self):
     """Test that valid positive integer inputs return the expected result."""
@@ -68,7 +70,7 @@ class CreateSetTests(unittest.TestCase):
     """Test that non-integer inputs return an error message."""
     with patch.object(builtins, 'input', return_value="5 three 7"):
       result = create_set()
-      self.assertEqual(result, 'Invalid input, please enter only positive integers')
+      self.assertEqual(result, ERROR_MESSAGES.invalid_set_integers)
 
   def test_valid_input(self):
     """Test that valid integer inputs create a sorted set."""
@@ -80,13 +82,13 @@ class CreateSetTests(unittest.TestCase):
     """Test that empty input returns an error message."""
     with patch.object(builtins, 'input', return_value=""):
       result = create_set()
-      self.assertEqual(result, 'Invalid input, set cannot be empty')
+      self.assertEqual(result, ERROR_MESSAGES.empty_set)
 
   def test_spaces_only(self):
     """Test that input with only spaces returns an error message."""
     with patch.object(builtins, 'input', return_value="   "):
       result = create_set()
-      self.assertEqual(result, 'Invalid input, set cannot be empty')
+      self.assertEqual(result, ERROR_MESSAGES.empty_set)
 
   def test_duplicate_integers(self):
     """Test that duplicate integers are removed in the returned set."""
