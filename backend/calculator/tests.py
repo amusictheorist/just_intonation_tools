@@ -58,3 +58,7 @@ class RatioToCentsTests(TestCase):
     self.assertEqual(ratio_to_cents(6,5), 315.64)
     self.assertEqual(ratio_to_cents(7,6), 266.87)
     self.assertEqual(ratio_to_cents(8,7), 231.17)
+
+class CreateSetTests(TestCase):
+
+  
