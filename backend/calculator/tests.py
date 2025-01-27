@@ -81,3 +81,9 @@ class CreateSetTests(unittest.TestCase):
     with patch.object(builtins, 'input', return_value=""):
       result = create_set()
       self.assertEqual(result, 'Invalid input, set cannot be empty')
+
+  def test_spaces_only(self):
+    """Test that input with only spaces returns an error message."""
+    with patch.object(builtins, 'input', return_value="   "):
+      result = create_set()
+      self.assertEqual(result, 'Invalid input, set cannot be empty')
