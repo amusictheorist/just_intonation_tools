@@ -1,5 +1,8 @@
 from django.test import TestCase
-from .utils import par_to_parc, ratio_to_cents
+import unittest
+from unittest.mock import patch
+import builtins
+from .utils import par_to_parc, ratio_to_cents, create_set
 
 class ParToParcTests(TestCase):
 
@@ -59,6 +62,10 @@ class RatioToCentsTests(TestCase):
     self.assertEqual(ratio_to_cents(7,6), 266.87)
     self.assertEqual(ratio_to_cents(8,7), 231.17)
 
-class CreateSetTests(TestCase):
-
+class CreateSetTests(unittest.TestCase):
   
+  def test_invalid_input(self):
+    """Test that non-integer inputs return an error message."""
+    with patch.object(builtins, 'input', return_value="5 three 7"):
+      result = create_set()
+      self.assertEqual(result, 'Invalid input, please enter only positive integers')
