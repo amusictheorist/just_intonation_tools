@@ -2,6 +2,7 @@ import math
 error_message = 'Invalid input, please enter a positive integer'
 value_error = 'Invalid input, both inputs must be positive integers'
 set_error = 'Invalid input, please enter only positive integers'
+empty_error = 'Invalid input, set cannot be empty'
 
 def par_to_parc(num):
     if type(num) is not int:
@@ -31,6 +32,9 @@ def ratio_to_cents(x, y):
 
 def create_set():
     user_input = input('Enter integers separated by spaces: ')
+    if not user_input.strip():
+        return empty_error
+    
     try:
         nums = {int(num) for num in user_input.split()}
         return nums
