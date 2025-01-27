@@ -27,3 +27,6 @@ def ratio_to_cents(x, y):
     result = log / math.log(2)
     result *= 1200
     return round(result, 2)
+
+def create_set():
+    pass
