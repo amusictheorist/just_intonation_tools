@@ -1,5 +1,5 @@
 from django.test import TestCase
-from .utils import par_to_parc
+from .utils import par_to_parc, ratio_to_cents
 
 class ParToParcTests(TestCase):
 
@@ -22,3 +22,7 @@ class ParToParcTests(TestCase):
     self.assertEqual(par_to_parc(8), 1)
     self.assertEqual(par_to_parc(12), 3)
     self.assertEqual(par_to_parc(40), 5)
+
+class RatioToCentsTests(TestCase):
+
+  
