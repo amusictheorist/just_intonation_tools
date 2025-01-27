@@ -106,3 +106,9 @@ class CreateSetTests(unittest.TestCase):
     with patch.object(builtins, 'input', return_value="5 5 5 5 "):
       result = create_set()
       self.assertEqual(result, {5})
+
+  def test_large_integers(self):
+     """Test that the function handles large integers."""
+     with patch.object(builtins, 'input', return_value="1000000 5000000 30000000"):
+        result = create_set()
+        self.assertEqual(result, {1000000, 5000000, 30000000})
