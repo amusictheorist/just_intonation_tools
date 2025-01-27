@@ -1,9 +1,11 @@
+error_message = 'Invalid input, please enter a positive integer'
+
 def par_to_parc(num):
     if type(num) is not int:
-        return 'Invalid input, please enter a positive integer'
+        return error_message
 
     if num <= 0:
-        return 'Invalid input, please enter a positive integer'
+        return error_message
 
     if num % 2 != 0:
         return num
@@ -13,4 +15,5 @@ def par_to_parc(num):
         return par_to_parc(num)
     
 def ratio_to_cents(x, y):
-    pass
+    if not isinstance(x, int) or not isinstance(y, int):
+        return 'Invalid input, please enter two positive integers'
