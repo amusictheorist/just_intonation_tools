@@ -11,3 +11,6 @@ def par_to_parc(num):
     else:
         num //= 2
         return par_to_parc(num)
+    
+def ratio_to_cents(x, y):
+    pass
