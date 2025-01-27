@@ -26,5 +26,12 @@ class ParToParcTests(TestCase):
 class RatioToCentsTests(TestCase):
 
   def test_invalid_type(self):
-    """"Test that a non integer input returns an error message."""
-    self.assertEqual(ratio_to_cents('1', 2), 'Invalid input, please enter two positive integers')
+    """"Test that a non-positive integer input raises a ValueError."""
+    with self.assertRaises(ValueError):
+      ratio_to_cents('1', 2)
+    
+    with self.assertRaises(ValueError):
+      ratio_to_cents(1.0, 2)
+
+    with self.assertRaises(ValueError):
+      ratio_to_cents(-1, 2)
