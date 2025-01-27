@@ -87,3 +87,9 @@ class CreateSetTests(unittest.TestCase):
     with patch.object(builtins, 'input', return_value="   "):
       result = create_set()
       self.assertEqual(result, 'Invalid input, set cannot be empty')
+
+  def test_duplicate_integers(self):
+    """Test that duplicate integers are removed in the returned set."""
+    with patch.object(builtins, 'input', return_value="5 5 5 5 "):
+      result = create_set()
+      self.assertEqual(result, {5})
