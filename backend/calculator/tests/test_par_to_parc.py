@@ -22,3 +22,10 @@ class ParToParcTests(TestCase):
         """Test that valid integer inputs produce expected results."""
         self.assertEqual(par_to_parc(16), 1)
         self.assertEqual(par_to_parc(35), 35)
+
+    def test_valid_input(self):
+        """Test that valid integers don't raise errors."""
+        try:
+            par_to_parc(16)
+        except Exception as e:
+            self.fail(f"par_to_parc raised {type(e).__name__} unexpectedly: {e}")
