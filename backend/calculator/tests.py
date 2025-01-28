@@ -140,3 +140,15 @@ class TransposeTests(unittest.TestCase):
         with self.assertRaises(TypeError) as context:
             transpose([1, 2, 3], 5)
             self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set)
+
+    def test_n_not_a_positive_integer(self):
+        """Test that an error is raised if n is not a positive integer."""
+        with self.assertRaises(ValueError) as context:
+            transpose({1, 2, 3}, -1)
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
+        with self.assertRaises(ValueError) as context:
+            transpose({1, 2, 3}, 0)
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
+        with self.assertRaises(ValueError) as context:
+            transpose({1, 2, 3}, "5")
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)

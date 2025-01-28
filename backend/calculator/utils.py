@@ -60,3 +60,5 @@ def create_set():
 def transpose(input_set, n):
     if not isinstance(input_set, set):
         raise TypeError(ERROR_MESSAGES.invalid_set)
+    if not isinstance(n, int) or n <= 0:
+        raise ValueError(ERROR_MESSAGES.invalid_set_integers)
