@@ -2,7 +2,7 @@ from django.test import TestCase
 import unittest
 from unittest.mock import patch
 import builtins
-from .utils import par_to_parc, ratio_to_cents, create_set, ERROR_MESSAGES
+from .utils import par_to_parc, ratio_to_cents, create_set, transpose, ERROR_MESSAGES
 
 class ParToParcTests(TestCase):
     def test_invalid_type(self):
@@ -133,3 +133,6 @@ class CreateSetTests(unittest.TestCase):
             result = create_set()
             self.assertEqual(result, ERROR_MESSAGES.invalid_set_integers)
 
+class TransposeTests(unittest.TestCase):
+    
+    
