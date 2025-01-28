@@ -127,3 +127,9 @@ class CreateSetTests(unittest.TestCase):
             self.assertEqual(min(result), 1)
             self.assertEqual(max(result), 10000)
 
+    def test_mixed_delimiters(self):
+        """Test that mixed delimiters are not accepted."""
+        with patch.object(builtins, 'input', return_value="1, 2, 3; 4 5"):
+            result = create_set()
+            self.assertEqual(result, ERROR_MESSAGES.invalid_set_integers)
+
