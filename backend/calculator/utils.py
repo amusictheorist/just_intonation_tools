@@ -17,7 +17,7 @@ ERROR_MESSAGES = ErrorMessages(
 
 def par_to_parc(num):
     if not isinstance(num, int):
-        raise ValueError(ERROR_MESSAGES.invalid_positive_integer)
+      raise ValueError(ERROR_MESSAGES.invalid_positive_integer)
 
     if num <= 0:
         raise ValueError(ERROR_MESSAGES.invalid_positive_integer)
@@ -27,15 +27,15 @@ def par_to_parc(num):
 
     else:
         num //= 2
-        return par_to_parc(num)
-    
+    return par_to_parc(num)
+
 def ratio_to_cents(x, y):
     if not isinstance(x, int) or not isinstance(y, int):
         raise ValueError(ERROR_MESSAGES.invalid_two_positive_integers)
-    
+
     if x <= 0 or y <= 0:
         raise ValueError(ERROR_MESSAGES.invalid_two_positive_integers)
-    
+
     log = math.log(x/y)
     result = log / math.log(2)
     result *= 1200
@@ -45,12 +45,12 @@ def create_set():
     user_input = input('Enter integers separated by spaces: ')
     if not user_input.strip():
         return ERROR_MESSAGES.empty_set
-    
+
     try:
         nums = {int(num) for num in user_input.split()}
         if any(num < 0 for num in nums):
             return ERROR_MESSAGES.invalid_set_integers
-        
+
         return nums
     except ValueError:
         return ERROR_MESSAGES.invalid_set_integers
