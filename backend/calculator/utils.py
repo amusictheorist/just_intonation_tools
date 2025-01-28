@@ -5,14 +5,16 @@ ErrorMessages = namedtuple('ErrorMessages', [
     'invalid_positive_integer',
     'invalid_two_positive_integers',
     'invalid_set_integers',
-    'empty_set'
+    'empty_set',
+    'invalid_set'
 ])
 
 ERROR_MESSAGES = ErrorMessages(
     invalid_positive_integer='Invalid input, please enter a positive integer',
     invalid_two_positive_integers='Invalid input, both inputs must be positive integers',
     invalid_set_integers='Invalid input, please enter only positive integers',
-    empty_set='Invalid input, set cannot be empty'
+    empty_set='Invalid input, set cannot be empty',
+    invalid_set='Invalid input, please enter a valid set'
 )
 
 def par_to_parc(num):
@@ -56,4 +58,5 @@ def create_set():
         return ERROR_MESSAGES.invalid_set_integers
     
 def transpose(input_set, n):
-    pass
+    if not isinstance(input_set, set):
+        raise TypeError(ERROR_MESSAGES.invalid_set)

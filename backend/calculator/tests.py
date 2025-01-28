@@ -135,4 +135,8 @@ class CreateSetTests(unittest.TestCase):
 
 class TransposeTests(unittest.TestCase):
     
-    
+    def test_input_set_not_a_set(self):
+        """Test that an error is raised if input set is not a set."""
+        with self.assertRaises(TypeError) as context:
+            transpose([1, 2, 3], 5)
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set)
