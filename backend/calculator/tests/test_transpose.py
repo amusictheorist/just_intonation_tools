@@ -1,7 +1,6 @@
-from django.test import TestCase
 import unittest
 from unittest.mock import patch
-from ..utils import transpose, ERROR_MESSAGES
+from calculator.utils import transpose, ERROR_MESSAGES
 
 class TransposeTests(unittest.TestCase):
     

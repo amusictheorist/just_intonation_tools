@@ -1,8 +1,7 @@
-from django.test import TestCase
 import unittest
 from unittest.mock import patch
 import builtins
-from ..utils import create_set, ERROR_MESSAGES
+from calculator.utils import create_set, ERROR_MESSAGES
 
 class CreateSetTests(unittest.TestCase):
 

@@ -1,5 +1,5 @@
 from django.test import TestCase
-from ..utils import ratio_to_cents, ERROR_MESSAGES
+from calculator.utils import ratio_to_cents, ERROR_MESSAGES
 
 class RatioToCentsTests(TestCase):
 
