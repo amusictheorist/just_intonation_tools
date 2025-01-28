@@ -54,3 +54,6 @@ def create_set():
         return nums
     except ValueError:
         return ERROR_MESSAGES.invalid_set_integers
+    
+def transpose(input_set, n):
+    pass
