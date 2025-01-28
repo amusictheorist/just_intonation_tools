@@ -62,3 +62,7 @@ def transpose(input_set, n):
         raise TypeError(ERROR_MESSAGES.invalid_set)
     if not isinstance(n, int) or n <= 0:
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
+    try:
+        input_set = {int(i) for i in input_set}
+    except ValueError:
+        raise ValueError(ERROR_MESSAGES.invalid_set_integers)

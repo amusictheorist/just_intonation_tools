@@ -152,3 +152,9 @@ class TransposeTests(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             transpose({1, 2, 3}, "5")
             self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
+
+    def test_input_set_contains_non_integers(self):
+        """Test that an error is raised if input set contains non-integer values."""
+        with self.assertRaises(ValueError) as context:
+            transpose({1, 2.5, 'a', -4}, 3)
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
