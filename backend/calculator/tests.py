@@ -185,3 +185,13 @@ class TransposeTests(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             transpose(set(), 5)
             self.assertEqual(str(context.exception), ERROR_MESSAGES.empty_set)
+
+    def test_0_in_input_set(self):
+        """Test that input sets containing 0 raise an error."""
+        with self.assertRaises(ValueError) as context:
+            transpose({0, 1, 2}, 5)
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
+
+        with self.assertRaises(ValueError) as context:
+            transpose({0}, 5)
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
