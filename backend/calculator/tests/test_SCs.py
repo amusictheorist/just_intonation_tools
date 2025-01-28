@@ -9,3 +9,9 @@ class ParSCTests(unittest.TestCase):
         with self.assertRaises(TypeError) as context:
             parSC([1, 2, 3])
             self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set)
+
+    def test_input_set_contains_non_integers(self):
+        """Test that an error is raised if input set contains non-integers."""
+        with self.assertRaises(ValueError) as context:
+            parSC({1, 'a', 3})
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
