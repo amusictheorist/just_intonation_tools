@@ -81,3 +81,5 @@ def parSC(input_set):
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
     if not input_set:
         raise ValueError(ERROR_MESSAGES.empty_set)
+    if 0 in input_set:
+        raise ValueError(ERROR_MESSAGES.invalid_set_integers)

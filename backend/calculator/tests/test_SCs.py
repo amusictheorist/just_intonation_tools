@@ -21,3 +21,9 @@ class ParSCTests(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             parSC(set())
             self.assertEqual(str(context.exception), ERROR_MESSAGES.empty_set)
+
+    def test_0_in_input(self):
+        """Test that input sets containing 0 raise an error."""
+        with self.assertRaises(ValueError) as context:
+            parSC({0, 1, 2})
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.empty_set)
