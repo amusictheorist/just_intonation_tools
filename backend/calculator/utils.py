@@ -75,4 +75,5 @@ def transpose(input_set, n):
     return transposed
 
 def parSC(input_set):
-    pass
+    if not isinstance(input_set, set):
+        raise TypeError(ERROR_MESSAGES.invalid_set)
