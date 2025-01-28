@@ -17,3 +17,8 @@ class ParToParcTests(TestCase):
         with self.assertRaises(ValueError) as context:
             par_to_parc(-5)
         self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
+
+    def test_valid_inputs(self):
+        """Test that valid integer inputs produce expected results."""
+        self.assertEqual(par_to_parc(16), 1)
+        self.assertEqual(par_to_parc(35), 35)
