@@ -165,3 +165,9 @@ class TransposeTests(unittest.TestCase):
             transpose({1, 2, 3}, 5)
         except Exception as e:
             self.fail(f"transpose raised {type(e).__name__} unexpectedly: {e}")
+
+    def test_valid_transposition(self):
+        """Test that valid inputs are correctly transposed."""
+        self.assertEqual(transpose({1, 2, 3}, 3), {3, 6, 9})
+        self.assertEqual(transpose({4, 5, 6, 7}, 4), {16, 20, 24, 28})
+        self.assertEqual(transpose({3, 7, 12, 19, 24}, 7), {21, 49, 84, 133, 168})

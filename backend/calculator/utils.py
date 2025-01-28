@@ -66,3 +66,8 @@ def transpose(input_set, n):
         input_set = {int(i) for i in input_set}
     except ValueError:
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
+    
+    transposed = set()
+    for i in input_set:
+        transposed.add(i * n)
+    return transposed
