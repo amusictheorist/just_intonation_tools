@@ -175,3 +175,7 @@ class TransposeTests(unittest.TestCase):
     def test_identity(self):
         """Test that transposition by n=1 returns the same set."""
         self.assertEqual(transpose({3, 4, 5}, 1), {3, 4, 5})
+
+    def test_duplicates_in_input(self):
+        """Test that duplicates in the input set do not affect the result."""
+        self.assertEqual(transpose({1, 1, 2, 3, 3}, 2), {2, 4, 6})
