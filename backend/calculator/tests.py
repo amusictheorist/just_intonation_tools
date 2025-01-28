@@ -5,22 +5,21 @@ import builtins
 from .utils import par_to_parc, ratio_to_cents, create_set, ERROR_MESSAGES
 
 class ParToParcTests(TestCase):
+  def test_invalid_type(self):
+    """Test that a non-integer input raises a ValueError."""
+    with self.assertRaises(ValueError) as context:
+      par_to_parc('string')
+      self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
 
-    def test_invalid_type(self):
-        """Test that a non-integer input raises a ValueError."""
-        with self.assertRaises(ValueError) as context:
-            par_to_parc('string')
-        self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
+  def test_non_positive_integer(self):
+    """Test that non-positive integers raise a ValueError."""
+    with self.assertRaises(ValueError) as context:
+      par_to_parc(0)
+      self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
 
-    def test_non_positive_integer(self):
-        """Test that non-positive integers raise a ValueError."""
-        with self.assertRaises(ValueError) as context:
-            par_to_parc(0)
-        self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
-
-        with self.assertRaises(ValueError) as context:
-            par_to_parc(-5)
-        self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
+    with self.assertRaises(ValueError) as context:
+        par_to_parc(-5)
+    self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_positive_integer)
 
 class RatioToCentsTests(TestCase):
 
@@ -112,3 +111,9 @@ class CreateSetTests(unittest.TestCase):
      with patch.object(builtins, 'input', return_value="1000000 5000000 30000000"):
         result = create_set()
         self.assertEqual(result, {1000000, 5000000, 30000000})
+
+  def test_leading_zeroes(self):
+    """Test that integers with leading zeroes are handled correctly."""
+    with patch.object(builtins, 'input', return_value="007 0042 100"):
+      result = create_set()
+      self.assertEqual(result, {7, 42, 100})
