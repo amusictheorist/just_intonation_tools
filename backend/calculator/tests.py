@@ -158,3 +158,10 @@ class TransposeTests(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             transpose({1, 2.5, 'a', -4}, 3)
             self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
+
+    def test_valid_inputs(self):
+        """Test that valid inputs do not raise errors."""
+        try:
+            transpose({1, 2, 3}, 5)
+        except Exception as e:
+            self.fail(f"transpose raised {type(e).__name__} unexpectedly: {e}")
