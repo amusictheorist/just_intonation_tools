@@ -43,6 +43,9 @@ def ratio_to_cents(x, y):
     result *= 1200
     return round(result, 2)
 
+def check_set_integers(input_set):
+    return all(isinstance(i, int) for i in input_set)
+
 def create_set():
     user_input = input('Enter integers separated by spaces: ')
     if not user_input.strip():
@@ -50,9 +53,8 @@ def create_set():
 
     try:
         nums = {int(num) for num in user_input.split()}
-        if any(num < 0 for num in nums):
+        if not check_set_integers(nums) or any(num < 0 for num in nums):
             return ERROR_MESSAGES.invalid_set_integers
-
         return nums
     except ValueError:
         return ERROR_MESSAGES.invalid_set_integers
@@ -64,9 +66,7 @@ def transpose(input_set, n):
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
     if not input_set:
         raise ValueError(ERROR_MESSAGES.empty_set)
-    try:
-        input_set = {int(i) for i in input_set}
-    except ValueError:
+    if not check_set_integers(input_set):
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
     if 0 in input_set:
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
@@ -77,3 +77,5 @@ def transpose(input_set, n):
 def parSC(input_set):
     if not isinstance(input_set, set):
         raise TypeError(ERROR_MESSAGES.invalid_set)
+    if not check_set_integers(input_set):
+        raise ValueError(ERROR_MESSAGES.invalid_set_integers)
