@@ -15,3 +15,9 @@ class ParSCTests(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             parSC({1, 'a', 3})
             self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
+
+    def test_empty_set(self):
+        """test that an empty set raises an error."""
+        with self.assertRaises(ValueError) as context:
+            parSC(set())
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.empty_set)

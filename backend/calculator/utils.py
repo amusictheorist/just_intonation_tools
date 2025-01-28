@@ -79,3 +79,5 @@ def parSC(input_set):
         raise TypeError(ERROR_MESSAGES.invalid_set)
     if not check_set_integers(input_set):
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
+    if not input_set:
+        raise ValueError(ERROR_MESSAGES.empty_set)
