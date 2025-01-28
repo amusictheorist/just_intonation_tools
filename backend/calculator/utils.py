@@ -73,3 +73,6 @@ def transpose(input_set, n):
     
     transposed = {i * n for i in input_set}
     return transposed
+
+def parSC(input_set):
+    pass
