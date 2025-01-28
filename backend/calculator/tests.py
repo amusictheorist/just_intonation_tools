@@ -179,3 +179,9 @@ class TransposeTests(unittest.TestCase):
     def test_duplicates_in_input(self):
         """Test that duplicates in the input set do not affect the result."""
         self.assertEqual(transpose({1, 1, 2, 3, 3}, 2), {2, 4, 6})
+
+    def test_empty_set(self):
+        """Test that an empty set raises an error message."""
+        with self.assertRaises(ValueError) as context:
+            transpose(set(), 5)
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.empty_set)
