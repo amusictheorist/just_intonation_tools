@@ -118,3 +118,12 @@ class CreateSetTests(unittest.TestCase):
             result = create_set()
             self.assertEqual(result, {7, 42, 100})
 
+    def test_large_set(self):
+        """Test that a large set of integers is handled correctly."""
+        large_input = " ".join(str(i) for i in range(1, 10001))
+        with patch.object(builtins, 'input', return_value=large_input):
+            result = create_set()
+            self.assertEqual(len(result), 10000)
+            self.assertEqual(min(result), 1)
+            self.assertEqual(max(result), 10000)
+
