@@ -15,13 +15,16 @@ class TestPartialSet(unittest.TestCase):
     def test_initialization_invalid(self):
         """Test that a partial set raises an error for invalid inputs."""
         with self.assertRaises(ValueError):
-            PartialSet([2, 4, 6, -8])
+            PartialSet([2, 4, 6, -8])  # Negative element
         
         with self.assertRaises(ValueError):
-            PartialSet([2, 4, 6, 7.5])
+            PartialSet([2, 4, 6, 7.5])  # Non-integer element
         
         with self.assertRaises(TypeError):
-            PartialSet('invalid')
+            PartialSet('invalid')  # Invalid type for initialization
+
+        with self.assertRaises(ValueError):
+            PartialSet([])  # Empty set should raise a ValueError
 
     def test_duplicate_elements(self):
         """Test that duplicate elements are removed."""
@@ -47,3 +50,11 @@ class TestPartialSet(unittest.TestCase):
         """Test that a partial set is a subclass of set."""
         partial_set = PartialSet([2, 4, 6, 8])
         self.assertTrue(isinstance(partial_set, set))
+
+    def test_large_set(self):
+        """Test that PartialSet handles large sets correctly."""
+        large_set = PartialSet(range(1, 10001))
+        self.assertEqual(len(large_set), 10000)
+
+if __name__ == '__main__':
+    unittest.main()

@@ -1,10 +1,13 @@
 class PartialSet(set):
     def __init__(self, elements):
         """Initialize a partial set, ensuring all elements are positive integers."""
-        if not isinstance(elements, (set, list, tuple)):
+        if not isinstance(elements, (set, list, tuple, range)):
             raise TypeError('A partial set must be initialized with a set, a list, or a tuple.')
 
         filtered_elements = set(elements)
+        if not filtered_elements:
+            raise ValueError('A partial set cannot be empty.')
+        
         if not all(isinstance(x, int) and x > 0 for x in filtered_elements):
             raise ValueError('A partial set can only contain positive integers.')
         
