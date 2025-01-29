@@ -33,14 +33,3 @@ class PartialClassSet(set):
 
     def __str__(self):
         return '{' + ', '.join(f"_{e}_" for e in sorted(self)) + '}'
-
-
-    def _reduce_to_parc(self, num):
-        while num % 2 == 0:
-            num //= 2
-        return num
-    
-    def par_to_parc(self):
-        updated_elements = {self._reduce_to_parc(e) for e in self}
-        self.clear()
-        self.update(updated_elements)
