@@ -1,5 +1,6 @@
 import math
 from collections import namedtuple
+from .partial_sets import PartialClassSet
 
 ErrorMessages = namedtuple('ErrorMessages', [
     'invalid_positive_integer',
@@ -17,19 +18,18 @@ ERROR_MESSAGES = ErrorMessages(
     invalid_set='Invalid input, please enter a valid set'
 )
 
-def par_to_parc(num):
-    if not isinstance(num, int):
-      raise ValueError(ERROR_MESSAGES.invalid_positive_integer)
-
-    if num <= 0:
-        raise ValueError(ERROR_MESSAGES.invalid_positive_integer)
-
-    if num % 2 != 0:
+def par_to_parc(partial_set):
+    if not isinstance(partial_set, (set, list, tuple, range)):
+        raise TypeError('Partial to partial-class conversion requires a ser, list, tuple, or range of partials.')
+    
+    def _reduce_to_parc(num):
+        while num % 2 == 0:
+            num //= 2
         return num
-
-    else:
-        num //= 2
-    return par_to_parc(num)
+    
+    partial_class_set = {_reduce_to_parc(e) for e in partial_set}
+    return PartialClassSet(partial_class_set)
+    
 
 def ratio_to_cents(x, y):
     if not isinstance(x, int) or not isinstance(y, int):
