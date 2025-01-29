@@ -119,5 +119,10 @@ class TestPartialClassSet(unittest.TestCase):
         partial_class_set = PartialClassSet([1, 3, 5])
         self.assertTrue(partial_class_set, set)
 
+    def test_large_set(self):
+        """test that PartialClassSet handles large sets correctly."""
+        large_set = PartialClassSet(range(1, 10001, 2))
+        self.assertEqual(len(large_set), 5000)
+
 if __name__ == '__main__':
     unittest.main()
