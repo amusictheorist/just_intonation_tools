@@ -114,5 +114,10 @@ class TestPartialClassSet(unittest.TestCase):
         self.assertEqual(set1 - set2, {1})
         self.assertEqual(set2 - set1, {7})
 
+    def test_is_subclass_of_set(self):
+        """Test that a partial-class set is a subclass of set."""
+        partial_class_set = PartialClassSet([1, 3, 5])
+        self.assertTrue(partial_class_set, set)
+
 if __name__ == '__main__':
     unittest.main()
