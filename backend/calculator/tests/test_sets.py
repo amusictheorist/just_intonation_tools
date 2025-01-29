@@ -22,3 +22,8 @@ class TestPartialSet(unittest.TestCase):
         
         with self.assertRaises(TypeError):
             PartialSet('invalid')
+
+    def test_duplicate_elements(self):
+        """Test that duplicate elements are removed."""
+        set = PartialSet([2, 4 ,4, 6, 6, 8])
+        self.assertEqual(set, {2, 4, 6, 8})
