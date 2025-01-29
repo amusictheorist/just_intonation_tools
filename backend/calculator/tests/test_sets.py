@@ -1,5 +1,5 @@
 import unittest
-from ..partial_sets import PartialSet
+from ..partial_sets import PartialSet, PartialClassSet
 
 class TestPartialSet(unittest.TestCase):
 
@@ -63,6 +63,17 @@ class TestPartialSet(unittest.TestCase):
         set3 = PartialSet([1, 2, 3])
         self.assertEqual(set1, set2)
         self.assertNotEqual(set1, set3)
+
+class TestPartialClassSet(unittest.TestCase):
+
+    def test_initialization_valid(self):
+        """Test that a partial-class set initializes with valid odd positive integers."""
+        set1 = PartialClassSet([1, 3, 5, 7])
+        set2 = PartialClassSet({9, 11, 13})
+        set3 = PartialClassSet((17, 15, 19))
+        self.assertEqual(set1, {1, 3, 5, 7})
+        self.assertEqual(set2, {9, 11, 13})
+        self.assertEqual(set3, {15, 17, 19})
 
 if __name__ == '__main__':
     unittest.main()
