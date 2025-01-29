@@ -27,3 +27,18 @@ class TestPartialSet(unittest.TestCase):
         """Test that duplicate elements are removed."""
         set = PartialSet([2, 4 ,4, 6, 6, 8])
         self.assertEqual(set, {2, 4, 6, 8})
+
+    def test_set_operations(self):
+        """Test common set operations."""
+        set1 = PartialSet([2, 4, 6])
+        set2 = PartialSet([4, 6, 8])
+
+        # Union
+        self.assertEqual(set1 | set2 , {2, 4, 6, 8})
+
+        # Intersection
+        self.assertEqual(set1 & set2, {4, 6})
+
+        # Difference
+        self.assertEqual(set1 - set2, {2})
+        self.assertEqual(set2 - set1, {8})
