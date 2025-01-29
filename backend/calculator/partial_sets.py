@@ -39,4 +39,6 @@ class PartialSetClass:
         """Initialize a partial-set class with a PartialSet."""
         if not isinstance(partial_set, PartialSet):
             raise TypeError('A partial-set class must be initialized with a partial set.')
-        self.partial_set = partial_set
+        self.representative_set = partial_set
+
+    
