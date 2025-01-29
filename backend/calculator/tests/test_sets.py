@@ -124,5 +124,13 @@ class TestPartialClassSet(unittest.TestCase):
         large_set = PartialClassSet(range(1, 10001, 2))
         self.assertEqual(len(large_set), 5000)
 
+    def test_set_equality(self):
+        """Test equality comparison between two sets."""
+        set1 = PartialClassSet([1, 3, 5, 7])
+        set2 = PartialClassSet([1, 3, 5, 7])
+        set3 = PartialClassSet([1, 3, 5])
+        self.assertEqual(set1, set2)
+        self.assertNotEqual(set1, set3)
+
 if __name__ == '__main__':
     unittest.main()
