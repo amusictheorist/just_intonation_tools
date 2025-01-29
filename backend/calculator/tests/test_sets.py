@@ -89,6 +89,11 @@ class TestPartialClassSet(unittest.TestCase):
         with self.assertRaises(ValueError):
             PartialClassSet([])
 
+    def test_string_representation(self):
+        """Test that the string representation correctly underlines numbers."""
+        set = PartialClassSet([1, 3, 5, 7])
+        self.assertEqual(str(set), '{_1_, _3_, _5_, _7_}')
+
 
 if __name__ == '__main__':
     unittest.main()

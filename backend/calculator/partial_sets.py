@@ -32,7 +32,8 @@ class PartialClassSet(set):
         super().__init__(filtered_elements)
 
     def __str__(self):
-        return '{ ' + ', '.join(f"_{e}_" for e in sorted(self.elements)) + ' }'
+        return '{' + ', '.join(f"_{e}_" for e in sorted(self)) + '}'
+
 
     def _reduce_to_parc(self, num):
         while num % 2 == 0:
