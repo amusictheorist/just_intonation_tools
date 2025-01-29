@@ -37,7 +37,7 @@ class TestPartialSet(unittest.TestCase):
         set2 = PartialSet([4, 6, 8])
 
         # Union
-        self.assertEqual(set1 | set2 , {2, 4, 6, 8})
+        self.assertEqual(set1 | set2, {2, 4, 6, 8})
 
         # Intersection
         self.assertEqual(set1 & set2, {4, 6})
@@ -99,6 +99,20 @@ class TestPartialClassSet(unittest.TestCase):
         set = PartialClassSet([1, 3, 3, 5, 5, 7])
         self.assertEqual(set, {1, 3, 5, 7})
 
+    def test_set_operations(self):
+        """Test common set operations."""
+        set1 = PartialClassSet([1, 3, 5])
+        set2 = PartialClassSet([3, 5, 7])
+
+        # Union
+        self.assertEqual(set1 | set2, {1, 3, 5, 7})
+
+        # Intersection
+        self.assertEqual(set1 & set2, {3, 5})
+
+        # Difference
+        self.assertEqual(set1 - set2, {1})
+        self.assertEqual(set2 - set1, {7})
 
 if __name__ == '__main__':
     unittest.main()
