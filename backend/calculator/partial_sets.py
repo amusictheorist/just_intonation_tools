@@ -21,9 +21,15 @@ class PartialClassSet(set):
         """Initialize a partial-class set, ensuring all elements are odd positive integers."""
         if not isinstance(elements, (set, list, tuple, range)):
             raise TypeError('A partial-class set must be initialized with a set, a list, a tuple, or a range.')
-        if not all(isinstance(e, int) and e > 0 and e % 2 == 1 for e in elements):
+        
+        filtered_elements = set(elements)
+        if not filtered_elements:
+            raise ValueError('A partial-class set cannot be empty.')
+        
+        if not all(isinstance(x, int) and x > 0 and x % 2 == 1 for x in filtered_elements):
             raise ValueError('All elements must be odd positive integers.')
-        super().__init__(elements)
+        
+        super().__init__(filtered_elements)
 
     def __str__(self):
         return '{ ' + ', '.join(f"_{e}_" for e in sorted(self.elements)) + ' }'
