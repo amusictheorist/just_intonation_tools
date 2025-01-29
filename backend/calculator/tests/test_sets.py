@@ -94,6 +94,11 @@ class TestPartialClassSet(unittest.TestCase):
         set = PartialClassSet([1, 3, 5, 7])
         self.assertEqual(str(set), '{_1_, _3_, _5_, _7_}')
 
+    def test_duplicate_elements(self):
+        """Test that duplicate elements are removed."""
+        set = PartialClassSet([1, 3, 3, 5, 5, 7])
+        self.assertEqual(set, {1, 3, 5, 7})
+
 
 if __name__ == '__main__':
     unittest.main()
