@@ -1,5 +1,5 @@
 import unittest
-from ..partial_sets import PartialSet, PartialClassSet
+from calculator.partial_sets import PartialSet, PartialClassSet
 
 class TestPartialSet(unittest.TestCase):
 
