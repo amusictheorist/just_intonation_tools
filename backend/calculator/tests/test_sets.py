@@ -42,3 +42,8 @@ class TestPartialSet(unittest.TestCase):
         # Difference
         self.assertEqual(set1 - set2, {2})
         self.assertEqual(set2 - set1, {8})
+
+    def test_is_subclass_of_set(self):
+        """Test that a partial set is a subclass of set."""
+        partial_set = PartialSet([2, 4, 6, 8])
+        self.assertTrue(isinstance(partial_set, set))
