@@ -104,5 +104,11 @@ class TestPartialClassSetClass(unittest.TestCase):
         self.assertTrue(set_class.is_member(PartialClassSet({3, 9, 15, 21})))
         self.assertFalse(set_class.is_member(PartialClassSet({3, 5, 7, 9})))
 
+    def test_non_membership(self):
+        """Test that a set that does not reduce to the representative set is not a member."""
+        set_class = PartialClassSetClass(PartialClassSet({1, 3, 5, 7}))
+        non_member = PartialClassSet({3, 5, 7})
+        self.assertFalse(set_class.is_member(non_member))
+
 if __name__ == '__main__':
     unittest.main()
