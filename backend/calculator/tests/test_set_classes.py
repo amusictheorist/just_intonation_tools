@@ -131,5 +131,11 @@ class TestPartialClassSetClass(unittest.TestCase):
         set_class = PartialClassSetClass(PartialClassSet({1, 3, 5, 7}))
         self.assertEqual(str(set_class), '[_1_, _3_, _5_, _7_]')
 
+    def test_equality(self):
+        """Test that two partial-class set class objects with the same representative set are equal."""
+        set1 = PartialClassSetClass(PartialClassSet({1, 3, 5, 7}))
+        set2 = PartialClassSetClass(PartialClassSet({3, 9, 15, 21}))
+        self.assertEqual(set1, set2)
+
 if __name__ == '__main__':
     unittest.main()

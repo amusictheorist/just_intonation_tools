@@ -103,5 +103,10 @@ class PartialClassSetClass:
         reduced_set  = self._reduce_set(partial_class_set)
         return reduced_set == self.representative_set
     
+    def __eq__(self, other):
+        if isinstance(other, PartialClassSetClass):
+            return self.representative_set == other.representative_set
+        return False
+    
     def __str__(self):
         return '[' + ', '.join(f"_{e}_" for e in sorted(self.representative_set)) + ']'
