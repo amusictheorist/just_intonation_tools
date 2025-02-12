@@ -55,8 +55,6 @@ class TestPartialSetClass(unittest.TestCase):
         """Test that two partial-set class objects with the same representative set are equal."""
         set1 = PartialSetClass(PartialSet({2, 4, 6, 8}))
         set2 = PartialSetClass(PartialSet({4, 8, 12, 16}))
-        print(set1)
-        print(set2)
         self.assertEqual(set1, set2)
 
     def test_transposition(self):
@@ -64,6 +62,13 @@ class TestPartialSetClass(unittest.TestCase):
         set_class = PartialSetClass(PartialSet({2, 4, 6, 8}))
         transposed = PartialSet({4, 8, 12, 16})
         self.assertTrue(set_class.is_member(transposed))
+
+    def test_iteration(self):
+        """Test that PartialSetClass can iterate over its members."""
+        set_class = PartialSetClass(PartialSet({2, 4, 6, 8}))
+        members = list(set_class)
+        expected_members = [{2, 4, 6, 8}, {4, 8, 12, 16}, {6, 12, 18, 24}]
+        self.assertTrue(all(PartialSet(m) in set_class for m in expected_members))
 
 if __name__ == '__main__':
     unittest.main()

@@ -36,7 +36,7 @@ class PartialClassSet(set):
 
     def __str__(self):
         return '{' + ', '.join(f"_{e}_" for e in sorted(self)) + '}'
-    
+
 class PartialSetClass:
     def __init__(self, partial_set):
         """Initialize a partial-set class with a PartialSet and compute its representative se."""
@@ -61,6 +61,12 @@ class PartialSetClass:
         if isinstance(other, PartialSetClass):
             return self.representative_set == other.representative_set
         return False
+    
+    def __iter__(self):
+        n = 1
+        while n <= 10:
+            yield PartialSet({e * n for e in self.representative_set})
+            n += 1
     
     def __str__(self):
         return f"[{', '.join(map(str, sorted(self.representative_set)))}]"
