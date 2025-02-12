@@ -74,6 +74,7 @@ class PartialSetClass:
 class PartialClassSetClass:
     def __init__(self, input_set):
         """Initialize a partial-class set class with a PartialClassSet, PartialSet, or PartialSetClass and compute its representative set."""
+        from calculator.utils import par_to_parc
 
         if isinstance(input_set, PartialSet):
             partial_class_set = PartialClassSet(par_to_parc(input_set))

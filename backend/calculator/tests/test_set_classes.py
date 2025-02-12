@@ -90,6 +90,22 @@ class TestPartialClassSetClass(unittest.TestCase):
         self.assertIsInstance(set_class, PartialClassSetClass)
         self.assertEqual(set_class.representative_set, partial_class_set)
 
+    def test_initialization_with_partial_sets(self):
+        """Test that a partial-class set class initializes correctly with partial sets and partial-set classes."""
+        from calculator.utils import par_to_parc
+
+        partial_set = PartialSet({4, 5, 6, 7})
+        set_class = PartialSetClass(partial_set)
+        partial_class_set_class1 = PartialClassSetClass(partial_set)
+        partial_class_set_class2 = PartialClassSetClass(set_class)
+
+        self.assertIsInstance(partial_class_set_class1, PartialClassSetClass)
+        self.assertIsInstance(partial_class_set_class2, PartialClassSetClass)
+
+        expected_rep_set = PartialClassSet(par_to_parc(set_class.representative_set))
+        self.assertEqual(partial_class_set_class1.representative_set, expected_rep_set)
+        self.assertEqual(partial_class_set_class2.representative_set, expected_rep_set)
+
     def test_initialization_with_reduction(self):
         """Test that a prtial-class set class reduces a partial-class set to its representative form."""
         partial_class_set = PartialClassSet({3, 9, 15, 21})
