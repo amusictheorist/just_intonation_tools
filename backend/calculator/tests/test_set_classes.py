@@ -97,5 +97,12 @@ class TestPartialClassSetClass(unittest.TestCase):
 
         self.assertEqual(set_class.representative_set, {1, 3, 5, 7})
 
+    def test_membership(self):
+        """Test that a partial-class set is correctly recognized as a member of a partial-class set class."""
+        set_class = PartialClassSetClass(PartialClassSet({1, 3, 5, 7}))
+
+        self.assertTrue(set_class.is_member(PartialClassSet({3, 9, 15, 21})))
+        self.assertFalse(set_class.is_member(PartialClassSet({3, 5, 7, 9})))
+
 if __name__ == '__main__':
     unittest.main()
