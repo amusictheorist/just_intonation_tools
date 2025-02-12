@@ -53,6 +53,11 @@ class TestPartialSetClass(unittest.TestCase):
         print(set2)
         self.assertEqual(set1, set2)
 
+    def test_transposition(self):
+        """Test that transposing a partial set keeps it in the same partial-set class."""
+        set_class = PartialSetClass(PartialSet({2, 4, 6, 8}))
+        transposed = PartialSet({4, 8, 12, 16})
+        self.assertTrue(set_class.is_member(transposed))
 
 if __name__ == '__main__':
     unittest.main()
