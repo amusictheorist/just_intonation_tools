@@ -72,10 +72,21 @@ class PartialSetClass:
         return f"[{', '.join(map(str, sorted(self.representative_set)))}]"
     
 class PartialClassSetClass:
-    def __init__(self, partial_class_set):
-        """Initialize a partial-class set class with a PartialClassSet and compute its representative set."""
-        if not isinstance(partial_class_set, PartialClassSet):
-            raise TypeError('A partial-class set class must be initialized with a partial set or a partial-class set.')
+    def __init__(self, input_set):
+        """Initialize a partial-class set class with a PartialClassSet, PartialSet, or PartialSetClass and compute its representative set."""
+
+        if isinstance(input_set, PartialSet):
+            partial_class_set = PartialClassSet(par_to_parc(input_set))
+
+        elif isinstance(input_set, PartialSetClass):
+            partial_class_set = PartialClassSet(par_to_parc(input_set.representative_set))
+
+        elif isinstance(input_set, PartialClassSet):
+            partial_class_set = input_set
+
+        else:
+            raise TypeError('A partial-class set class must be initialized with a partial set, a partial-set class, or a partial-class set.')
+        
         self.partial_class_set = partial_class_set
         self.representative_set = self._reduce_set(partial_class_set)
 
@@ -90,3 +101,6 @@ class PartialClassSetClass:
         
         reduced_set  = self._reduce_set(partial_class_set)
         return reduced_set == self.representative_set
+    
+    def __str__(self):
+        return '[' + ', '.join(f"_{e}_" for e in sorted(self.representative_set)) + ']'
