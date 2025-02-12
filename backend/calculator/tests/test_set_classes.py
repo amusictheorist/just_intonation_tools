@@ -110,5 +110,10 @@ class TestPartialClassSetClass(unittest.TestCase):
         non_member = PartialClassSet({3, 5, 7})
         self.assertFalse(set_class.is_member(non_member))
 
+    def test_representation(self):
+        """Test that a partial-class set class is represented using square brackets and that string representation correctly underlines numbers."""
+        set_class = PartialClassSetClass(PartialClassSet({1, 3, 5, 7}))
+        self.assertEqual(str(set_class), '[_1_, _3_, _5_, _7_]')
+
 if __name__ == '__main__':
     unittest.main()
