@@ -82,5 +82,13 @@ class TestPartialClassSetClass(unittest.TestCase):
         with self.assertRaises(TypeError):
             PartialClassSetClass(42)
 
+    def test_initialize_valid(self):
+        """Test that a partial-class set class initializes correctly with a partial-class set."""
+        partial_class_set = PartialClassSet([1, 3, 5, 7])
+        set_class = PartialClassSetClass(partial_class_set)
+
+        self.assertIsInstance(set_class, PartialClassSetClass)
+        self.assertEqual(set_class.representative_set, partial_class_set)
+
 if __name__ == '__main__':
     unittest.main()

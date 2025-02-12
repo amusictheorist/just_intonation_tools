@@ -77,6 +77,9 @@ class PartialClassSetClass:
         if not isinstance(partial_class_set, PartialClassSet):
             raise TypeError('A partial-class set class must be initialized with a partial set or a partial-class set.')
         self.partial_class_set = partial_class_set
-        self.representative_set = self.reduce(partial_class_set)
+        self.representative_set = self._reduce_set(partial_class_set)
 
-    
+    def _reduce_set(self, partial_class_set):
+        elements = list(partial_class_set)
+        gcd = reduce(math.gcd, elements)
+        return PartialClassSet({e // gcd for e in elements})
