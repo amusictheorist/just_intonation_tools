@@ -49,3 +49,10 @@ class PartialSetClass:
         elements = list(partial_set)
         gcd = reduce(math.gcd, elements)
         return PartialSet({e // gcd for e in elements})
+    
+    def is_member(self, partial_set):
+        if not isinstance(partial_set, PartialSet):
+            return False
+        
+        reduced_set = self._reduce_set(partial_set)
+        return reduced_set == self.representative_set

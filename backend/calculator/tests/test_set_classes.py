@@ -27,12 +27,19 @@ class TestPartialSetClass(unittest.TestCase):
         self.assertEqual(set_class.representative_set, partial_set)
 
     def test_initialization_with_reduction(self):
-        """Test that a PartialSetClass reduces a partial set to its representative form."""
+        """Test that a partial-set class reduces a partial set to its representative form."""
         partial_set = PartialSet({2, 4, 6, 8})
         set_class = PartialSetClass(partial_set)
 
         print('Representative set:', set_class.representative_set)
         self.assertEqual(set_class.representative_set, {1, 2, 3, 4})
+
+    def test_membership(self):
+        """Test whether a partial set is correctly recognized as a member of a partial-set class."""
+        set_class = PartialSetClass(PartialSet({1, 2, 3, 4}))
+
+        self.assertTrue(set_class.is_member(PartialSet({2, 4, 6, 8})))
+        self.assertFalse(set_class.is_member(PartialSet({1, 3, 5, 7})))
 
 if __name__ == '__main__':
     unittest.main()
