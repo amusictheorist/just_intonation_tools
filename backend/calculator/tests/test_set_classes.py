@@ -1,5 +1,5 @@
 import unittest
-from calculator.partial_sets import PartialSet, PartialClassSet, PartialSetClass
+from calculator.partial_sets import PartialSet, PartialClassSet, PartialSetClass, PartialClassSetClass
 
 class TestPartialSetClass(unittest.TestCase):
 
@@ -9,7 +9,6 @@ class TestPartialSetClass(unittest.TestCase):
             PartialSetClass([1, 2, 3])
 
         with self.assertRaises(TypeError):
-            
             PartialSetClass('invalid')
 
         with self.assertRaises(TypeError):
@@ -69,6 +68,19 @@ class TestPartialSetClass(unittest.TestCase):
         members = list(set_class)
         expected_members = [{2, 4, 6, 8}, {4, 8, 12, 16}, {6, 12, 18, 24}]
         self.assertTrue(all(PartialSet(m) in set_class for m in expected_members))
+
+class TestPartialClassSetClass(unittest.TestCase):
+
+    def test_initialization_invalid(self):
+        """Test that a partial-class set class raises an error for invalid inputs."""
+        with self.assertRaises(TypeError):
+            PartialClassSetClass([1, 2, 3])
+
+        with self.assertRaises(TypeError):
+            PartialClassSetClass('invalid')
+
+        with self.assertRaises(TypeError):
+            PartialClassSetClass(42)
 
 if __name__ == '__main__':
     unittest.main()
