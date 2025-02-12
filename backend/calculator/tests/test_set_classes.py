@@ -40,6 +40,12 @@ class TestPartialSetClass(unittest.TestCase):
         self.assertTrue(set_class.is_member(PartialSet({2, 4, 6, 8})))
         self.assertFalse(set_class.is_member(PartialSet({1, 3, 5, 7})))
 
+    def test_non_membership(self):
+        """Test that a set that does not reduce to the representative set is not a member."""
+        set_class = PartialSetClass(PartialSet({2, 4, 6, 8}))
+        non_member = PartialSet({3, 5, 7, 9})
+        self.assertFalse(set_class.is_member(non_member))
+
     def test_representation(self):
         """Tes that a partial-set class is represented using square brackets."""
         set_class = PartialSetClass(PartialSet({2, 4, 6, 8}))
