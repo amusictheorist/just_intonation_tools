@@ -90,5 +90,12 @@ class TestPartialClassSetClass(unittest.TestCase):
         self.assertIsInstance(set_class, PartialClassSetClass)
         self.assertEqual(set_class.representative_set, partial_class_set)
 
+    def test_initialization_with_reduction(self):
+        """Test that a prtial-class set class reduces a partial-class set to its representative form."""
+        partial_class_set = PartialClassSet({3, 9, 15, 21})
+        set_class = PartialClassSetClass(partial_class_set)
+
+        self.assertEqual(set_class.representative_set, {1, 3, 5, 7})
+
 if __name__ == '__main__':
     unittest.main()
