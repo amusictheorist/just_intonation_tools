@@ -56,3 +56,6 @@ class PartialSetClass:
         
         reduced_set = self._reduce_set(partial_set)
         return reduced_set == self.representative_set
+    
+    def __str__(self):
+        return f"[{', '.join(map(str, sorted(self.representative_set)))}]"

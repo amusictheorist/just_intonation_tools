@@ -41,5 +41,10 @@ class TestPartialSetClass(unittest.TestCase):
         self.assertTrue(set_class.is_member(PartialSet({2, 4, 6, 8})))
         self.assertFalse(set_class.is_member(PartialSet({1, 3, 5, 7})))
 
+    def test_representation(self):
+        """Tes that a partial-set class is represented using square brackets."""
+        set_class = PartialSetClass(PartialSet({2, 4, 6, 8}))
+        self.assertEqual(str(set_class), '[1, 2, 3, 4]')
+
 if __name__ == '__main__':
     unittest.main()
