@@ -31,7 +31,6 @@ class TestPartialSetClass(unittest.TestCase):
         partial_set = PartialSet({2, 4, 6, 8})
         set_class = PartialSetClass(partial_set)
 
-        print('Representative set:', set_class.representative_set)
         self.assertEqual(set_class.representative_set, {1, 2, 3, 4})
 
     def test_membership(self):
@@ -45,6 +44,15 @@ class TestPartialSetClass(unittest.TestCase):
         """Tes that a partial-set class is represented using square brackets."""
         set_class = PartialSetClass(PartialSet({2, 4, 6, 8}))
         self.assertEqual(str(set_class), '[1, 2, 3, 4]')
+
+    def test_equality(self):
+        """Test that two partial-set class objects with the same representative set are equal."""
+        set1 = PartialSetClass(PartialSet({2, 4, 6, 8}))
+        set2 = PartialSetClass(PartialSet({4, 8, 12, 16}))
+        print(set1)
+        print(set2)
+        self.assertEqual(set1, set2)
+
 
 if __name__ == '__main__':
     unittest.main()
