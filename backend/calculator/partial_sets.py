@@ -108,5 +108,11 @@ class PartialClassSetClass:
             return self.representative_set == other.representative_set
         return False
     
+    def __iter__(self):
+        n = 1
+        while n <= 10:
+            yield PartialClassSet({e * n for e in self.representative_set})
+            n += 2
+    
     def __str__(self):
         return '[' + ', '.join(f"_{e}_" for e in sorted(self.representative_set)) + ']'

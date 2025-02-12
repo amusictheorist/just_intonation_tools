@@ -143,5 +143,13 @@ class TestPartialClassSetClass(unittest.TestCase):
         transposed = PartialClassSet({3, 9, 15, 21})
         self.assertTrue(set_class.is_member(transposed))
 
+    def test_iteration(self):
+        """Test that PartialClassSetClass can iterate over its members."""
+
+        set_class = PartialClassSetClass(PartialClassSet({1, 3, 5}))
+        members = list(set_class)
+        expected_members = [{1, 3, 5}, {3, 9, 15}, {5, 15, 25}]
+        self.assertTrue(all(PartialClassSet(m) in set_class for m in expected_members))
+
 if __name__ == '__main__':
     unittest.main()
