@@ -9,6 +9,7 @@ class TestPartialSetClass(unittest.TestCase):
             PartialSetClass([1, 2, 3])
 
         with self.assertRaises(TypeError):
+            
             PartialSetClass('invalid')
 
         with self.assertRaises(TypeError):
@@ -24,6 +25,14 @@ class TestPartialSetClass(unittest.TestCase):
 
         self.assertIsInstance(set_class, PartialSetClass)
         self.assertEqual(set_class.representative_set, partial_set)
+
+    def test_initialization_with_reduction(self):
+        """Test that a PartialSetClass reduces a partial set to its representative form."""
+        partial_set = PartialSet({2, 4, 6, 8})
+        set_class = PartialSetClass(partial_set)
+
+        print('Representative set:', set_class.representative_set)
+        self.assertEqual(set_class.representative_set, {1, 2, 3, 4})
 
 if __name__ == '__main__':
     unittest.main()

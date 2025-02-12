@@ -1,3 +1,6 @@
+import math
+from functools import reduce
+
 class PartialSet(set):
     def __init__(self, elements):
         """Initialize a partial set, ensuring all elements are positive integers."""
@@ -36,9 +39,13 @@ class PartialClassSet(set):
     
 class PartialSetClass:
     def __init__(self, partial_set):
-        """Initialize a partial-set class with a PartialSet."""
+        """Initialize a partial-set class with a PartialSet and compute its representative se."""
         if not isinstance(partial_set, PartialSet):
             raise TypeError('A partial-set class must be initialized with a partial set.')
-        self.representative_set = partial_set
+        self.partial_set = partial_set
+        self.representative_set = self._reduce_set(partial_set)
 
-    
+    def _reduce_set(self, partial_set):
+        elements = list(partial_set)
+        gcd = reduce(math.gcd, elements)
+        return PartialSet({e // gcd for e in elements})
