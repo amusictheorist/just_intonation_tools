@@ -1,11 +1,10 @@
 import './App.css';
-import PartialSetList from './components/PartialSetList';
+import HomePage from './components/HomePage';
 
 function App() {
   return (
     <div>
-      <h1>Set Calculator</h1>
-      <PartialSetList />
+      <HomePage />
     </div>
   );
 }

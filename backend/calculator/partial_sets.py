@@ -17,7 +17,7 @@ class PartialSet(set):
         super().__init__(filtered_elements)
 
     def __str__(self):
-        return '{ ' + ', '.join(str(x) for x in sorted(self)) + ' }'
+        return '{' + ', '.join(str(x) for x in sorted(self)) + '}'
     
 class PartialClassSet(set):
     def __init__(self, elements):
