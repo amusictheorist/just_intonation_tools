@@ -69,5 +69,17 @@ class TestPartialSetClassHC(unittest.TestCase):
         expected_result = round(sum({1})/1, 2)
         self.assertEqual(partial_class_set.cardHCpc(), expected_result)
 
+    def test_large_set_cardHC(self):
+        """Test that #HC scales correctly with large sets."""
+        partial_set = PartialSet({10, 20, 30, 40, 50, 60, 70, 80})
+        partial_class_set = PartialClassSet({3, 9, 15, 21, 27, 33, 39, 45})
+        expected_parSC = ({1, 2, 3, 4, 5, 6, 7, 8})
+        expected_parcSC = ({1, 3, 5, 7, 9, 11, 13, 15})
+        expected_cardHCp = round(sum(expected_parSC)/36, 2)
+        expected_cardHCpc = round(sum(expected_parcSC)/64, 2)
+
+        self.assertEqual(partial_set.cardHCp(), expected_cardHCp)
+        self.assertEqual(partial_class_set.cardHCpc(), expected_cardHCpc)
+
 if __name__ == '__main__':
     unittest.main()
