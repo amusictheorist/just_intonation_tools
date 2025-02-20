@@ -28,5 +28,12 @@ class InversionTests(unittest.TestCase):
         except Exception as e:
             self.fail(f"Low inverse raised {type(e).__name__} unexpectedly: {e}")
 
+    def test_valid_inversion(self):
+        """Test that a set is correctly transformed to its low inverse."""
+        self.assertEqual(low_inverse({4, 5, 6}), {10, 12, 15})
+        self.assertEqual(low_inverse({4, 5, 6, 7}), {60, 70, 84, 105})
+        self.assertEqual(low_inverse({1, 3, 5}), {3, 5, 15})
+        self.assertEqual(low_inverse({1, 3, 5, 7}), {15, 21, 35, 105})
+
 if __name__ == '__main__':
     unittest.main()

@@ -1,5 +1,6 @@
 import math
 from collections import namedtuple
+from functools import reduce
 from .partial_sets import PartialClassSet
 
 ErrorMessages = namedtuple('ErrorMessages', [
@@ -81,3 +82,9 @@ def low_inverse(input_set):
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
     if not input_set:
         raise ValueError(ERROR_MESSAGES.empty_set)
+    
+    low_inv = set()
+    lcm = reduce(math.lcm, input_set)
+    for par in input_set:
+        low_inv.add(int(lcm * (1/par)))
+    return low_inv
