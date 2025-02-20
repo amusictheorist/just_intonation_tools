@@ -35,7 +35,7 @@ class PartialClassSet(set):
         super().__init__(filtered_elements)
 
     def __str__(self):
-        return '{' + ', '.join(f"_{e}_" for e in sorted(self)) + '}'
+        return '{' + ', '.join(str(e) for e in sorted(self)) + '}'
 
 class PartialSetClass:
     def __init__(self, partial_set):
@@ -115,4 +115,4 @@ class PartialClassSetClass:
             n += 2
     
     def __str__(self):
-        return '[' + ', '.join(f"_{e}_" for e in sorted(self.representative_set)) + ']'
+        return f"[{', '.join(map(str, sorted(self.representative_set)))}]"
