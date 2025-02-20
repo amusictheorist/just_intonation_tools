@@ -43,5 +43,10 @@ class InversionTests(unittest.TestCase):
         """Test that duplicates in input don't affect result."""
         self.assertEqual(low_inverse({4, 4, 5, 5, 6}), {10, 12, 15})
 
+    def test_prime_numbers(self):
+        """Test that prime number sets are correctly inverted."""
+        self.assertEqual(low_inverse({2, 3, 5, 7}), {30, 42, 70, 105})
+        self.assertEqual(low_inverse({11, 13, 17}), {143, 187, 221})
+
 if __name__ == '__main__':
     unittest.main()
