@@ -20,7 +20,7 @@ ERROR_MESSAGES = ErrorMessages(
 
 def par_to_parc(partial_set):
     if not isinstance(partial_set, (set, list, tuple, range)):
-        raise TypeError('Partial to partial-class conversion requires a ser, list, tuple, or range of partials.')
+        raise TypeError('Partial to partial-class conversion requires a set, list, tuple, or range of partials.')
     
     def _reduce_to_parc(num):
         while num % 2 == 0:
