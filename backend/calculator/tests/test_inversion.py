@@ -35,5 +35,9 @@ class InversionTests(unittest.TestCase):
         self.assertEqual(low_inverse({1, 3, 5}), {3, 5, 15})
         self.assertEqual(low_inverse({1, 3, 5, 7}), {15, 21, 35, 105})
 
+    def test_dyad_inversion(self):
+        """Test that an inverted interval returns itself."""
+        self.assertEqual(low_inverse({4, 5}), {4, 5})
+
 if __name__ == '__main__':
     unittest.main()
