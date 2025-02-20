@@ -44,6 +44,12 @@ class TestPartialSetClassHC(unittest.TestCase):
         partial_set = PartialSet({7})
         expected_sum = sum({1})
         self.assertEqual(partial_set.HCp(), expected_sum)
+    
+    def test_single_element_HCpc(self):
+        """Test HCpc for a single-element set."""
+        partial_class_set = PartialClassSet({7})
+        expected_sum = sum({1})
+        self.assertEqual(partial_class_set.HCpc(), expected_sum)
 
 if __name__ == '__main__':
     unittest.main()
