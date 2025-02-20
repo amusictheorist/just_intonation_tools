@@ -57,5 +57,11 @@ class TestPartialSetClassHC(unittest.TestCase):
         expected_sum = sum({3, 5, 7})
         self.assertEqual(partial_set.HCp(), expected_sum)
 
+    def test_single_element_cardHCp(self):
+        """Test #HCp for a single-element set."""
+        partial_set = PartialSet({10})
+        expected_result = round(sum({1})/1, 2)
+        self.assertEqual(partial_set.cardHCp(), expected_result)
+
 if __name__ == '__main__':
     unittest.main()
