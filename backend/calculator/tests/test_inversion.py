@@ -48,5 +48,11 @@ class InversionTests(unittest.TestCase):
         self.assertEqual(low_inverse({2, 3, 5, 7}), {30, 42, 70, 105})
         self.assertEqual(low_inverse({11, 13, 17}), {143, 187, 221})
 
+    def test_involution(self):
+        """Test that performing low_inverse twice in a row returns the initial set."""
+        initial = ({4, 5, 6})
+        inverted = low_inverse(initial)
+        self.assertEqual(initial, low_inverse(inverted))
+
 if __name__ == '__main__':
     unittest.main()
