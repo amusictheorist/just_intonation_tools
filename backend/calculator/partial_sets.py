@@ -37,6 +37,9 @@ class PartialClassSet(set):
         
         super().__init__(filtered_elements)
 
+    def HCpc(self):
+        return PartialClassSetClass(self).HCpc()
+
     def __str__(self):
         return '{' + ', '.join(str(e) for e in sorted(self)) + '}'
 
@@ -119,6 +122,9 @@ class PartialClassSetClass:
         while n <= 10:
             yield PartialClassSet({e * n for e in self.representative_set})
             n += 2
+
+    def HCpc(self):
+        return sum(self.representative_set)
     
     def __str__(self):
         return f"[{', '.join(map(str, sorted(self.representative_set)))}]"
