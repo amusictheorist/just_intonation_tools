@@ -51,5 +51,11 @@ class TestPartialSetClassHC(unittest.TestCase):
         expected_sum = sum({1})
         self.assertEqual(partial_class_set.HCpc(), expected_sum)
 
+    def test_prime_number_HCp(self):
+        """Test HCp for a set of prime numbers."""
+        partial_set = PartialSet({3, 5, 7})
+        expected_sum = sum({3, 5, 7})
+        self.assertEqual(partial_set.HCp(), expected_sum)
+
 if __name__ == '__main__':
     unittest.main()
