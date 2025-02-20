@@ -18,6 +18,9 @@ const HomePage = () => {
     return (
       <div className="form-container">
         <h1>Set Calculator</h1>
+        <p className="form description">
+          Enter partial numbers to compute sets and set classes
+        </p>
         <form onSubmit={handleSubmit}>
           <input
             className="input-field"
@@ -26,10 +29,6 @@ const HomePage = () => {
             onChange={(e) => setUserInput(e.target.value)}
             placeholder="Enter numbers separated by commas"
           />
-          <select value={inputType} onChange={(e) => setInputType(e.target.value)}>
-            <option value='partial'>Partial Set</option>
-            <option value='partial class'>Partial-Class Set</option>
-          </select>
           <button type="submit">Submit</button>
         </form>
     
