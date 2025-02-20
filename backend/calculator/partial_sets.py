@@ -18,6 +18,9 @@ class PartialSet(set):
 
     def HCp(self):
         return PartialSetClass(self).HCp()
+    
+    def cardHCp(self):
+        return PartialSetClass(self).cardHCp()
 
     def __str__(self):
         return '{' + ', '.join(str(x) for x in sorted(self)) + '}'
@@ -76,6 +79,12 @@ class PartialSetClass:
 
     def HCp(self):
         return sum(self.representative_set)
+    
+    def cardHCp(self):
+        cardinality = len(self.representative_set)
+        factor = 1/((cardinality*(cardinality+1))/2)
+        HCp = self.HCp()
+        return round(HCp * factor, 2)
     
     def __str__(self):
         return f"[{', '.join(map(str, sorted(self.representative_set)))}]"

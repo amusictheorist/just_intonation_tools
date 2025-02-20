@@ -21,5 +21,14 @@ class TestPartialSetClassHC(unittest.TestCase):
         self.assertEqual(partial_class_set_class.HCpc(), expected_sum)
         self.assertEqual(partial_class_set.HCpc(), expected_sum)
 
+    def test_cardinality_HCp(self):
+        """Test that #HCp of a partial set is properly calculated."""
+        partial_set = PartialSet({8, 10, 12, 14})
+        expected_result = round(sum({4, 5, 6, 7})/10, 2)
+        partial_set_class = PartialSetClass(partial_set)
+
+        self.assertEqual(partial_set_class.cardHCp(), expected_result)
+        self.assertEqual(partial_set.cardHCp(), expected_result)
+
 if __name__ == '__main__':
     unittest.main()
