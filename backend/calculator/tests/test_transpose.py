@@ -1,5 +1,4 @@
 import unittest
-from unittest.mock import patch
 from calculator.utils import transpose, ERROR_MESSAGES
 
 class TransposeTests(unittest.TestCase):

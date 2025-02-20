@@ -74,12 +74,5 @@ def transpose(input_set, n):
     transposed = {i * n for i in input_set}
     return transposed
 
-def parSC(input_set):
-    if not isinstance(input_set, set):
-        raise TypeError(ERROR_MESSAGES.invalid_set)
-    if not check_set_integers(input_set):
-        raise ValueError(ERROR_MESSAGES.invalid_set_integers)
-    if not input_set:
-        raise ValueError(ERROR_MESSAGES.empty_set)
-    if 0 in input_set:
-        raise ValueError(ERROR_MESSAGES.invalid_set_integers)
+def low_inverse(input_set):
+    pass
