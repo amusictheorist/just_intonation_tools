@@ -63,3 +63,6 @@ class TransposeTests(unittest.TestCase):
         with self.assertRaises(ValueError) as context:
             transpose({0}, 5)
             self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
+
+if __name__ == '__main__':
+    unittest.main()

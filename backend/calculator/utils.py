@@ -75,4 +75,7 @@ def transpose(input_set, n):
     return transposed
 
 def low_inverse(input_set):
-    pass
+    if not isinstance(input_set, set):
+        raise TypeError(ERROR_MESSAGES.invalid_set)
+    if not check_set_integers(input_set):
+        raise ValueError(ERROR_MESSAGES.invalid_set_integers)
