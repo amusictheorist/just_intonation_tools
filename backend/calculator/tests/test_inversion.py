@@ -15,5 +15,11 @@ class InversionTests(unittest.TestCase):
             low_inverse({1, 2.5, 'a', -4})
             self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_set_integers)
 
+    def test_empty_set(self):
+        """Test that an empty set raises an error message."""
+        with self.assertRaises(ValueError) as context:
+            low_inverse(set())
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.empty_set)
+
 if __name__ == '__main__':
     unittest.main()
