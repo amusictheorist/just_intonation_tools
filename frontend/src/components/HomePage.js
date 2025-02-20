@@ -39,6 +39,7 @@ const HomePage = () => {
           <div className="results-container">
             <h2>Results:</h2>
             <p><strong>Partial Set:</strong> {data.partial_set}</p>
+            <p><strong>Low inverse:</strong> {data.low_parset}</p>
             <p><strong>Partial-Class Set:</strong> {
               data.partial_class_set.split(', ').map((item, index) => (
                 <>
@@ -47,15 +48,18 @@ const HomePage = () => {
                 </>
               ))
             }</p>
+            <p><strong>Low inverse:</strong> {data.low_parcset}</p>
             <p><strong>Partial-Set Class:</strong> {data.partial_set_class}</p>
+            <p><strong>HCp:</strong> {data.HCp} <strong>#HCp:</strong> {data.cardHCp}</p>
             <p><strong>Partial-Class Set Class:</strong> {
               data.partial_class_set_class.split(', ').map((item, index) => (
-              <>
+                <>
                 <span key={index} className="underline">{item}</span>
                 {index < data.partial_class_set_class.split(', ').length - 1 && ', '}
               </>
               ))
-              }</p>
+            }</p>
+            <p><strong>HCpc:</strong> {data.HCpc} <strong>#HCpc:</strong> {data.cardHCpc}</p>
           </div>
         )}
       </div>
