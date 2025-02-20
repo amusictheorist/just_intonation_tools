@@ -32,7 +32,7 @@ class TransposeTests(unittest.TestCase):
         try:
             transpose({1, 2, 3}, 5)
         except Exception as e:
-            self.fail(f"transpose raised {type(e).__name__} unexpectedly: {e}")
+            self.fail(f"Transpose raised {type(e).__name__} unexpectedly: {e}")
 
     def test_valid_transposition(self):
         """Test that valid inputs are correctly transposed."""

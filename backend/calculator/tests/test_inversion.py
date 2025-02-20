@@ -21,5 +21,12 @@ class InversionTests(unittest.TestCase):
             low_inverse(set())
             self.assertEqual(str(context.exception), ERROR_MESSAGES.empty_set)
 
+    def test_valid_input(self):
+        """Test that a valid input does not raise an error."""
+        try:
+            low_inverse({4, 5, 6})
+        except Exception as e:
+            self.fail(f"Low inverse raised {type(e).__name__} unexpectedly: {e}")
+
 if __name__ == '__main__':
     unittest.main()
