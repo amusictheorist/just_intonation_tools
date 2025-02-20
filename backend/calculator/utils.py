@@ -8,7 +8,8 @@ ErrorMessages = namedtuple('ErrorMessages', [
     'invalid_two_positive_integers',
     'invalid_set_integers',
     'empty_set',
-    'invalid_set'
+    'invalid_set',
+    'invalid_inversion'
 ])
 
 ERROR_MESSAGES = ErrorMessages(
@@ -16,7 +17,8 @@ ERROR_MESSAGES = ErrorMessages(
     invalid_two_positive_integers='Invalid input, both inputs must be positive integers',
     invalid_set_integers='Invalid input, please enter only positive integers',
     empty_set='Invalid input, set cannot be empty',
-    invalid_set='Invalid input, please enter a valid set'
+    invalid_set='Invalid input, please enter a valid set',
+    invalid_inversion='Low inverse is undefined for single-element sets'
 )
 
 def par_to_parc(partial_set):
@@ -82,6 +84,8 @@ def low_inverse(input_set):
         raise ValueError(ERROR_MESSAGES.invalid_set_integers)
     if not input_set:
         raise ValueError(ERROR_MESSAGES.empty_set)
+    if len(input_set) == 1:
+        raise ValueError(ERROR_MESSAGES.invalid_inversion)
     
     low_inv = set()
     lcm = reduce(math.lcm, input_set)

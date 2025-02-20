@@ -54,5 +54,11 @@ class InversionTests(unittest.TestCase):
         inverted = low_inverse(initial)
         self.assertEqual(initial, low_inverse(inverted))
 
+    def test_single_element(self):
+        """Test that attempting to innvert a single element raises an error."""
+        with self.assertRaises(ValueError) as context:
+            low_inverse({7})
+            self.assertEqual(str(context.exception), ERROR_MESSAGES.invalid_inversion)
+
 if __name__ == '__main__':
     unittest.main()
