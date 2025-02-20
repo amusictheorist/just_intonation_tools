@@ -81,5 +81,17 @@ class TestPartialSetClassHC(unittest.TestCase):
         self.assertEqual(partial_set.cardHCp(), expected_cardHCp)
         self.assertEqual(partial_class_set.cardHCpc(), expected_cardHCpc)
 
+    def test_HC_class_equivalence(self):
+        """Test that HC is the same for different sets in the same class."""
+        partial_set1 = PartialSet({4, 5, 6})
+        partial_set2 = PartialSet({8, 10, 12})
+        partial_class_set1 = PartialClassSet({1, 3, 5})
+        partial_class_set2 = PartialClassSet({5, 15, 25})
+
+        self.assertEqual(partial_set1.HCp(), partial_set2.HCp())
+        self.assertEqual(partial_set1.cardHCp(), partial_set2.cardHCp())
+        self.assertEqual(partial_class_set1.HCpc(), partial_class_set2.HCpc())
+        self.assertEqual(partial_class_set1.cardHCpc(), partial_class_set2.cardHCpc())
+
 if __name__ == '__main__':
     unittest.main()
