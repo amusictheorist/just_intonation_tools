@@ -39,5 +39,9 @@ class InversionTests(unittest.TestCase):
         """Test that an inverted interval returns itself."""
         self.assertEqual(low_inverse({4, 5}), {4, 5})
 
+    def test_duplicates(self):
+        """Test that duplicates in input don't affect result."""
+        self.assertEqual(low_inverse({4, 4, 5, 5, 6}), {10, 12, 15})
+
 if __name__ == '__main__':
     unittest.main()
