@@ -16,9 +16,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from calculator.views import PartialSetView
+from calculator.views.partial_set_view import PartialSetView
+from calculator.views.transpose_set_view import TransposeSetView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/partial-set/', PartialSetView.as_view(), name='partial-set')
+    path('api/partial-set/', PartialSetView.as_view(), name='partial-set'),
+    path('api/transpose-set/', TransposeSetView.as_view(), name='transpose-set')
 ]

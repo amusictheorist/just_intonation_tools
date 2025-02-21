@@ -3,67 +3,120 @@ import usePartialSetAPI from "../hooks/usePartialSetAPI";
 
 const HomePage = () => {
   const [userInput, setUserInput] = useState('');
-  const [inputType, setInputType] = useState('partial');
-  const { data, loading, error, fetchPartialSetData } = usePartialSetAPI('http://localhost:8000');
+  const [transposeValue, setTransposeValue] = useState('');
+  const { data: originalSet, transposedData, loading, error, fetchPartialSetData, transposeSet } = usePartialSetAPI('http://localhost:8000');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!userInput.trim()) {
-      alert('Please enter some integers before submitting');
-      return;
-    }
-    fetchPartialSetData(userInput, inputType);
-    };
+    fetchPartialSetData(userInput, 'partial');
+  };
 
-    return (
-      <div className="form-container">
-        <h1>Set Calculator</h1>
-        <p className="form description">
-          Enter partial numbers to compute sets and set classes
-        </p>
-        <form onSubmit={handleSubmit}>
-          <input
-            className="input-field"
-            type="text"
-            value={userInput}
-            onChange={(e) => setUserInput(e.target.value)}
-            placeholder="Enter numbers separated by commas"
-          />
-          <button type="submit">Submit</button>
-        </form>
-    
-        {loading && <p>Loading...</p>}
-        {error && <p className="error-message">(error)</p>}
-    
-        {data && (
-          <div className="results-container">
-            <h2>Results:</h2>
-            <p><strong>Partial Set:</strong> {data.partial_set}</p>
-            <p><strong>Low inverse:</strong> {data.low_parset}</p>
-            <p><strong>Partial-Class Set:</strong> {
-              data.partial_class_set.split(', ').map((item, index) => (
-                <>
-                  <span key={index} className="underline">{item}</span>
-                  {index < data.partial_class_set.split(', ').length - 1 && ', '}
-                </>
-              ))
-            }</p>
-            <p><strong>Low inverse:</strong> {data.low_parcset}</p>
-            <p><strong>Partial-Set Class:</strong> {data.partial_set_class}</p>
-            <p><strong>HCp:</strong> {data.HCp} <strong>#HCp:</strong> {data.cardHCp}</p>
-            <p><strong>Partial-Class Set Class:</strong> {
-              data.partial_class_set_class.split(', ').map((item, index) => (
-                <>
-                <span key={index} className="underline">{item}</span>
-                {index < data.partial_class_set_class.split(', ').length - 1 && ', '}
-              </>
-              ))
-            }</p>
-            <p><strong>HCpc:</strong> {data.HCpc} <strong>#HCpc:</strong> {data.cardHCpc}</p>
-          </div>
-        )}
-      </div>
-    );
+  const handleTranspose = (e) => {
+    e.preventDefault();
+    const transposition = Number(transposeValue);
+
+    if (!isNaN(transposition)) {
+      transposeSet(transposition);
+    } else {
+      alert("Please enter a valid transpose value.");
+    }
+  };
+
+  return (
+    <div className="container">
+      <h1>Partial Set Calculator</h1>
+      <p className="form description">
+        Enter a set of numbers to calculate its properties.
+      </p>
+  
+      <form onSubmit={handleSubmit}>
+        <input
+          className="input-field"
+          type="text"
+          value={userInput}
+          onChange={(e) => setUserInput(e.target.value)}
+          placeholder="Enter numbers separated by commas"
+        />
+        <button type="submit" disabled={loading}>
+          {loading ? "Calculating..." : "Submit"}
+        </button>
+      </form>
+  
+      {error && <p className="error">{error}</p>}
+  
+      {originalSet && (
+        <div className="results">
+          <h2>Results:</h2>
+          <p><strong>Partial Set:</strong> {originalSet.partial_set}</p>
+          <p><strong>Low inverse:</strong> {originalSet.low_parset}</p>
+          <p><strong>Partial-Class Set:</strong> {
+            originalSet.partial_class_set.split(", ").map((item, index) => (
+              <React.Fragment key={index}>
+                <span className="underline">{item}</span>
+                {index < originalSet.partial_class_set.split(", ").length - 1 && ", "}
+              </React.Fragment>
+            ))
+          }</p>
+          <p><strong>Low inverse:</strong> {
+            originalSet.low_parcset.split(', ').map((item, index) => (
+              <React.Fragment key={index}>
+                <span className="underline">{item}</span>
+                {index < originalSet.low_parcset.split(', ').length - 1 && ', '}
+              </React.Fragment>
+            ))
+          }</p>
+          <p><strong>Partial-Set Class:</strong> {originalSet.partial_set_class}</p>
+          <p><strong>HCp:</strong> {originalSet.HCp} <strong>#HCp:</strong> {originalSet.cardHCp}</p>
+          <p><strong>Partial-Class Set Class:</strong> {
+            originalSet.partial_class_set_class.split(", ").map((item, index) => (
+              <React.Fragment key={index}>
+                <span className="underline">{item}</span>
+                {index < originalSet.partial_class_set_class.split(", ").length - 1 && ", "}
+              </React.Fragment>
+            ))
+          }</p>
+          <p><strong>HCpc:</strong> {originalSet.HCpc} <strong>#HCpc:</strong> {originalSet.cardHCpc}</p>
+  
+          <h3>Transpose your set</h3>
+          <form onSubmit={handleTranspose} className="form">
+            <input
+              type="number"
+              value={transposeValue}
+              onChange={(e) => setTransposeValue(e.target.value)}
+              placeholder="Enter transposition value"
+            />
+            <button type="submit" disabled={loading}>
+              {loading ? "Transposing..." : "Transpose"}
+            </button>
+          </form>
+  
+          {transposedData && (
+            <div className="results">
+              <h2>Transposed Results:</h2>
+              <p><strong>Partial Set:</strong> {transposedData.partial_set}</p>
+              <p><strong>Partial-Class Set:</strong> {
+                transposedData.partial_class_set.split(', ').map((item, index) => (
+                  <React.Fragment key={index}>
+                    <span className="underline">{item}</span>
+                    {index < transposedData.partial_class_set.split(', ').length - 1 && ', '}
+                  </React.Fragment>
+                ))
+              }</p>
+              <p><strong>Partial Set low inverse:</strong> {transposedData.low_parset}</p>
+              <p><strong>Partial-Class Set low inverse:</strong> {
+                transposedData.low_parcset.split(', ').map((item, index) => (
+                  <React.Fragment key={index}>
+                    <span className="underline">{item}</span>
+                    {index < transposedData.low_parcset.split(', ').length - 1 && ', '}
+                  </React.Fragment>
+                ))
+              }</p>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default HomePage;
