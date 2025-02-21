@@ -19,8 +19,8 @@ class PartialSetView(APIView):
             cardHCp = partial_set.cardHCp()
             HCpc = partial_class_set.HCpc()
             cardHCpc = partial_class_set.cardHCpc()
-            low_parset = low_inverse(partial_set)
-            low_parcset = low_inverse(partial_class_set)
+            low_parset = PartialSet(low_inverse(partial_set))
+            low_parcset = PartialClassSet(low_inverse(partial_class_set))
 
             response_data = {
                 'partial_set': str(partial_set),

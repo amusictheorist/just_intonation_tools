@@ -16,8 +16,8 @@ class TransposeSetView(APIView):
             transposed_set = [x * int(transpose_value) for x in input_set]
             partial_set = PartialSet(transposed_set)
             partial_class_set = PartialClassSet(par_to_parc(partial_set))
-            low_parset = low_inverse(partial_set)
-            low_parcset = par_to_parc(low_parset)
+            low_parset = PartialSet(low_inverse(partial_set))
+            low_parcset = PartialClassSet(low_inverse(partial_class_set))
 
             response_data = {
                 'partial_set': str(partial_set),
