@@ -92,3 +92,22 @@ def low_inverse(input_set):
     for par in input_set:
         low_inv.add(int(lcm * (1/par)))
     return low_inv
+
+def find_partitions(n, start=1, path=None, count=[0]):
+    if path is None:
+        path = []
+
+    if n == 0:
+        if len(path) > 1:
+            count[0] += 1
+            print(path)
+        return
+    
+    for i in range(start, n + 1):
+        find_partitions(n - i, i + 1, path + [i], count)
+
+def count_partitions(n):
+    print(f"Distinct partitions of {n}:")
+    count = [0]
+    find_partitions(n, count=count)
+    print(f"Total partitions: {count[0]}")
