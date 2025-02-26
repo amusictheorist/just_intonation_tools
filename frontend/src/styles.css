@@ -1,3 +1,7 @@
 .underline {
   text-decoration: underline;
 }
+
+.container {
+  margin: 2rem
+}

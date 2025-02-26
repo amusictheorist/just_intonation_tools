@@ -4,7 +4,7 @@ from functools import reduce
 class PartialSet(set):
     def __init__(self, elements):
         """Initialize a partial set, ensuring all elements are positive integers."""
-        if not isinstance(elements, (set, list, tuple, range)):
+        if not isinstance(elements, (set, list, tuple, range, int)):
             raise TypeError('A partial set must be initialized with a set, a list, a tuple, or a range.')
 
         filtered_elements = set(elements)
@@ -28,7 +28,7 @@ class PartialSet(set):
 class PartialClassSet(set):
     def __init__(self, elements):
         """Initialize a partial-class set, ensuring all elements are odd positive integers."""
-        if not isinstance(elements, (set, list, tuple, range)):
+        if not isinstance(elements, (set, list, tuple, range, int)):
             raise TypeError('A partial-class set must be initialized with a set, a list, a tuple, or a range.')
         
         filtered_elements = set(elements)

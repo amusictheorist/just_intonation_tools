@@ -85,7 +85,7 @@ def low_inverse(input_set):
     if not input_set:
         raise ValueError(ERROR_MESSAGES.empty_set)
     if len(input_set) == 1:
-        raise ValueError(ERROR_MESSAGES.invalid_inversion)
+        return input_set
     
     low_inv = set()
     lcm = reduce(math.lcm, input_set)
