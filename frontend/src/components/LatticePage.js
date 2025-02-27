@@ -2,6 +2,9 @@ import React, { useEffect, useRef, useState } from "react";
 import * as THREE from 'three';
 import { OrbitControls } from "three/examples/jsm/Addons.js";
 
+const rendererRef = useRef(null);
+const cameraRef = useRef(null);
+
 const factorize = (numerator, denominator) => {
   const factors = {};
   const primeFactorize = (num, sign = 1) => {
@@ -18,33 +21,22 @@ const factorize = (numerator, denominator) => {
   return factors;
 };
 
-const computePosition = (factors) => {
-  let x = 0, y = 0, z = 0, radius = 1, angle = 0;
-  const radialPrimes = [];
-  
+const computePosition = (factors, spacing = 2) => {
+  let x = 0, y = 0, z = 0;
   Object.entries(factors).forEach(([prime, exponent]) => {
     const factor = parseInt(prime);
-    if (factor === 3) x = exponent;
-    else if (factor === 5) y = exponent;
-    else if (factor === 7) z = exponent;
-    else radialPrimes.push({ factor, exponent });
+    if (factor === 3) x = exponent * spacing;
+    else if (factor === 5) y = -exponent * spacing;
+    else if (factor === 7) z = exponent * spacing;
   });
-
-  if (radialPrimes.length > 0) {
-    radialPrimes.forEach(({ factor, exponent }, index) => {
-      radius += Math.abs(exponent);
-      angle += (index + 1) * (Math.PI / 4) * exponent;
-    });
-    x += radius * Math.cos(angle);
-    y += radius * Math.sin(angle);
-  }
-
   return new THREE.Vector3(x, y, z);
 };
 
 const LatticePage = () => {
   const mountRef = useRef(null);
   const [ratios, setRatios] = useState(['1/1']);
+  const spheresRef = useRef([]);
+  const sceneRef = useRef(null);
 
   useEffect(() => {
     const mount = mountRef.current;
@@ -52,29 +44,31 @@ const LatticePage = () => {
 
     const scene = new THREE.Scene();
     scene.background = new THREE.Color(0xffffff);
+    sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(5, 5, 10);
+    cameraRef.current = camera;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
     mount.appendChild(renderer.domElement);
+    rendererRef.current = renderer;
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-    const light = new THREE.AmbientLight(0xffffff, 1.5);
-    scene.add(light);
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
+    scene.add(ambientLight);
 
     const pointLight = new THREE.PointLight(0xffffff, 1, 100);
     pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
 
-    const spheres = [];
     const sphereGeometry = new THREE.SphereGeometry(0.2, 16, 16);
     const sphereMaterial = new THREE.MeshStandardMaterial({ color: 'red' });
-
-    ratios.forEach((ratio) => {
+    
+    const addSphere = (ratio) => {
       const [numerator, denominator] = ratio.split('/').map(Number);
       const factors = factorize(numerator, denominator);
       const position = computePosition(factors);
@@ -82,40 +76,42 @@ const LatticePage = () => {
       const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
       sphere.position.copy(position);
       scene.add(sphere);
-      spheres.push({ ratio, factors, position });
 
-      let parentSphere = null;
-      
-      spheres.forEach((existingSphere) => {
-        if (existingSphere.ratio === ratio) return;
+      spheresRef.current.push({ ratio, factors, position, sphere });
 
-        let diffCount = 0;
-        Object.keys(factors).forEach((prime) => {
-          const diff = Math.abs((factors[prime] || 0) - (existingSphere.factors[prime] || 0));
-          if (diff > 0) diffCount += diff;
+      if (spheresRef.current.length > 1) {
+        let parentSphere = null;
+        spheresRef.current.forEach((existingSphere) => {
+          if (existingSphere.ratio == ratio) return;
+
+          let diffCount = 0;
+          Object.keys(factors).forEach((prime) => {
+            const diff = Math.abs((factors[prime] || 0) - (existingSphere.factors[prime] || 0));
+            if (diff > 0) diffCount += diff;
+          });
+
+          if (diffCount === 1) {
+            parentSphere = existingSphere;
+          }
         });
 
-        if (diffCount === 1) {
-          parentSphere = existingSphere;
+        if (parentSphere) {
+          const points = [parentSphere.position.clone(), position.clone()];
+          const geometry = new THREE.BufferGeometry().setFromPoints(points);
+          const material = new THREE.LineBasicMaterial({ color: 0x00000 });
+          const line = new THREE.Line(geometry, material);
+          scene.add(line);
         }
-      });
-
-      if (parentSphere) {
-        const points = [parentSphere.position.clone(), position.clone()];
-        const geometry = new THREE.BufferGeometry().setFromPoints(points);
-        const material = new THREE.LineBasicMaterial({ color: 0x000000 });
-        const line = new THREE.Line(geometry, material);
-        scene.add(line);
       }
 
-      const canvas = document.createElement("canvas");
-      const context = canvas.getContext("2d");
+      const canvas = document.createElement('canvas');
+      const context = canvas.getContext('2d');
       canvas.width = 512;
       canvas.height = 256;
 
       context.clearRect(0, 0, canvas.width, canvas.height);
-      context.font = "64px Arial";
-      context.fillStyle = "black";
+      context.font = '64px Arial';
+      context.fillStyle = 'black';
       context.textAlign = 'center';
       context.textBaseline = 'middle';
       context.fillText(ratio, canvas.width / 2, canvas.height / 2);
@@ -129,7 +125,9 @@ const LatticePage = () => {
       sprite.position.set(position.x, position.y + 0.6, position.z);
       sprite.scale.set(2, 1, 1);
       scene.add(sprite);
-    });
+    };
+
+    ratios.forEach((ratio) => addSphere(ratio));
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -143,13 +141,76 @@ const LatticePage = () => {
       mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [ratios]);
+  }, []);
 
   const handleAddRatio = (event) => {
     event.preventDefault();
-    const inputRatio = event.target.elements.ratio.value;
+    const inputRatio = event.target.elements.ratio.value.trim();
+  
     if (/^\d+\/\d+$/.test(inputRatio)) {
       setRatios((prevRatios) => [...prevRatios, inputRatio]);
+  
+      if (sceneRef.current) {
+        const [numerator, denominator] = inputRatio.split('/').map(Number);
+        const factors = factorize(numerator, denominator);
+        const position = computePosition(factors);
+  
+        console.log("New Sphere Position:", position);
+  
+        // Create sphere
+        const sphereGeometry = new THREE.SphereGeometry(0.2, 16, 16);
+        const sphereMaterial = new THREE.MeshStandardMaterial({ color: 'red' });
+        const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+        sphere.position.copy(position);
+        sceneRef.current.add(sphere);
+  
+        // Store sphere
+        spheresRef.current.push({ ratio: inputRatio, factors, position, sphere });
+  
+        // **Find the parent sphere**
+        let parentSphere = null;
+        let minDiffCount = Infinity;
+  
+        spheresRef.current.forEach((existingSphere) => {
+          if (existingSphere.ratio === inputRatio) return;
+  
+          let diffCount = 0;
+          Object.keys(factors).forEach((prime) => {
+            const diff = Math.abs((factors[prime] || 0) - (existingSphere.factors[prime] || 0));
+            if (diff > 0) diffCount += diff;
+          });
+  
+          if (diffCount === 1 && diffCount < minDiffCount) {
+            parentSphere = existingSphere;
+            minDiffCount = diffCount;
+          }
+        });
+  
+        console.log("Parent Sphere:", parentSphere);
+  
+        // **Draw the line**
+        if (parentSphere) {
+          console.log("Adding line between", parentSphere.position, "and", position);
+  
+          const points = new Float32Array([
+            parentSphere.position.x, parentSphere.position.y, parentSphere.position.z,
+            position.x, position.y, position.z
+          ]);
+  
+          const geometry = new THREE.BufferGeometry();
+          geometry.setAttribute('position', new THREE.BufferAttribute(points, 3));
+  
+          const material = new THREE.LineBasicMaterial({ color: 0x000000 });
+          const line = new THREE.Line(geometry, material);
+  
+          sceneRef.current.add(line);
+        }
+  
+        // Force re-render
+        if (rendererRef.current && cameraRef.current) {
+          rendererRef.current.render(sceneRef.current, cameraRef.current);
+        }
+      }
     }
     event.target.reset();
   };
@@ -157,7 +218,7 @@ const LatticePage = () => {
   return (
     <div>
       <form onSubmit={handleAddRatio}>
-        <input type="text" name="ratio" placeholder="Enter ratio (e.g., 3/2)" required />
+        <input type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
         <button type="submit">Add Ratio</button>
       </form>
       <div ref={mountRef} style={{ width: '100vw', height: '90vh' }} />
