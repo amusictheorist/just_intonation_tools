@@ -1,102 +1,134 @@
-import React, { useEffect, useRef } from "react";
-import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import React, { useEffect, useRef, useState } from "react";
+import * as THREE from 'three';
+import { OrbitControls } from "three/examples/jsm/Addons.js";
 
-const decimalToFraction = (decimal, tolerance = 1e-6) => {
-  let numerator = 1;
-  let denominator = 1;
-  let error = Math.abs(numerator / denominator - decimal);
-
-  while (error > tolerance) {
-    if (numerator / denominator < decimal) {
-      numerator++;
-    } else {
-      denominator++;
-      numerator = Math.round(decimal * denominator);
-    }
-    error = Math.abs(numerator / denominator - decimal);
-  }
-
-  return `${numerator}/${denominator}`;
-};
-
-const generate5LimitLattice = (steps = 2, spacing = 2) => {
-  const lattice = [];
-  const primeIntervals = { 3: 3 / 2, 5: 5 / 4, 7: 7 / 4 };
-
-  for (let p = -steps; p <= steps; p++) {
-    for (let q = -steps; q <= steps; q++) {
-      for (let r = -steps; r <= steps; r++) {
-        const ratio = (primeIntervals[3] ** p) * (primeIntervals[5] ** q) * (primeIntervals[7] ** r);
-        lattice.push({
-          x: spacing * p,
-          y: spacing * -q,
-          z: spacing * r,
-          ratio: decimalToFraction(ratio),
-        });
+const factorize = (numerator, denominator) => {
+  const factors = {};
+  const primeFactorize = (num, sign = 1) => {
+    let n = Math.abs(num);
+    for (let i = 2; i <= n; i++) {
+      while (n % i === 0) {
+        factors[i] = (factors[i] || 0) + sign;
+        n /= i;
       }
     }
+  };
+  primeFactorize(numerator, 1);
+  primeFactorize(denominator, -1);
+  return factors;
+};
+
+const computePosition = (factors) => {
+  let x = 0, y = 0, z = 0, radius = 1, angle = 0;
+  const radialPrimes = [];
+  
+  Object.entries(factors).forEach(([prime, exponent]) => {
+    const factor = parseInt(prime);
+    if (factor === 3) x = exponent;
+    else if (factor === 5) y = exponent;
+    else if (factor === 7) z = exponent;
+    else radialPrimes.push({ factor, exponent });
+  });
+
+  if (radialPrimes.length > 0) {
+    radialPrimes.forEach(({ factor, exponent }, index) => {
+      radius += Math.abs(exponent);
+      angle += (index + 1) * (Math.PI / 4) * exponent;
+    });
+    x += radius * Math.cos(angle);
+    y += radius * Math.sin(angle);
   }
 
-  return lattice;
+  return new THREE.Vector3(x, y, z);
 };
 
 const LatticePage = () => {
   const mountRef = useRef(null);
+  const [ratios, setRatios] = useState(['1/1']);
 
   useEffect(() => {
     const mount = mountRef.current;
-
     if (!mount) return;
 
     const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0xffffff);
+
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     camera.position.set(5, 5, 10);
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
     renderer.setSize(window.innerWidth, window.innerHeight);
-
-    if (mountRef.current) {
-      mountRef.current.appendChild(renderer.domElement);
-    }
+    mount.appendChild(renderer.domElement);
 
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;
 
-    scene.background = new THREE.Color(0xffffff);
+    const light = new THREE.AmbientLight(0xffffff, 1.5);
+    scene.add(light);
 
-
-    const ambientLight = new THREE.AmbientLight(0xffffff, 1.5);
-    scene.add(ambientLight);
-    
     const pointLight = new THREE.PointLight(0xffffff, 1, 100);
     pointLight.position.set(10, 10, 10);
     scene.add(pointLight);
 
-    const lattice = generate5LimitLattice(2, 2);
-
+    const spheres = [];
     const sphereGeometry = new THREE.SphereGeometry(0.2, 16, 16);
-    const sphereMaterial = new THREE.MeshStandardMaterial({ color: "red" });
+    const sphereMaterial = new THREE.MeshStandardMaterial({ color: 'red' });
 
-    lattice.forEach((point) => {
+    ratios.forEach((ratio) => {
+      const [numerator, denominator] = ratio.split('/').map(Number);
+      const factors = factorize(numerator, denominator);
+      const position = computePosition(factors);
+
       const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
-      sphere.position.set(point.x, point.y, point.z);
+      sphere.position.copy(position);
       scene.add(sphere);
+      spheres.push({ ratio, factors, position });
 
-      const textLoader = new THREE.TextureLoader();
-      const textSprite = new THREE.Sprite(
-        new THREE.SpriteMaterial({
-          map: textLoader.load(`data:image/svg+xml;charset=utf-8,${encodeURIComponent(
-            `<svg xmlns="http://www.w3.org/2000/svg" width="100" height="50">
-              <text x="10" y="25" font-size="24" fill="black">${point.ratio}</text>
-            </svg>`
-          )}`),
-          transparent: true,
-        })
-      );
-      textSprite.position.set(point.x, point.y + 0.4, point.z);
-      textSprite.scale.set(1, 0.5, 1);
-      scene.add(textSprite);
+      let parentSphere = null;
+      
+      spheres.forEach((existingSphere) => {
+        if (existingSphere.ratio === ratio) return;
+
+        let diffCount = 0;
+        Object.keys(factors).forEach((prime) => {
+          const diff = Math.abs((factors[prime] || 0) - (existingSphere.factors[prime] || 0));
+          if (diff > 0) diffCount += diff;
+        });
+
+        if (diffCount === 1) {
+          parentSphere = existingSphere;
+        }
+      });
+
+      if (parentSphere) {
+        const points = [parentSphere.position.clone(), position.clone()];
+        const geometry = new THREE.BufferGeometry().setFromPoints(points);
+        const material = new THREE.LineBasicMaterial({ color: 0x000000 });
+        const line = new THREE.Line(geometry, material);
+        scene.add(line);
+      }
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      canvas.width = 512;
+      canvas.height = 256;
+
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      context.font = "64px Arial";
+      context.fillStyle = "black";
+      context.textAlign = 'center';
+      context.textBaseline = 'middle';
+      context.fillText(ratio, canvas.width / 2, canvas.height / 2);
+
+      const texture = new THREE.CanvasTexture(canvas);
+      texture.needsUpdate = true;
+      texture.transparent = true;
+
+      const spriteMaterial = new THREE.SpriteMaterial({ map: texture });
+      const sprite = new THREE.Sprite(spriteMaterial);
+      sprite.position.set(position.x, position.y + 0.6, position.z);
+      sprite.scale.set(2, 1, 1);
+      scene.add(sprite);
     });
 
     const animate = () => {
@@ -104,17 +136,33 @@ const LatticePage = () => {
       controls.update();
       renderer.render(scene, camera);
     };
+
     animate();
 
     return () => {
-      if (mountRef.current) {
-        mountRef.current.removeChild(renderer.domElement);
-      }
+      mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, []);
+  }, [ratios]);
 
-  return <div ref={mountRef} />;
+  const handleAddRatio = (event) => {
+    event.preventDefault();
+    const inputRatio = event.target.elements.ratio.value;
+    if (/^\d+\/\d+$/.test(inputRatio)) {
+      setRatios((prevRatios) => [...prevRatios, inputRatio]);
+    }
+    event.target.reset();
+  };
+
+  return (
+    <div>
+      <form onSubmit={handleAddRatio}>
+        <input type="text" name="ratio" placeholder="Enter ratio (e.g., 3/2)" required />
+        <button type="submit">Add Ratio</button>
+      </form>
+      <div ref={mountRef} style={{ width: '100vw', height: '90vh' }} />
+    </div>
+  );
 };
 
 export default LatticePage;
