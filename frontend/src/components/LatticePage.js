@@ -1,7 +1,8 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generateLattice, undoLast } from "../utils/latticeUtils";
+import { generateLattice, undoLast } from '../utils/latticeUtils';
+import '../styles/Lattice.css';
 
 const LatticePage = () => {
   const mountRef = useRef(null);
@@ -72,13 +73,18 @@ const LatticePage = () => {
   };
 
   return (
-    <div>
-      <form onSubmit={handleAddRatio}>
-        <input type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
-        <button type="submit">Add Ratio</button>
-      </form>
-      <button onClick={handleUndo}>Undo</button>
-      <div ref={mountRef} style={{ width: "100vw", height: "90vh" }} />
+    <div className="lattice-page">
+      <header className="header">
+        <h1>Ratio Lattice Generator</h1>
+      </header>
+      <div className="controls">
+        <form onSubmit={handleAddRatio} className="form">
+          <input className="input" type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
+          <button className="button" type="submit">Add Ratio</button>
+        </form>
+        <button className="button" onClick={handleUndo} >Undo</button>
+      </div>
+      <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
     </div>
   );
 };

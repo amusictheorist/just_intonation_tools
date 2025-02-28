@@ -4,7 +4,8 @@ import HomePage from './components/HomePage';
 import Navbar from './components/Navbar';
 import AboutPage from './components/AboutPage';
 import LatticePage from './components/LatticePage';
-import './styles.css'
+import CalculatorPage from './components/CalculatorPage';
+import './styles/styles.css'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/about' element={<AboutPage />} />
+          <Route path='/calculator' element={<CalculatorPage />} />
           <Route path='/lattice' element={<LatticePage />} />
         </Routes>
       </div>
