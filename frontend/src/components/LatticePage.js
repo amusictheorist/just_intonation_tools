@@ -76,13 +76,14 @@ const LatticePage = () => {
     <div className="lattice-page">
       <header className="header">
         <h1>Ratio Lattice Generator</h1>
+        <p className="description">Currently, this generator only supports 7-limit lattices, but I am working on expanding its functionality.</p>
       </header>
       <div className="controls">
         <form onSubmit={handleAddRatio} className="form">
           <input className="input" type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
           <button className="button" type="submit">Add Ratio</button>
+          <button className="button" onClick={handleUndo} >Undo</button>
         </form>
-        <button className="button" onClick={handleUndo} >Undo</button>
       </div>
       <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
     </div>

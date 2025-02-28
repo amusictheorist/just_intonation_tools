@@ -8,7 +8,7 @@ const HomePage = () => {
       <header className="header">
         <h1>Just Intonation Tools</h1>
         <p className="description">
-          Explore various tools for working with just intonation that I am developing based on my dissertation work, including a set calculator, a ratio lattice generator, and more to come soon.
+          Explore various tools for working with just intonation that I am developing based on my dissertation work in music theory, including a set calculator, a ratio lattice generator, and more to come soon. To find out more about this project, please visit the <Link to='/about'>About</Link> page.
         </p>
       </header>
       <section className="tools-section">
@@ -23,7 +23,7 @@ const HomePage = () => {
           </li>
         </ul>
       </section>
-      
+
       <footer className="footer">
         <p>&copy; 2025 Just Intonation Tools. All rights reserved.</p>
         <p className="credit">
