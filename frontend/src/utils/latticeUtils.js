@@ -51,9 +51,22 @@ const addLabels = (text) => {
   return sprite;
 };
 
+const findNeighbours = (position, spheresRef, spacing = 2) => {
+  const neighbours = [];
+  spheresRef.current.forEach(({ sphere }) => {
+    const { x, y, z } = sphere.position;
+    if (
+      (Math.abs(x - position.x) === spacing && y === position.y && z === position.z) ||
+      (Math.abs(y - position.y) === spacing && x === position.x && z === position.z) ||
+      (Math.abs(z - position.z) === spacing && x === position.x && y === position.y)
+    ) {
+      neighbours.push(sphere.position);
+    }
+  });
+  return neighbours;
+}
+
 export const generateLattice = (newRatio, scene, spheresRef) => {
-  // console.log('Generating lattice for: ', newRatio);
-  // console.log('Current spheres before adding: ', spheresRef.current);
   const [numerator, denominator] = newRatio.split('/').map(Number);
   if (isNaN(numerator) || isNaN(denominator)) {
     console.error("Invalid ratio input:", newRatio);
@@ -71,44 +84,48 @@ export const generateLattice = (newRatio, scene, spheresRef) => {
   const label = addLabels(newRatio);
   label.position.set(position.x, position.y + 0.4, position.z);
 
-  let line = null;
-  if (spheresRef.current.length > 0) {
-    const lastSphere = spheresRef.current[spheresRef.current.length - 1].sphere;
-    const lastPosition = lastSphere.position;
+  const neighbouringPositions = findNeighbours(position, spheresRef);
+  neighbouringPositions.forEach((neighbourPos) => {
+    const points = [neighbourPos, sphere.position];
+    const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const line = new THREE.Line(lineGeometry, lineMaterial);
+    scene.add(line);
+    spheresRef.current.push({ sphere, label, line });
+  });
 
-    const points = [lastPosition, sphere.position];
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
-    const material = new THREE.LineBasicMaterial({ color: 0x000000 });
-    line = new THREE.Line(geometry, material);
-    // scene.add(line);
-
-    // console.log("Line created:", line);
-  }
-
-  spheresRef.current.push({ sphere, label, line });
+  spheresRef.current.push({ sphere, label });
   scene.add(sphere);
   scene.add(label);
-  // console.log("Sphere, label, and line added at position: ", position);
-  // console.log("Scene children: ", scene.children);
-  // console.log("Spheres Ref content after adding:", spheresRef.current);
 };
 
 export const undoLast = (scene, spheresRef, renderer, camera) => {
   if (spheresRef.current.length > 0) {
     const lastObject = spheresRef.current.pop();
-    const { sphere, label, line } = lastObject;
+    const { sphere, label } = lastObject;
 
     if (sphere) scene.remove(sphere);
     if (label) scene.remove(label);
-    if (line) scene.remove(line);
 
-    // console.log('Removing Sphere, Label, and Line: ', lastObject);
-    // console.log('Remaining Spheres: ', spheresRef.current);
+    spheresRef.current = spheresRef.current.filter(({ line }) => {
+      if (line) {
+        const points = line.geometry.attributes.position.array;
+        const spherePos = [sphere.position.x, sphere.position.y, sphere.position.z];
+        const isConnected =
+          (points[0] === spherePos[0] && points[1] === spherePos[1] && points[2] === spherePos[2]) ||
+          (points[3] === spherePos[0] && points[4] === spherePos[1] && points[5] === spherePos[2]);
+        if (isConnected) {
+          scene.remove(line);
+          return false;
+        }
+      }
+      return true;
+    });
 
     if (renderer && camera) {
       renderer.render(scene, camera);
     }
   } else {
-    // console.log("No spheres left to remove");
+    console.log("No spheres left to remove");
   }
 };

@@ -82,7 +82,7 @@ const LatticePage = () => {
         <form onSubmit={handleAddRatio} className="form">
           <input className="input" type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
           <button className="button" type="submit">Add Ratio</button>
-          <button className="button" onClick={handleUndo} >Undo</button>
+          <button className="button" type="button" onClick={handleUndo} >Undo</button>
         </form>
       </div>
       <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
