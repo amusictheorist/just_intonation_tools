@@ -72,6 +72,19 @@ const LatticePage = () => {
     }
   };
 
+  const resetLattice = () => {
+    const scene = sceneRef.current;
+    if (scene) {
+      spheresRef.current.forEach(({ sphere, label, line }) => {
+        if (sphere) scene.remove(sphere);
+        if (label) scene.remove(label);
+        if (line) scene.remove(line);
+      });
+      spheresRef.current = [];
+      generateLattice('1/1', scene, spheresRef);
+    }
+  };
+
   return (
     <div className="lattice-page">
       <header className="header">
@@ -83,6 +96,7 @@ const LatticePage = () => {
           <input className="input" type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
           <button className="button" type="submit">Add Ratio</button>
           <button className="button" type="button" onClick={handleUndo} >Undo</button>
+          <button className="button" type="button" onClick={resetLattice} >Reset</button>
         </form>
       </div>
       <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
