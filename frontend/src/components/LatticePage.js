@@ -11,8 +11,19 @@ const LatticePage = () => {
   const cameraRef = useRef(null);
   const spheresRef = useRef([]);
   const [ratios, setRatios] = useState(["1/1"]);
+  const [visualizationMode, setVisualizationMode] = useState('3D');
 
   useEffect(() => {
+    const handleResize = () => {
+      if (cameraRef.current && rendererRef.current) {
+        cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+        cameraRef.current.updateProjectionMatrix();
+        rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    
     const mount = mountRef.current;
     if (!mount) return;
 
@@ -46,10 +57,11 @@ const LatticePage = () => {
     animate();
 
     return () => {
+      window.removeEventListener('resize', handleResize);
       mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, []);
+  }, [visualizationMode]);
 
   const handleAddRatio = (event) => {
     event.preventDefault();
@@ -85,6 +97,10 @@ const LatticePage = () => {
     }
   };
 
+  const toggleVisualizationMode = () => {
+    setVisualizationMode((prevMode) => (prevMode === '3D' ? '2D' : '3D'));
+  };
+
   return (
     <div className="lattice-page">
       <header className="header">
@@ -97,6 +113,7 @@ const LatticePage = () => {
           <button className="button" type="submit">Add Ratio</button>
           <button className="button" type="button" onClick={handleUndo} >Undo</button>
           <button className="button" type="button" onClick={resetLattice} >Reset</button>
+          <button className="button" type="button" onClick={toggleVisualizationMode} >Switch to {visualizationMode === '3D' ? '2D' : '3D'} Visualization</button>
         </form>
       </div>
       <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
