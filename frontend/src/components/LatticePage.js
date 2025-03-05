@@ -10,7 +10,6 @@ const LatticePage = () => {
   const rendererRef = useRef(null);
   const cameraRef = useRef(null);
   const spheresRef = useRef([]);
-  const [ratios, setRatios] = useState(["1/1"]);
   const [visualizationMode, setVisualizationMode] = useState('3D');
 
   useEffect(() => {
@@ -46,7 +45,7 @@ const LatticePage = () => {
     const light = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(light);
 
-    generateLattice('1/1', scene, spheresRef);
+    generateLattice('1/1', scene, spheresRef, visualizationMode);
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -66,10 +65,9 @@ const LatticePage = () => {
   const handleAddRatio = (event) => {
     event.preventDefault();
     const inputRatio = event.target.elements.ratio.value;
-    // console.log('Adding ratio: ', inputRatio);
 
     if (/^\d+\/\d+$/.test(inputRatio) && sceneRef.current) {
-      generateLattice(inputRatio, sceneRef.current, spheresRef);
+      generateLattice(inputRatio, sceneRef.current, spheresRef, visualizationMode);
     }
 
     event.target.reset();
@@ -84,7 +82,7 @@ const LatticePage = () => {
     }
   };
 
-  const resetLattice = () => {
+  const resetLattice = (mode = visualizationMode) => {
     const scene = sceneRef.current;
     if (scene) {
       spheresRef.current.forEach(({ sphere, label, line }) => {
@@ -93,13 +91,18 @@ const LatticePage = () => {
         if (line) scene.remove(line);
       });
       spheresRef.current = [];
-      generateLattice('1/1', scene, spheresRef);
+      generateLattice('1/1', scene, spheresRef, mode);
     }
   };
 
   const toggleVisualizationMode = () => {
-    setVisualizationMode((prevMode) => (prevMode === '3D' ? '2D' : '3D'));
+    setVisualizationMode((prevMode) => {
+      const newMode = prevMode === '3D' ? '2D' : '3D';
+      resetLattice(newMode);
+      return newMode;
+    });
   };
+  
 
   return (
     <div className="lattice-page">

@@ -1,5 +1,7 @@
 import * as THREE from 'three';
 
+const log2 = (n) => Math.log(n) / Math.log(2);
+
 const factorize = (numerator, denominator) => {
   const factors = {};
   const primeFactorize = (num, sign = 1) => {
@@ -16,13 +18,37 @@ const factorize = (numerator, denominator) => {
   return factors;
 };
 
-const computePosition = (factors, spacing = 2) => {
+const computePosition = (factors, spacing = 2, visualizationMode = '3D') => {
   let x = 0, y = 0, z = 0;
-  Object.entries(factors).forEach(([prime, exponent]) => {
-    if (parseInt(prime) === 3) x = exponent * spacing;
-    if (parseInt(prime) === 5) y = exponent * spacing;
-    if (parseInt(prime) === 7) z = exponent * spacing;
-  });
+
+  if (visualizationMode === '3D') {
+    Object.entries(factors).forEach(([prime, exponent]) => {
+      if (parseInt(prime) === 3) x = exponent * spacing;
+      if (parseInt(prime) === 5) y = exponent * spacing;
+      if (parseInt(prime) === 7) z = exponent * spacing;
+    });
+  } else if (visualizationMode === '2D') {
+    if (Object.keys(factors).length === 0) {
+      return { x: 0, y: 0, z: 0 };
+    }
+
+    const { 2: log2Exponent = 0, ...otherFactors } = factors;
+    const numerator = Object.entries(otherFactors)
+      .filter(([_, exp]) => exp > 0)
+      .reduce((acc, [prime, exp]) => acc * Math.pow(prime, exp), 1);
+
+    const denominator = Object.entries(otherFactors)
+      .filter(([_, exp]) => exp < 0)
+      .reduce((acc, [prime, exp]) => acc * Math.pow(prime, -exp), 1);
+
+    const angle = (log2(numerator / denominator) + log2Exponent) * 360;
+    const radians = angle * (Math.PI / 180);
+    const r = 2;
+    x = r * Math.sin(radians);
+    y = r * Math.cos(radians);
+    z = 0;
+  }
+
   return { x, y, z };
 };
 
@@ -66,38 +92,34 @@ const findNeighbours = (position, spheresRef, spacing = 2) => {
   return neighbours;
 }
 
-export const generateLattice = (newRatio, scene, spheresRef) => {
-  const [numerator, denominator] = newRatio.split('/').map(Number);
-  if (isNaN(numerator) || isNaN(denominator)) {
-    console.error("Invalid ratio input:", newRatio);
-    return;
-  }
-
+export const generateLattice = (ratio, scene, spheresRef, visualizationMode) => {
+  const [numerator, denominator] = ratio.split('/').map(Number);
   const factors = factorize(numerator, denominator);
-  const position = computePosition(factors);
+  const position = computePosition(factors, 2, visualizationMode);
 
   const geometry = new THREE.SphereGeometry(0.2, 32, 32);
   const material = new THREE.MeshStandardMaterial({ color: 'red' });
   const sphere = new THREE.Mesh(geometry, material);
   sphere.position.set(position.x, position.y, position.z);
 
-  const label = addLabels(newRatio);
+  const label = addLabels(ratio);
   label.position.set(position.x, position.y + 0.4, position.z);
 
   const neighbouringPositions = findNeighbours(position, spheresRef);
   neighbouringPositions.forEach((neighbourPos) => {
     const points = [neighbourPos, sphere.position];
     const lineGeometry = new THREE.BufferGeometry().setFromPoints(points);
-    const lineMaterial = new THREE.LineBasicMaterial({ color: 0x000000 });
+    const lineMaterial = new THREE.LineBasicMaterial({ color: 'black' });
     const line = new THREE.Line(lineGeometry, lineMaterial);
     scene.add(line);
     spheresRef.current.push({ sphere, label, line });
-  });
+  })
 
   spheresRef.current.push({ sphere, label });
   scene.add(sphere);
   scene.add(label);
 };
+
 
 export const undoLast = (scene, spheresRef, renderer, camera) => {
   if (spheresRef.current.length > 0) {
