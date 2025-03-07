@@ -130,7 +130,8 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ALLOWED_ORIGINS = [
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'https://amusictheorist-just-intonation-tools.onrender.com'
 ]
 
 CSRF_TRUSTED_ORIGINS = ['https://amusictheorist-just-intonation-tools.onrender.com']
