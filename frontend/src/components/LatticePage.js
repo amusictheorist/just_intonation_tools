@@ -83,6 +83,7 @@ const LatticePage = () => {
   };
 
   const resetLattice = (mode = visualizationMode) => {
+    console.log('resetting lattice in mode ', mode);
     const scene = sceneRef.current;
     if (scene) {
       spheresRef.current.forEach(({ sphere, label, line }) => {
@@ -98,6 +99,7 @@ const LatticePage = () => {
   const toggleVisualizationMode = () => {
     setVisualizationMode((prevMode) => {
       const newMode = prevMode === '3D' ? '2D' : '3D';
+      console.log('switching to mode ', newMode);
       resetLattice(newMode);
       return newMode;
     });
@@ -108,16 +110,19 @@ const LatticePage = () => {
     <div className="lattice-page">
       <header className="header">
         <h1>Ratio Lattice Generator</h1>
-        <p className="description">Currently, this generator only supports 7-limit lattices, but I am working on expanding its functionality.</p>
+        <p className="description">Currently, 3D visualization only supports 7-limit lattices, but I am working on expanding its functionality.</p>
       </header>
       <div className="controls">
         <form onSubmit={handleAddRatio} className="form">
           <input className="input" type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
           <button className="button" type="submit">Add Ratio</button>
-          <button className="button" type="button" onClick={handleUndo} >Undo</button>
+          {/* <button className="button" type="button" onClick={handleUndo} >Undo</button> */}
           <button className="button" type="button" onClick={resetLattice} >Reset</button>
           <button className="button" type="button" onClick={toggleVisualizationMode} >Switch to {visualizationMode === '3D' ? '2D' : '3D'} Visualization</button>
         </form>
+        <div className="mode-label">
+          Current Mode: <strong>{visualizationMode}</strong>
+        </div>
       </div>
       <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
     </div>
