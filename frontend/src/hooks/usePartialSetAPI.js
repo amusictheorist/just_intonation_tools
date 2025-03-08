@@ -5,12 +5,12 @@ const usePartialSetAPI = () => {
   const [transposedData, setTransposedData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const baseUrl = process.env.REACT_APP_BASE_URL;
 
   const fetchPartialSetData = async (userInput, type) => {
     setLoading(true);
     setError(null);
     setTransposedData(null);
-    const baseUrl = process.env.REACT_APP_BASE_URL;
 
     try {
       const response = await fetch(`${baseUrl}/api/partial-set/`, {
