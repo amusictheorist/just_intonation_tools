@@ -5,7 +5,8 @@ import '../styles/Calculator.css';
 const CalculatorPage = () => {
   const [userInput, setUserInput] = useState('');
   const [transposeValue, setTransposeValue] = useState('');
-  const { data: originalSet, transposedData, loading, error, fetchPartialSetData, transposeSet } = usePartialSetAPI('http://localhost:8000');
+  const { data: originalSet, transposedData, loading, error, fetchPartialSetData, transposeSet } = usePartialSetAPI();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();

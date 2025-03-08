@@ -6,9 +6,10 @@ const usePartialSetAPI = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const baseURL = process.env.REACT_APP_BASE_URL; // Use environment variable
+  const baseURL = process.env.REACT_APP_BASE_URL;
 
   const fetchPartialSetData = async (userInput, type) => {
+    console.log("Sending data:", { input: userInput, type });
     setLoading(true);
     setError(null);
     setTransposedData(null);
@@ -26,6 +27,7 @@ const usePartialSetAPI = () => {
       }
 
       const result = await response.json();
+      console.log("Fetched data:", result);
       setData(result);
     } catch (err) {
       setError(err.message);
