@@ -7,13 +7,13 @@ const usePartialSetAPI = () => {
   const [error, setError] = useState(null);
 
   const fetchPartialSetData = async (userInput, type) => {
-    console.log("Sending data:", { input: userInput, type });
     setLoading(true);
     setError(null);
     setTransposedData(null);
+    const baseUrl = process.env.REACT_APP_BASE_URL;
 
     try {
-      const response = await fetch('https://amusictheorist-just-intonation-tools.onrender.com/api/partial-set/', {
+      const response = await fetch(`${baseUrl}/api/partial-set/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ input: userInput, type }),
@@ -25,7 +25,6 @@ const usePartialSetAPI = () => {
       }
 
       const result = await response.json();
-      console.log("Fetched data:", result);
       setData(result);
     } catch (err) {
       setError(err.message);
@@ -42,11 +41,8 @@ const usePartialSetAPI = () => {
     
     try {
       const parsedSet = data.partial_set.replace(/\{|\}/g, '');
-      console.log('parsed set: ', parsedSet)
-      console.log('parsedSet is a ', typeof(parsedSet))
-      console.log('Transposing with value: ', transposeValue);
       
-      const response = await fetch('https://amusictheorist-just-intonation-tools.onrender.com/api/transpose-set/', {
+      const response = await fetch(`${baseUrl}/api/transpose-set/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ input: parsedSet, transpose_value: Number(transposeValue) })
