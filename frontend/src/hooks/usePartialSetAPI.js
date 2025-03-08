@@ -7,6 +7,7 @@ const usePartialSetAPI = () => {
   const [error, setError] = useState(null);
 
   const baseURL = process.env.REACT_APP_BASE_URL;
+  console.log('base url: ', baseURL);
 
   const fetchPartialSetData = async (userInput, type) => {
     console.log("Sending data:", { input: userInput, type });
