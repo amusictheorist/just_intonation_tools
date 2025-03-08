@@ -73,14 +73,14 @@ const LatticePage = () => {
     event.target.reset();
   };
 
-  const handleUndo = () => {
-    const scene = sceneRef.current;
-    const renderer = rendererRef.current;
-    const camera = cameraRef.current;
-    if (scene && renderer && camera) {
-      undoLast(scene, spheresRef, renderer, camera);
-    }
-  };
+  // const handleUndo = () => {
+  //   const scene = sceneRef.current;
+  //   const renderer = rendererRef.current;
+  //   const camera = cameraRef.current;
+  //   if (scene && renderer && camera) {
+  //     undoLast(scene, spheresRef, renderer, camera);
+  //   }
+  // };
 
   const resetLattice = (mode = visualizationMode) => {
     console.log('resetting lattice in mode ', mode);

@@ -204,12 +204,12 @@ const addLabels = (text) => {
   return sprite;
 };
 
-const createLine = (start, end) => {
-  const material = new THREE.LineBasicMaterial({ color: 'black' });
-  const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
-  const line = new THREE.Line(geometry, material);
-  return line;
-}
+// const createLine = (start, end) => {
+//   const material = new THREE.LineBasicMaterial({ color: 'black' });
+//   const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
+//   const line = new THREE.Line(geometry, material);
+//   return line;
+// }
 
 export const generateLattice = (input, scene, spheresRef, visualizationMode = '3D') => {
   console.log('generating ratio for ', input);
