@@ -11,3 +11,4 @@ venv/
 # React
 node_modules/
 build/
+.env

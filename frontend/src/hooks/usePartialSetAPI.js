@@ -1,10 +1,12 @@
 import { useState } from "react";
 
-const usePartialSetAPI = (baseURL) => {
+const usePartialSetAPI = () => {
   const [data, setData] = useState(null);
   const [transposedData, setTransposedData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  const baseURL = process.env.REACT_APP_BASE_URL; // Use environment variable
 
   const fetchPartialSetData = async (userInput, type) => {
     setLoading(true);
