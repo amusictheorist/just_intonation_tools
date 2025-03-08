@@ -4,6 +4,9 @@ from ..partial_sets import PartialSet, PartialClassSet, PartialSetClass, Partial
 from ..utils import par_to_parc, low_inverse
 
 class PartialSetView(APIView):
+    def get(self, req):
+        return Response({"message": "Send a POST request with data to calculate."}, status=status.HTTP_200_OK)
+    
     def post(self, req):
         input_data = str(req.data.get('input', ''))
 
