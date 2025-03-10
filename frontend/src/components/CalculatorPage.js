@@ -44,6 +44,9 @@ const CalculatorPage = () => {
         <button type="submit" className="button" disabled={loading}>
           {loading ? "Calculating..." : "Submit"}
         </button>
+        <span className="tooltip">ⓘ
+          <span className="tooltiptext">The server might take a minute to start up before calculating your results, please give it a minute to finish or return to this page in a few minutes.</span>
+        </span>
       </form>
   
       {error && <p className="error">{error}</p>}
