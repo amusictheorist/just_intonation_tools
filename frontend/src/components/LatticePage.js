@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generateLattice/*, undoLast*/ } from '../utils/latticeUtils';
+import { generate3DLattice, undo3DLast } from '../utils/3DlatticeUtils';
 import '../styles/Lattice.css';
 
 const LatticePage = () => {
@@ -10,7 +10,7 @@ const LatticePage = () => {
   const rendererRef = useRef(null);
   const cameraRef = useRef(null);
   const spheresRef = useRef([]);
-  const [visualizationMode, setVisualizationMode] = useState('3D');
+  const [visualizationMode, setVisualizationMode] = useState('3D cubic');
 
   useEffect(() => {
     const handleResize = () => {
@@ -45,7 +45,7 @@ const LatticePage = () => {
     const light = new THREE.AmbientLight(0xffffff, 1.5);
     scene.add(light);
 
-    generateLattice('1/1', scene, spheresRef, visualizationMode);
+    generate3DLattice('1/1', scene, spheresRef);
 
     const animate = () => {
       requestAnimationFrame(animate);
@@ -67,20 +67,20 @@ const LatticePage = () => {
     const inputRatio = event.target.elements.ratio.value;
 
     if (/^\d+\/\d+$/.test(inputRatio) && sceneRef.current) {
-      generateLattice(inputRatio, sceneRef.current, spheresRef, visualizationMode);
+      generate3DLattice(inputRatio, sceneRef.current, spheresRef, visualizationMode);
     }
 
     event.target.reset();
   };
 
-  // const handleUndo = () => {
-  //   const scene = sceneRef.current;
-  //   const renderer = rendererRef.current;
-  //   const camera = cameraRef.current;
-  //   if (scene && renderer && camera) {
-  //     undoLast(scene, spheresRef, renderer, camera);
-  //   }
-  // };
+  const handle3DUndo = () => {
+    const scene = sceneRef.current;
+    const renderer = rendererRef.current;
+    const camera = cameraRef.current;
+    if (scene && renderer && camera) {
+      undo3DLast(scene, spheresRef, renderer, camera);
+    }
+  };
 
   const resetLattice = (mode = visualizationMode) => {
     console.log('resetting lattice in mode ', mode);
@@ -92,13 +92,13 @@ const LatticePage = () => {
         if (line) scene.remove(line);
       });
       spheresRef.current = [];
-      generateLattice('1/1', scene, spheresRef, mode);
+      generate3DLattice('1/1', scene, spheresRef);
     }
   };
 
   const toggleVisualizationMode = () => {
     setVisualizationMode((prevMode) => {
-      const newMode = prevMode === '3D' ? '2D' : '3D';
+      const newMode = prevMode === '3D cubic' ? 'Radial' : '3D cubic';
       console.log('switching to mode ', newMode);
       resetLattice(newMode);
       return newMode;
@@ -110,18 +110,18 @@ const LatticePage = () => {
     <div className="lattice-page">
       <header className="header">
         <h1>Ratio Lattice Generator</h1>
-        <p className="description">Currently, 3D visualization only supports 7-limit lattices, but I am working on expanding its functionality.</p>
+        <p className="description">Currently, the 3D cubic lattice only supports 7-limit lattices, but I am working on expanding its functionality.</p>
       </header>
       <div className="controls">
         <form onSubmit={handleAddRatio} className="form">
           <input className="input" type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
           <button className="button" type="submit">Add Ratio</button>
-          {/* <button className="button" type="button" onClick={handleUndo} >Undo</button> */}
+          <button className="button" type="button" onClick={handle3DUndo} >Undo</button>
           <button className="button" type="button" onClick={resetLattice} >Reset</button>
-          <button className="button" type="button" onClick={toggleVisualizationMode} >Switch to {visualizationMode === '3D' ? '2D' : '3D'} Visualization</button>
+          {/* <button className="button" type="button" onClick={toggleVisualizationMode} >Switch to {visualizationMode === '3D cubic' ? 'Radial' : '3D cubic'} Visualization</button> */}
         </form>
         <div className="mode-label">
-          Current Mode: <strong>{visualizationMode}</strong>
+          Current Mode: <strong>{visualizationMode}</strong> visualization
         </div>
       </div>
       <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />

@@ -12,10 +12,8 @@ const captureRatio = (input) => {
   }
 
   ratio.values = [numerator, denominator];
-  // console.log('Captured ratio:', ratio);
   return ratio;
 };
-
 
 const log2 = (n) => Math.log(n) / Math.log(2);
 
@@ -74,7 +72,6 @@ const factorize = (input) => {
   primeFactorize(numerator, 1);
   primeFactorize(denominator, -1);
 
-  // console.log('Factorization result:', factors);
   return factors;
 };
 
@@ -85,22 +82,17 @@ const computePosition = (factors, input, spacing = 2, visualizationMode = '3D') 
   if (visualizationMode === '3D') {
     Object.entries(factors).forEach(([prime, exponent]) => {
       const parsedPrime = parseInt(prime);
-      // console.log(`Prime: ${parsedPrime}, Exponent: ${exponent}, Spacing: ${spacing}`);
     
       if (parsedPrime === 3) {
         x = exponent * spacing;
-        // console.log(`Computed x: ${x}`);
       }
       if (parsedPrime === 5) {
         y = exponent * spacing;
-        // console.log(`Computed y: ${y}`);
       }
       if (parsedPrime === 7) {
         z = exponent * spacing;
-        // console.log(`Computed z: ${z}`);
       }
     });
-    
 
   } else if (visualizationMode === '2D') {
     const ratioData = captureRatio(input);
@@ -118,7 +110,6 @@ const computePosition = (factors, input, spacing = 2, visualizationMode = '3D') 
     }
 
     const analysis = analyzeNumber(numerator);
-    // console.log('Number analysis:', analysis);
     let r = 2;
 
     if (analysis.type === 'prime') {
@@ -126,7 +117,6 @@ const computePosition = (factors, input, spacing = 2, visualizationMode = '3D') 
       const radians = angle * (Math.PI / 180);
       x = r * Math.sin(radians);
       y = r * Math.cos(radians);
-      // console.log(`Prime Position (angle: ${angle}, radians: ${radians}): x=${x}, y=${y}`);
 
     } else if (analysis.type === 'perfectPower') {
       const base = analysis.base;
@@ -142,14 +132,12 @@ const computePosition = (factors, input, spacing = 2, visualizationMode = '3D') 
       r *= analysis.exponent;
       x = r * Math.sin(radians);
       y = r * Math.cos(radians);
-      // console.log(`Perfect Power Position: x=${x}, y=${y}`);
 
     } else if (analysis.type === 'composite') {
       const primeFactors = Object.entries(factors).filter(([prime, exp]) => exp > 0);
 
       if (primeFactors.length === 2) {
         const [[prime1, exp1], [prime2, exp2]] = primeFactors.map(([p, e]) => [parseInt(p), e]);
-        // console.log('Composite Primes:', { prime1, exp1, prime2, exp2 });
 
         const primeRatio1 = prime1 / closestPowerOf2(prime1);
         const primeRatio2 = prime2 / closestPowerOf2(prime2);
@@ -170,12 +158,10 @@ const computePosition = (factors, input, spacing = 2, visualizationMode = '3D') 
         x = r1 * Math.sin(radians1) + r2 * Math.sin(radians2);
         y = r1 * Math.cos(radians1) + r2 * Math.cos(radians2);
 
-        // console.log('Composite Position:', { x, y });
       }
     }
   }
 
-  // console.log('Computed position:', { x, y, z });
   if (isNaN(x) || isNaN(y) || isNaN(z)) {
     console.error('NaN detected in computed position:', { x, y, z });
   }
@@ -204,18 +190,21 @@ const addLabels = (text) => {
   return sprite;
 };
 
-// const createLine = (start, end) => {
-//   const material = new THREE.LineBasicMaterial({ color: 'black' });
-//   const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
-//   const line = new THREE.Line(geometry, material);
-//   return line;
-// }
+const createLine = (start, end) => {
+  console.log("Creating line from", start, "to", end);
+  const material = new THREE.LineBasicMaterial({ color: 'black' });
+  const geometry = new THREE.BufferGeometry().setFromPoints([start, end]);
+  return new THREE.Line(geometry, material);
+};
 
 export const generateLattice = (input, scene, spheresRef, visualizationMode = '3D') => {
-  console.log('generating ratio for ', input);
-  console.log('visualization mode: ', visualizationMode);
 
-  const { string } = captureRatio(input);
+  const ratioData = captureRatio(input);
+  const string = ratioData.string;
+  const numerator = ratioData.values[0];
+  const denominator = ratioData.values[1];
+  // console.log('string: ', string);
+  // console.log('ratio: ', numerator, denominator);
   const factors = factorize(input);
   const position = computePosition(factors, input, 2, visualizationMode);
 
@@ -224,77 +213,102 @@ export const generateLattice = (input, scene, spheresRef, visualizationMode = '3
     return;
   }
 
+  const numeratorAnalysis = analyzeNumber(numerator);
+  // console.log('numerator: ', numerator);
+  const isConnectable = numeratorAnalysis.type === 'prime' || numeratorAnalysis.isPerfectPower;
+  // console.log(isConnectable);
+
   const geometry = new THREE.SphereGeometry(0.2, 32, 32);
   const material = new THREE.MeshStandardMaterial({ color: 'red' });
   const sphere = new THREE.Mesh(geometry, material);
   sphere.position.set(position.x, position.y, position.z);
+  // console.log('position: ', position);
 
   const label = addLabels(string);
   label.position.set(position.x, position.y + 0.4, position.z);
 
-  spheresRef.current.push({ sphere, label });
-  console.log('Adding sphere at position ', sphere.position);
-  console.log('Adding label at position ', label.position);
+  spheresRef.current.push({ sphere, label, position, type: numeratorAnalysis.type });
   scene.add(sphere);
   scene.add(label);
+  // console.log(spheresRef.current);
 
-  // const createdSpheres = new Set();
-  // createdSpheres.add(`${position.x},${position.y},${position.z}`);
+  if (isConnectable) {
+    spheresRef.current.forEach(({ sphere: existingSphere, position: existingPos, type }) => {
+      const alignedX = position.x === existingPos.x && position.y === existingPos.y && position.z !== existingPos.z;
+      const alignedY = position.y === existingPos.y && position.z === existingPos.z && position.x !== existingPos.x;
+      const alignedZ = position.z === existingPos.z && position.x === existingPos.x && position.y !== existingPos.y;
 
-  // // Line Creation Logic Based on Visualization Mode
-  // if (visualizationMode === '3D') {
-  //   // For 3D mode, create lines connecting spheres along the cubic lattice
+      console.log({ alignedX, alignedY, alignedZ, type });
+      if ((alignedX || alignedY || alignedZ) && (type === 'prime' || type === 'perfectPower')) {
+        const start = new THREE.Vector3(position.x, position.y, position.z);
+        const end = new THREE.Vector3(existingPos.x, existingPos.y, existingPos.z);
+        console.log("Creating line from", start, "to", end);
+        const line = createLine(start, end);
+        scene.add(line);
+      } else {
+        console.log("Line creation skipped.");
+      }
+      
+    })
+  }
 
-  //   // Define neighboring positions in the cubic lattice
-  //   const neighbors = [
-  //     new THREE.Vector3(position.x + 1, position.y, position.z), // x + 1
-  //     new THREE.Vector3(position.x - 1, position.y, position.z), // x - 1
-  //     new THREE.Vector3(position.x, position.y + 1, position.z), // y + 1
-  //     new THREE.Vector3(position.x, position.y - 1, position.z), // y - 1
-  //     new THREE.Vector3(position.x, position.y, position.z + 1), // z + 1
-  //     new THREE.Vector3(position.x, position.y, position.z - 1)  // z - 1
-  //   ];
-
-  //   // Create lines to each neighboring sphere if they already exist
-  //   neighbors.forEach((neighborPos) => {
-  //     if (createdSpheres.has(`${neighborPos.x},${neighborPos.y},${neighborPos.z}`)) {
-  //       const line = createLine(sphere.position, neighborPos);
-  //       scene.add(line);
-  //       console.log('Adding line from ', sphere.position, ' to ', neighborPos);
-  //     }
-  //   });
-  // }
-
-  // if (visualizationMode === '2D') {
-  //   // For 2D mode, create lines based on prime ratios and their connections
-  //   const { values: [numerator, denominator] } = captureRatio(input);
-  //   const ratio = numerator / denominator;
-  //   const analysis = analyzeNumber(numerator);
-
-  //   // Prime ratios: Connect to 1/1
-  //   if (analysis.type === 'prime') {
-  //     const line = createLine(sphere.position, new THREE.Vector3(0, 0, 0)); // Connect to 1/1 sphere
-  //     scene.add(line);
-  //   }
-
-  //   // Perfect powers: Connect to base ratio
-  //   if (analysis.type === 'perfectPower') {
-  //     const baseRatio = analysis.base / closestPowerOf2(analysis.base);
-  //     const baseSpherePosition = computePosition(factorize(`${analysis.base}/1`), `${analysis.base}/1`, visualizationMode);
-  //     const line = createLine(sphere.position, new THREE.Vector3(baseSpherePosition.x, baseSpherePosition.y, baseSpherePosition.z));
-  //     scene.add(line);
-  //   }
-
-  //   // Composite ratios: Connect to prime factors
-  //   if (analysis.type === 'composite') {
-  //     const primeFactors = Object.entries(factors).filter(([prime, exp]) => exp > 0);
-  //     primeFactors.forEach(([prime, exp]) => {
-  //       const primeRatioSpherePosition = computePosition({ [prime]: exp }, prime, visualizationMode);
-  //       const line = createLine(sphere.position, new THREE.Vector3(primeRatioSpherePosition.x, primeRatioSpherePosition.y, primeRatioSpherePosition.z));
-  //       scene.add(line);
-  //     });
-  //   }
-  // }
 };
 
 export const undoLast = () => { };
+// const createdSpheres = new Set();
+// createdSpheres.add(`${position.x},${position.y},${position.z}`);
+
+// // Line Creation Logic Based on Visualization Mode
+// if (visualizationMode === '3D') {
+//   // For 3D mode, create lines connecting spheres along the cubic lattice
+
+//   // Define neighboring positions in the cubic lattice
+//   const neighbors = [
+//     new THREE.Vector3(position.x + 1, position.y, position.z), // x + 1
+//     new THREE.Vector3(position.x - 1, position.y, position.z), // x - 1
+//     new THREE.Vector3(position.x, position.y + 1, position.z), // y + 1
+//     new THREE.Vector3(position.x, position.y - 1, position.z), // y - 1
+//     new THREE.Vector3(position.x, position.y, position.z + 1), // z + 1
+//     new THREE.Vector3(position.x, position.y, position.z - 1)  // z - 1
+//   ];
+
+//   // Create lines to each neighboring sphere if they already exist
+//   neighbors.forEach((neighborPos) => {
+//     if (createdSpheres.has(`${neighborPos.x},${neighborPos.y},${neighborPos.z}`)) {
+//       const line = createLine(sphere.position, neighborPos);
+//       scene.add(line);
+//       console.log('Adding line from ', sphere.position, ' to ', neighborPos);
+//     }
+//   });
+// }
+
+// if (visualizationMode === '2D') {
+//   // For 2D mode, create lines based on prime ratios and their connections
+//   const { values: [numerator, denominator] } = captureRatio(input);
+//   const ratio = numerator / denominator;
+//   const analysis = analyzeNumber(numerator);
+
+//   // Prime ratios: Connect to 1/1
+//   if (analysis.type === 'prime') {
+//     const line = createLine(sphere.position, new THREE.Vector3(0, 0, 0)); // Connect to 1/1 sphere
+//     scene.add(line);
+//   }
+
+//   // Perfect powers: Connect to base ratio
+//   if (analysis.type === 'perfectPower') {
+//     const baseRatio = analysis.base / closestPowerOf2(analysis.base);
+//     const baseSpherePosition = computePosition(factorize(`${analysis.base}/1`), `${analysis.base}/1`, visualizationMode);
+//     const line = createLine(sphere.position, new THREE.Vector3(baseSpherePosition.x, baseSpherePosition.y, baseSpherePosition.z));
+//     scene.add(line);
+//   }
+
+//   // Composite ratios: Connect to prime factors
+//   if (analysis.type === 'composite') {
+//     const primeFactors = Object.entries(factors).filter(([prime, exp]) => exp > 0);
+//     primeFactors.forEach(([prime, exp]) => {
+//       const primeRatioSpherePosition = computePosition({ [prime]: exp }, prime, visualizationMode);
+//       const line = createLine(sphere.position, new THREE.Vector3(primeRatioSpherePosition.x, primeRatioSpherePosition.y, primeRatioSpherePosition.z));
+//       scene.add(line);
+//     });
+//   }
+// }
