@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef/*, useState*/ } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { generate3DLattice, undo3DLast } from '../utils/3DlatticeUtils';
@@ -10,7 +10,7 @@ const LatticePage = () => {
   const rendererRef = useRef(null);
   const cameraRef = useRef(null);
   const spheresRef = useRef([]);
-  const [visualizationMode, setVisualizationMode] = useState('3D cubic');
+  // const [visualizationMode, setVisualizationMode] = useState('3D cubic');
 
   useEffect(() => {
     const handleResize = () => {
@@ -60,14 +60,14 @@ const LatticePage = () => {
       mount.removeChild(renderer.domElement);
       renderer.dispose();
     };
-  }, [visualizationMode]);
+  }, [/*visualizationMode*/]);
 
   const handleAddRatio = (event) => {
     event.preventDefault();
     const inputRatio = event.target.elements.ratio.value;
 
     if (/^\d+\/\d+$/.test(inputRatio) && sceneRef.current) {
-      generate3DLattice(inputRatio, sceneRef.current, spheresRef, visualizationMode);
+      generate3DLattice(inputRatio, sceneRef.current, spheresRef/*, visualizationMode*/);
     }
 
     event.target.reset();
@@ -82,8 +82,7 @@ const LatticePage = () => {
     }
   };
 
-  const resetLattice = (mode = visualizationMode) => {
-    console.log('resetting lattice in mode ', mode);
+  const resetLattice = (/*mode = visualizationMode*/) => {
     const scene = sceneRef.current;
     if (scene) {
       spheresRef.current.forEach(({ sphere, label, line }) => {
@@ -96,16 +95,15 @@ const LatticePage = () => {
     }
   };
 
-  const toggleVisualizationMode = () => {
-    setVisualizationMode((prevMode) => {
-      const newMode = prevMode === '3D cubic' ? 'Radial' : '3D cubic';
-      console.log('switching to mode ', newMode);
-      resetLattice(newMode);
-      return newMode;
-    });
-  };
+  // const toggleVisualizationMode = () => {
+  //   setVisualizationMode((prevMode) => {
+  //     const newMode = prevMode === '3D cubic' ? 'Radial' : '3D cubic';
+  //     console.log('switching to mode ', newMode);
+  //     resetLattice(newMode);
+  //     return newMode;
+  //   });
+  // };
   
-
   return (
     <div className="lattice-page">
       <header className="header">
@@ -121,7 +119,7 @@ const LatticePage = () => {
           {/* <button className="button" type="button" onClick={toggleVisualizationMode} >Switch to {visualizationMode === '3D cubic' ? 'Radial' : '3D cubic'} Visualization</button> */}
         </form>
         <div className="mode-label">
-          Current Mode: <strong>{visualizationMode}</strong> visualization
+          {/* Current Mode: <strong>{visualizationMode}</strong> visualization */}
         </div>
       </div>
       <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
