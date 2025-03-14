@@ -11,14 +11,14 @@
 
 .scene-container {
   width: 100%;
-  height: 70vh; /* Adjust the height as needed */
-  max-width: 1200px; /* This limits the width */
-  margin: 0 auto; /* Centers the container */
-  padding: 1rem; /* Optional, adds space around the scene */
+  height: 70vh;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem;
   box-sizing: border-box;
-  border: 1px solid #ccc; /* Optional, adds a border around the container */
-  background-color: #f4f4f4; /* Optional, gives the container a background color */
-  border-radius: 8px; /* Optional, adds rounded corners to the container */
+  border: 1px solid #ccc;
+  background-color: #f4f4f4;
+  border-radius: 8px;
 }
 
 .lattice-page .description {
