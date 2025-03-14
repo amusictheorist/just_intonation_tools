@@ -1,4 +1,4 @@
-import React, { useEffect, useRef/*, useState*/ } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { generate3DLattice, undo3DLast } from '../utils/3DlatticeUtils';
@@ -10,14 +10,17 @@ const LatticePage = () => {
   const rendererRef = useRef(null);
   const cameraRef = useRef(null);
   const spheresRef = useRef([]);
+  const [modalOpen, setModalOpen] = useState(false);
   // const [visualizationMode, setVisualizationMode] = useState('3D cubic');
 
   useEffect(() => {
     const handleResize = () => {
-      if (cameraRef.current && rendererRef.current) {
-        cameraRef.current.aspect = window.innerWidth / window.innerHeight;
+      if (cameraRef.current && rendererRef.current && mountRef.current) {
+        const width = mountRef.current.clientWidth;
+        const height = mountRef.current.clientHeight;
+        cameraRef.current.aspect = width / height;
         cameraRef.current.updateProjectionMatrix();
-        rendererRef.current.setSize(window.innerWidth, window.innerHeight);
+        rendererRef.current.setSize(width, height);
       }
     };
 
@@ -30,7 +33,7 @@ const LatticePage = () => {
     scene.background = new THREE.Color(0xffffff);
     sceneRef.current = scene;
 
-    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const camera = new THREE.PerspectiveCamera(75, mount.clientWidth / mount.clientHeight, 0.1, 1000);
     camera.position.set(5, 5, 10);
     cameraRef.current = camera;
 
@@ -54,6 +57,7 @@ const LatticePage = () => {
     };
 
     animate();
+    handleResize();
 
     return () => {
       window.removeEventListener('resize', handleResize);
@@ -85,14 +89,22 @@ const LatticePage = () => {
   const resetLattice = (/*mode = visualizationMode*/) => {
     const scene = sceneRef.current;
     if (scene) {
-      spheresRef.current.forEach(({ sphere, label, line }) => {
+      spheresRef.current.forEach(({ sphere, label, lines }) => {
         if (sphere) scene.remove(sphere);
         if (label) scene.remove(label);
-        if (line) scene.remove(line);
+        if (lines && lines.length > 0) {
+          lines.forEach((line) => {
+            scene.remove(line);
+          });
+        }
       });
       spheresRef.current = [];
       generate3DLattice('1/1', scene, spheresRef);
     }
+  };
+
+  const toggleModal = () => {
+    setModalOpen(!modalOpen);
   };
 
   // const toggleVisualizationMode = () => {
@@ -108,7 +120,6 @@ const LatticePage = () => {
     <div className="lattice-page">
       <header className="header">
         <h1>Ratio Lattice Generator</h1>
-        <p className="description">Currently, the 3D cubic lattice only supports 7-limit lattices, but I am working on expanding its functionality.</p>
       </header>
       <div className="controls">
         <form onSubmit={handleAddRatio} className="form">
@@ -122,7 +133,26 @@ const LatticePage = () => {
           {/* Current Mode: <strong>{visualizationMode}</strong> visualization */}
         </div>
       </div>
-      <div ref={mountRef} style={{ width: "100vw", height: "80vh" }} />
+
+      <button className="info-button" onClick={toggleModal}>
+        ℹ️
+      </button>
+
+      {modalOpen && (
+        <div className="info-modal">
+          <div className="info-content">
+            <h2>About the Lattice Generator</h2>
+            <p>This 3D lattice generator arranges ratios as spheres on a lattice based on their prime factorizations.</p>
+            <p>It uses a combination of cubic and radial positioning to place ratios in 3D space. As is traditionally done in musical ratio theory, I've mapped primes 3, 5, and 7 to the x, y, and z axes respectively, and these are the primary intervals shown through lines.</p>
+            <p> I am experimenting with placing prime ratios above 7, since it introduces a fourth spatial dimension, which is always an issue on a 2D sheet of paper. But here, in 3D space, I'm using higher primes and the golden ratio to distribute ratios on an imaginary sphere around the central 1/1 sphere ensuring that they are uniquely placed but not on the cubic lattice. The primary intervals are also highlighted when compounded with higher primes, which I find helpful in visualizing the higher spatial dimensions as well.</p>
+            <button className="close-modal" onClick={toggleModal}>Close</button>
+          </div>
+        </div>
+      )}
+      
+      <div className="scene-container">
+        <div ref={mountRef} style={{ width: "100%", height: "100%" }} />
+      </div>
     </div>
   );
 };
