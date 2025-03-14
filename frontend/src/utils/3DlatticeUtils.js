@@ -16,13 +16,39 @@ const factorize = (numerator, denominator) => {
   return factors;
 };
 
-const computePosition = (factors, spacing = 2) => {
+const computeCubicPosition = (factors, spacing = 2) => {
   let x = 0, y = 0, z = 0;
+  
   Object.entries(factors).forEach(([prime, exponent]) => {
-    if (parseInt(prime) === 3) x = exponent * spacing;
-    if (parseInt(prime) === 5) y = exponent * spacing;
-    if (parseInt(prime) === 7) z = exponent * spacing;
+    prime = parseInt(prime);
+    
+    if (prime === 3) x += exponent * spacing;
+    else if (prime === 5) y += exponent * spacing;
+    else if (prime === 7) z += exponent * spacing;
   });
+
+  return { x, y, z };
+};
+
+const computeRadialPosition = (factors, spacing = 2) => {
+  let x = 0, y = 0, z = 0;
+  
+  Object.entries(factors).forEach(([prime, exponent]) => {
+    prime = parseInt(prime);
+
+    if (prime > 7) {
+      const index = Math.log2(prime);
+      const goldenRatio = (1 + Math.sqrt(5)) / 2;
+      const theta = 2 * Math.PI * ((index * goldenRatio) % 1);
+      const phi = Math.acos(1 - (2 * (index % 1)));
+
+      const r = spacing * Math.abs(exponent);
+      x += r * Math.sin(phi) * Math.cos(theta);
+      y += r * Math.sin(phi) * Math.sin(theta);
+      z += r * Math.cos(phi);
+    }
+  });
+
   return { x, y, z };
 };
 
@@ -77,7 +103,33 @@ export const generate3DLattice = (ratio, scene, spheresRef) => {
   }
 
   const factors = factorize(numerator, denominator);
-  const position = computePosition(factors);
+  
+  let hasCubicPrime = false;
+  let hasRadialPrime = false;
+
+  Object.keys(factors).forEach(prime => {
+    prime = parseInt(prime);
+    if (prime === 3 || prime === 5 || prime === 7) {
+      hasCubicPrime = true;
+    } else if (prime > 7) {
+      hasRadialPrime = true;
+    }
+  });
+
+  let position;
+  if (hasCubicPrime && !hasRadialPrime) {
+    position = computeCubicPosition(factors);
+  } else if (!hasCubicPrime && hasRadialPrime) {
+    position = computeRadialPosition(factors);
+  } else {
+    const cubicPos = computeCubicPosition(factors);
+    const radialPos = computeRadialPosition(factors);
+    position = {
+      x: cubicPos.x + radialPos.x,
+      y: cubicPos.y + radialPos.y,
+      z: cubicPos.z + radialPos.z,
+    };
+  }
 
   const geometry = new THREE.SphereGeometry(0.2, 32, 32);
   const material = new THREE.MeshBasicMaterial({ color: '#B22222' });

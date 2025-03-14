@@ -9,6 +9,18 @@
   margin-bottom: 2rem;
 }
 
+.scene-container {
+  width: 100%;
+  height: 70vh; /* Adjust the height as needed */
+  max-width: 1200px; /* This limits the width */
+  margin: 0 auto; /* Centers the container */
+  padding: 1rem; /* Optional, adds space around the scene */
+  box-sizing: border-box;
+  border: 1px solid #ccc; /* Optional, adds a border around the container */
+  background-color: #f4f4f4; /* Optional, gives the container a background color */
+  border-radius: 8px; /* Optional, adds rounded corners to the container */
+}
+
 .lattice-page .description {
   font-size: 1.2rem;
   color: #555;
@@ -82,4 +94,62 @@
   margin-top: 10px;
   font-size: 1.2rem;
   color: #333;
+}
+
+.info-button {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #007bff;
+  color: white;
+  font-size: 24px;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.info-button:hover {
+  background-color: #0056b3;
+}
+
+.info-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.info-content {
+  background-color: white;
+  padding: 20px;
+  max-width: 400px;
+  width: 90%;
+  border-radius: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  text-align: left;
+}
+
+.close-modal {
+  background-color: #007bff;
+  color: white;
+  padding: 10px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 20px;
+}
+
+.close-modal:hover {
+  background-color: #0056b3;
 }
