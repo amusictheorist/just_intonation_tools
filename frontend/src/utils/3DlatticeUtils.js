@@ -42,7 +42,9 @@ const computeRadialPosition = (factors, spacing = 2) => {
       const theta = 2 * Math.PI * ((index * goldenRatio) % 1);
       const phi = Math.acos(1 - (2 * (index % 1)));
 
-      const r = spacing * Math.abs(exponent);
+      let r = spacing * Math.abs(exponent); 
+      if (exponent < 0) r = -r;
+
       x += r * Math.sin(phi) * Math.cos(theta);
       y += r * Math.sin(phi) * Math.sin(theta);
       z += r * Math.cos(phi);
@@ -51,6 +53,7 @@ const computeRadialPosition = (factors, spacing = 2) => {
 
   return { x, y, z };
 };
+
 
 const addLabels = (text) => {
   const canvas = document.createElement('canvas');
@@ -160,25 +163,29 @@ export const generate3DLattice = (ratio, scene, spheresRef) => {
   scene.add(label);
 };
 
-
 export const undo3DLast = (scene, spheresRef, renderer, camera) => {
-  if (spheresRef.current.length > 0) {
-    const lastObject = spheresRef.current.pop();
-    const { sphere, label, lines } = lastObject;
+  if (spheresRef.current.length === 0) return;
 
-    if (sphere) scene.remove(sphere);
-    if (label) scene.remove(label);
+  let lastObject;
+  do {
+    lastObject = spheresRef.current.pop();
+  } while (
+    lastObject &&
+    lastObject.sphere.position.x === 0 &&
+    lastObject.sphere.position.y === 0 &&
+    lastObject.sphere.position.z === 0 &&
+    spheresRef.current.length > 0
+  );
 
-    if (lines && lines.length > 0) {
-      lines.forEach((line) => {
-        scene.remove(line);
-      });
-    }
+  if (!lastObject) return;
 
-    if (renderer && camera) {
-      renderer.render(scene, camera);
-    }
-  } else {
-    console.log('No spheres left to remove');
+  const { sphere, label, lines } = lastObject;
+
+  if (sphere) scene.remove(sphere);
+  if (label) scene.remove(label);
+  if (lines?.length) lines.forEach((line) => scene.remove(line));
+
+  if (renderer && camera) {
+    renderer.render(scene, camera);
   }
 };
