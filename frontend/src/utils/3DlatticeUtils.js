@@ -30,7 +30,7 @@ const computeCubicPosition = (factors, spacing = 2) => {
   return { x, y, z };
 };
 
-const computeRadialPosition = (factors, spacing = 2) => {
+const computeRadialPosition = (factors, radiusFactor = 2, angleShift = 0) => {
   let x = 0, y = 0, z = 0;
   
   Object.entries(factors).forEach(([prime, exponent]) => {
@@ -39,10 +39,12 @@ const computeRadialPosition = (factors, spacing = 2) => {
     if (prime > 7) {
       const index = Math.log2(prime);
       const goldenRatio = (1 + Math.sqrt(5)) / 2;
-      const theta = 2 * Math.PI * ((index * goldenRatio) % 1);
+      
+      // Apply the angleShift to theta calculation
+      const theta = 2 * Math.PI * (((index * goldenRatio) + angleShift) % 1);
       const phi = Math.acos(1 - (2 * (index % 1)));
 
-      let r = spacing * Math.abs(exponent); 
+      let r = radiusFactor * Math.abs(exponent); 
       if (exponent < 0) r = -r;
 
       x += r * Math.sin(phi) * Math.cos(theta);
@@ -53,7 +55,6 @@ const computeRadialPosition = (factors, spacing = 2) => {
 
   return { x, y, z };
 };
-
 
 const addLabels = (text) => {
   const canvas = document.createElement('canvas');
@@ -80,17 +81,19 @@ const addLabels = (text) => {
 
 const findNeighbours = (position, spheresRef) => {
   const neighbours = [];
-  
+
   spheresRef.current.forEach(({ sphere }) => {
     const { x, y, z } = sphere.position;
+    
+    // Ensure only cubic lattice points are considered
+    if (sphere.userData.isRadialPrime) return; // Skip radial primes
 
-    const sameX = x === position.x && z === position.z;
-    const sameY = y === position.y && z === position.z;
-    const sameZ = x === position.x && y === position.y;
+    // Check direct cubic connections (only along one axis at a time)
+    const isCubicX = x !== position.x && y === position.y && z === position.z;
+    const isCubicY = y !== position.y && x === position.x && z === position.z;
+    const isCubicZ = z !== position.z && x === position.x && y === position.y;
 
-    if ((sameX && Math.abs(y - position.y) % 2 === 0) ||
-        (sameY && Math.abs(x - position.x) % 2 === 0) ||
-        (sameZ && Math.abs(z - position.z) % 2 === 0)) {
+    if (isCubicX || isCubicY || isCubicZ) {
       neighbours.push({ x, y, z });
     }
   });
@@ -98,69 +101,111 @@ const findNeighbours = (position, spheresRef) => {
   return neighbours;
 };
 
-export const generate3DLattice = (ratio, scene, spheresRef) => {
+export const generate3DLattice = (ratio, scene, spheresRef, radiusFactor = 2, angleShift = 0, radialColor = '#B22222') => {
   const [numerator, denominator] = ratio.split('/').map(Number);
   if (isNaN(numerator) || isNaN(denominator)) {
     console.error('Invalid ratio input: ', ratio);
-    return;
+    return false;
   }
 
   const factors = factorize(numerator, denominator);
-  
-  let hasCubicPrime = false;
   let hasRadialPrime = false;
 
   Object.keys(factors).forEach(prime => {
-    prime = parseInt(prime);
-    if (prime === 3 || prime === 5 || prime === 7) {
-      hasCubicPrime = true;
-    } else if (prime > 7) {
+    if (parseInt(prime) > 7) {
       hasRadialPrime = true;
     }
   });
 
-  let position;
-  if (hasCubicPrime && !hasRadialPrime) {
-    position = computeCubicPosition(factors);
-  } else if (!hasCubicPrime && hasRadialPrime) {
-    position = computeRadialPosition(factors);
-  } else {
-    const cubicPos = computeCubicPosition(factors);
-    const radialPos = computeRadialPosition(factors);
-    position = {
-      x: cubicPos.x + radialPos.x,
-      y: cubicPos.y + radialPos.y,
-      z: cubicPos.z + radialPos.z,
-    };
-  }
+  // Compute positions correctly
+  const cubicPos = computeCubicPosition(factors);
+  const radialPos = hasRadialPrime ? computeRadialPosition(factors, radiusFactor, angleShift) : { x: 0, y: 0, z: 0 };
+  const finalPos = {
+    x: cubicPos.x + radialPos.x,
+    y: cubicPos.y + radialPos.y,
+    z: cubicPos.z + radialPos.z,
+  };
 
+  // Create sphere
   const geometry = new THREE.SphereGeometry(0.2, 32, 32);
-  const material = new THREE.MeshBasicMaterial({ color: '#B22222' });
+  const material = new THREE.MeshBasicMaterial({ color: radialColor });
   const sphere = new THREE.Mesh(geometry, material);
-  sphere.position.set(position.x, position.y, position.z);
+  sphere.position.set(finalPos.x, finalPos.y, finalPos.z);
 
+  // Create label
   const label = addLabels(ratio);
-  label.position.set(position.x, position.y + 0.4, position.z);
+  label.position.set(finalPos.x, finalPos.y + 0.4, finalPos.z);
 
-  const lines = [];
-  const neighbouringPositions = findNeighbours(position, spheresRef) || [];
-
-  neighbouringPositions.forEach((neighbourPos) => {
-    const points = [
-      new THREE.Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z),
-      new THREE.Vector3(position.x, position.y, position.z),
-    ];
-    const geometry = new THREE.BufferGeometry().setFromPoints(points);
-    geometry.computeBoundingSphere();
-    const material = new THREE.LineBasicMaterial({ color: 'black' });
-    const line = new THREE.Line(geometry, material);
-    scene.add(line);
-    lines.push(line);
-  });
-
-  spheresRef.current.push({ sphere, label, lines });
   scene.add(sphere);
   scene.add(label);
+
+  // Create connections only for cubic primes
+  const lines = [];
+  if (!hasRadialPrime) {
+    const neighbouringPositions = findNeighbours(finalPos, spheresRef);
+    neighbouringPositions.forEach((neighbourPos) => {
+      const points = [
+        new THREE.Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z),
+        new THREE.Vector3(finalPos.x, finalPos.y, finalPos.z),
+      ];
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color: 'black' });
+      const line = new THREE.Line(geometry, material);
+      scene.add(line);
+      lines.push(line);
+    });
+  }
+  
+  // Store sphere with additional data
+  sphere.userData = { isRadialPrime: hasRadialPrime, factors, lines };
+  spheresRef.current.push({ sphere, label, lines });
+
+  return hasRadialPrime;
+};
+
+export const updateRadialPrimes = (scene, spheresRef, radiusFactor, angleShift, radialColor) => {
+  spheresRef.current.forEach(({ sphere, label, lines }) => {
+    // Update all radial primes regardless of the last placed sphere
+    if (!sphere.userData.isRadialPrime) return; // Only update radial primes
+
+    const factors = sphere.userData.factors;
+    
+    // Keep cubic position
+    const cubicPos = computeCubicPosition(factors);
+    const radialPos = computeRadialPosition(factors, radiusFactor, angleShift);
+
+    // New final position
+    const newX = cubicPos.x + radialPos.x;
+    const newY = cubicPos.y + radialPos.y;
+    const newZ = cubicPos.z + radialPos.z;
+
+    // Move sphere and label
+    sphere.position.set(newX, newY, newZ);
+    label.position.set(newX, newY + 0.4, newZ);
+    sphere.material.color.set(radialColor);
+
+    // Remove old lines
+    lines.forEach((line) => scene.remove(line));
+
+    // Find new neighbours and redraw lines
+    const neighbours = findNeighbours({ x: newX, y: newY, z: newZ }, spheresRef) || [];
+    const newLines = [];
+
+    neighbours.forEach((neighbourPos) => {
+      const points = [
+        new THREE.Vector3(neighbourPos.x, neighbourPos.y, neighbourPos.z),
+        new THREE.Vector3(newX, newY, newZ),
+      ];
+      const geometry = new THREE.BufferGeometry().setFromPoints(points);
+      const material = new THREE.LineBasicMaterial({ color: 'black' });
+      const line = new THREE.Line(geometry, material);
+      scene.add(line);
+      newLines.push(line);
+    });
+
+    // Update stored lines
+    sphere.userData.lines = newLines;
+  });
 };
 
 export const undo3DLast = (scene, spheresRef, renderer, camera) => {

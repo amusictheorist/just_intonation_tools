@@ -153,3 +153,41 @@
 .close-modal:hover {
   background-color: #0056b3;
 }
+
+.slider-controls {
+  margin-top: 2rem;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  align-items: center;
+}
+
+.slider-controls label {
+  font-size: 1rem;
+  color: #555;
+  display: block;
+  text-align: center;
+}
+
+.slider-controls input[type="range"] {
+  width: 200px;
+  margin-top: 0.5rem;
+}
+
+.slider-controls select {
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.slider-controls select option {
+  padding: 0.8rem;
+}
+
+.slider-controls label, .slider-controls select {
+  text-align: center;
+}

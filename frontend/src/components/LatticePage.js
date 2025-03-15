@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generate3DLattice, undo3DLast } from '../utils/3DlatticeUtils';
+import { generate3DLattice, undo3DLast, updateRadialPrimes } from '../utils/3DlatticeUtils';
 import '../styles/Lattice.css';
 
 const LatticePage = () => {
@@ -11,7 +11,12 @@ const LatticePage = () => {
   const cameraRef = useRef(null);
   const spheresRef = useRef([]);
   const [modalOpen, setModalOpen] = useState(false);
-  // const [visualizationMode, setVisualizationMode] = useState('3D cubic');
+  const [radiusFactor, setRadiusFactor] = useState(2);
+  const [angleShift, setAngleShift] = useState(0);
+  const [radialColor, setRadialColor] = useState('#B22222');
+  const [hasRadialPrime, setHasRadialPrime] = useState(false);
+  const [slidersVisible, setSlidersVisible] = useState(false);
+  // const [visualizationMode, setVisualizationMode] = useState('3D cubic);
 
   useEffect(() => {
     const handleResize = () => {
@@ -69,11 +74,15 @@ const LatticePage = () => {
   const handleAddRatio = (event) => {
     event.preventDefault();
     const inputRatio = event.target.elements.ratio.value;
-
+  
     if (/^\d+\/\d+$/.test(inputRatio) && sceneRef.current) {
-      generate3DLattice(inputRatio, sceneRef.current, spheresRef/*, visualizationMode*/);
+      const radialPrimeExists = generate3DLattice(inputRatio, sceneRef.current, spheresRef/*, visualizationMode*/, radiusFactor, angleShift, radialColor);
+      setHasRadialPrime(radialPrimeExists);
+      if (radialPrimeExists) {
+        setSlidersVisible(true);
+      }
     }
-
+  
     event.target.reset();
   };
 
@@ -86,7 +95,14 @@ const LatticePage = () => {
     }
   };
 
-  const resetLattice = (/*mode = visualizationMode*/) => {
+  useEffect(() => {
+    if (hasRadialPrime) {
+      console.log("A radial prime was added.");
+    }
+  }, [hasRadialPrime]);
+  
+
+  const resetLattice = (/*visualizationMode*/) => {
     const scene = sceneRef.current;
     if (scene) {
       spheresRef.current.forEach(({ sphere, label, lines }) => {
@@ -100,14 +116,22 @@ const LatticePage = () => {
       });
       spheresRef.current = [];
       generate3DLattice('1/1', scene, spheresRef);
+      setHasRadialPrime(false);
+      setSlidersVisible(false);
     }
   };
+
+  useEffect(() => {
+    if (sceneRef.current) {
+      updateRadialPrimes(sceneRef.current, spheresRef, radiusFactor, angleShift, radialColor);
+    }
+  }, [radiusFactor, angleShift, radialColor]);
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
 
-  // const toggleVisualizationMode = () => {
+    // const toggleVisualizationMode = () => {
   //   setVisualizationMode((prevMode) => {
   //     const newMode = prevMode === '3D cubic' ? 'Radial' : '3D cubic';
   //     console.log('switching to mode ', newMode);
@@ -115,7 +139,7 @@ const LatticePage = () => {
   //     return newMode;
   //   });
   // };
-  
+
   return (
     <div className="lattice-page">
       <header className="header">
@@ -134,6 +158,46 @@ const LatticePage = () => {
         </div>
       </div>
 
+      {slidersVisible && (
+        <div className="slider-controls">
+          <label>
+            Radius Factor:
+            <input
+              type="range"
+              min="1"
+              max="5"
+              step="0.1"
+              value={radiusFactor}
+              onChange={(e) => setRadiusFactor(parseFloat(e.target.value))}
+            />
+          </label>
+          <label>
+            Angle Shift:
+            <input
+              type="range"
+              min="-1"
+              max="1"
+              step="0.01"
+              value={angleShift}
+              onChange={(e) => setAngleShift(parseFloat(e.target.value))}
+            />
+          </label>
+          <label>
+            Radial Sphere Color:
+            <select
+              value={radialColor}
+              onChange={(e) => setRadialColor(e.target.value)}
+            >
+              <option value="#B22222">Red</option>
+              <option value="#1E90FF">Blue</option>
+              <option value="#32CD32">Green</option>
+              <option value="#FFD700">Yellow</option>
+              <option value="#8A2BE2">Purple</option>
+            </select>
+          </label>
+        </div>
+      )}
+
       <button className="info-button" onClick={toggleModal}>
         ℹ️
       </button>
@@ -144,12 +208,13 @@ const LatticePage = () => {
             <h2>About the Lattice Generator</h2>
             <p>This 3D lattice generator arranges ratios as spheres on a lattice based on their prime factorizations.</p>
             <p>It uses a combination of cubic and radial positioning to place ratios in 3D space. As is traditionally done in musical ratio theory, I've mapped primes 3, 5, and 7 to the x, y, and z axes respectively, and these are the primary intervals shown through lines.</p>
-            <p> I am experimenting with placing prime ratios above 7, since it introduces a fourth spatial dimension, which is always an issue on a 2D sheet of paper. But here, in 3D space, I'm using higher primes and the golden ratio to distribute ratios on an imaginary sphere around the central 1/1 sphere ensuring that they are uniquely placed but not on the cubic lattice. The primary intervals are also highlighted when compounded with higher primes, which I find helpful in visualizing the higher spatial dimensions as well.</p>
+            <p> I am experimenting with placing prime ratios above 7, since it introduces a fourth spatial dimension, which is always an issue on a 2D sheet of paper. But here, in 3D space, I'm using higher primes and the golden ratio to distribute ratios on an imaginary sphere around the central 1/1 ratio ensuring that prime ratios are uniquely placed, but not on the cubic lattice.</p>
+            <p>I've added sliders to change the radius of the imaginary sphere and the radial angles of higher primes so that one can move them around for better visualization. It is also possible to change to color of the radial spheres so they contrast more against the spheres on the cubic lattice.</p>
             <button className="close-modal" onClick={toggleModal}>Close</button>
           </div>
         </div>
       )}
-      
+
       <div className="scene-container">
         <div ref={mountRef} style={{ width: "100%", height: "100%" }} />
       </div>
