@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { generate3DLattice, undo3DLast, updateRadialPrimes } from '../utils/3DlatticeUtils';
-import '../styles/Lattice.css';
 
 const LatticePage = () => {
   const mountRef = useRef(null);
@@ -141,26 +140,49 @@ const LatticePage = () => {
   // };
 
   return (
-    <div className="lattice-page">
-      <header className="header">
-        <h1>Ratio Lattice Generator</h1>
+    <div className="pt-[100px] px-8 py-12 text-center bg-gray-50">
+      <header className="mb-8">
+        <h1 className="text-3xl font-bold mb-4">Ratio Lattice Generator</h1>
       </header>
-      <div className="controls">
-        <form onSubmit={handleAddRatio} className="form">
-          <input className="input" type="text" name="ratio" placeholder="Enter ratio (e.g. 3/2)" required />
-          <button className="button" type="submit">Add Ratio</button>
-          <button className="button" type="button" onClick={handle3DUndo} >Undo</button>
-          <button className="button" type="button" onClick={resetLattice} >Reset</button>
+      <div>
+        <form onSubmit={handleAddRatio} className="flex justify-center items-center gap-4 mb-8 flex-wrap">
+          <input
+            type="text"
+            name="ratio"
+            placeholder="Enter ratio (e.g. 3/2)"
+            required
+            className="p-3 text-base border border-gray-300 rounded-md w-72"
+          />
+          <button
+            type="submit"
+            className="p-3 px-6 text-lg bg-green-600 text-white font-semibold rounded-md transition hover:bg-green-700 hover:underline"
+          >
+            Add Ratio
+          </button>
+          <button
+            type="button"
+            onClick={handle3DUndo}
+            className="p-3 px-6 text-lg bg-green-600 text-white font-semibold rounded-md transition hover:bg-green-700 hover:underline"
+          >
+            Undo
+          </button>
+          <button
+            type="button"
+            onClick={resetLattice}
+            className="p-3 px-6 text-lg bg-green-600 text-white font-semibold rounded-md transition hover:bg-green-700 hover:underline"
+          >
+            Reset
+          </button>
           {/* <button className="button" type="button" onClick={toggleVisualizationMode} >Switch to {visualizationMode === '3D cubic' ? 'Radial' : '3D cubic'} Visualization</button> */}
         </form>
-        <div className="mode-label">
+        <div>
           {/* Current Mode: <strong>{visualizationMode}</strong> visualization */}
         </div>
       </div>
 
       {slidersVisible && (
-        <div className="slider-controls">
-          <label>
+        <div className="flex justify-center gap-8 mt-8 items-center flex-wrap">
+          <label className="text-gray-600 text-base text-center">
             Radius Factor:
             <input
               type="range"
@@ -169,9 +191,10 @@ const LatticePage = () => {
               step="0.1"
               value={radiusFactor}
               onChange={(e) => setRadiusFactor(parseFloat(e.target.value))}
+              className="w-52 mt-2"
             />
           </label>
-          <label>
+          <label className="text-gray-600 text-base text-center">
             Angle Shift:
             <input
               type="range"
@@ -180,13 +203,15 @@ const LatticePage = () => {
               step="0.01"
               value={angleShift}
               onChange={(e) => setAngleShift(parseFloat(e.target.value))}
+              className="w-52 mt-2"
             />
           </label>
-          <label>
+          <label className="text-gray-600 text-base text-center">
             Radial Sphere Color:
             <select
               value={radialColor}
               onChange={(e) => setRadialColor(e.target.value)}
+              className="p-2 text-base border border-gray-300 rounded-md mt-2 cursor-pointer"
             >
               <option value="#B22222">Red</option>
               <option value="#1E90FF">Blue</option>
@@ -198,24 +223,30 @@ const LatticePage = () => {
         </div>
       )}
 
-      <button className="info-button" onClick={toggleModal}>
+      <button className="fixed bottom-5 right-5 w-12 h-12 bg-blue-600 text-white text-2xl rounded-full flex items-center justify-center shadow-md hover:bg-blue-800" onClick={toggleModal}>
         ℹ️
       </button>
 
       {modalOpen && (
-        <div className="info-modal">
-          <div className="info-content">
-            <h2>About the Lattice Generator</h2>
-            <p>This 3D lattice generator arranges ratios as spheres on a lattice based on their prime factorizations.</p>
-            <p>It uses a combination of cubic and radial positioning to place ratios in 3D space. As is traditionally done in musical ratio theory, I've mapped primes 3, 5, and 7 to the x, y, and z axes respectively, and these are the primary intervals shown through lines.</p>
-            <p> I am experimenting with placing prime ratios above 7, since it introduces a fourth spatial dimension, which is always an issue on a 2D sheet of paper. But here, in 3D space, I'm using higher primes and the golden ratio to distribute ratios on an imaginary sphere around the central 1/1 ratio ensuring that prime ratios are uniquely placed, but not on the cubic lattice.</p>
-            <p>I've added sliders to change the radius of the imaginary sphere and the radial angles of higher primes so that one can move them around for better visualization. It is also possible to change to color of the radial spheres so they contrast more against the spheres on the cubic lattice.</p>
-            <button className="close-modal" onClick={toggleModal}>Close</button>
+        <div className="fixed inset-0 bg-black/50 flex justify-center items-center">
+          <div className="bg-white p-5 max-w-sm w-11/12 rounded-lg shadow-lg text-left">
+            <h2 className="text-xl font-bold mb-3">About the Lattice Generator</h2>
+            <p className="mb-2">This 3D lattice generator arranges ratios as spheres on a lattice based on their prime factorizations.</p>
+            <p className="mb-2">
+              It uses a combination of cubic and radial positioning to place ratios in 3D space. As is traditionally done in musical ratio theory, I've mapped primes 3, 5, and 7 to the x, y, and z axes respectively, and these are the primary intervals shown through lines.
+            </p>
+            <p className="mb-2">
+              I am experimenting with placing prime ratios above 7, since it introduces a fourth spatial dimension, which is always an issue on a 2D sheet of paper. But here, in 3D space, I'm using higher primes and the golden ratio to distribute ratios on an imaginary sphere around the central 1/1 ratio ensuring that prime ratios are uniquely placed, but not on the cubic lattice.
+            </p>
+            <p className="mb-2">
+              I've added sliders to change the radius of the imaginary sphere and the radial angles of higher primes so that one can move them around for better visualization. It is also possible to change to color of the radial spheres so they contrast more against the spheres on the cubic lattice.
+            </p>
+            <button className="mt-5 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-600" onClick={toggleModal}>Close</button>
           </div>
         </div>
       )}
 
-      <div className="scene-container">
+      <div className="w-full h-[70vh] max-w-[1200px] mx-auto p-4 border border-gray-300 bg-gray-100 rounded-lg">
         <div ref={mountRef} style={{ width: "100%", height: "100%" }} />
       </div>
     </div>
