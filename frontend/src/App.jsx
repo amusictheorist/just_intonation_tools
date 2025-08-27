@@ -5,6 +5,7 @@ import AboutPage from './components/AboutPage';
 import LatticePage from './components/LatticePage';
 import CalculatorPage from './components/CalculatorPage';
 
+
 function App() {
   return (
     <Router>
