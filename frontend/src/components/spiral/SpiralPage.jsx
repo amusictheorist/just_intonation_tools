@@ -4,7 +4,9 @@ import NumberInput from "./NumberInput";
 import SpiralCanvas from "./SpiralCanvas";
 
 const SpiralPage = () => {
-  const { addPoint, selected, svgGroupRef, pathRef } = useSpiral();
+  const { addPoint, values, selected, svgGroupRef, pathRef, setSelected } = useSpiral();
+
+  const handleClear = () => setSelected(new Set());
 
   return (
     <div className="pt-[100px] px-8 py-12 text-center bg-gray-50">
@@ -14,10 +16,10 @@ const SpiralPage = () => {
       </header>
       <div className="w-full max-w-[1200px] mx-auto md:grid md:grid-cols-2 gap-8 items-start">
         <div className="bg-white p-4 rounded-lg shadow border border-gray-200 flex justify-center">
-          <SpiralCanvas svgGroupRef={svgGroupRef} pathRef={pathRef} />
+          <SpiralCanvas svgGroupRef={svgGroupRef} pathRef={pathRef} values={values} selected={selected} />
         </div>
-        <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
-          <InfoPanel selected={selected} />
+        <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full">
+          <InfoPanel selected={selected} onClear={handleClear} />
         </div>
       </div>
     </div>

@@ -1,23 +1,39 @@
 import { useState } from "react"
 
 const NumberInput = ({ onAdd }) => {
-  const [value, setValue] = useState('');
+  const [input, setInput] = useState('');
+
+  const handleSubmit = () => {
+    if (!input.trim()) return;
+
+    const numbers = input
+      .split(/[ ,]+/)
+      .map((n) => parseInt(n, 10))
+      .filter((n) => !isNaN(n) && n > 0);
+    
+    numbers.forEach((n) => onAdd(n));
+    setInput('');
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
 
   return (
-    <div>
+    <div className="flex justify-center items-center space-x-2">
       <input
-        type="number"
-        min='1'
-        placeholder="Enter a positive integer"
-        value={value}
-        onChange={(e => setValue(e.target.value))}
-        className="p-3 text-base border border-gray-300 rounded-md w-72"
+        type="text"
+        value={input}
+        onChange={(e => setInput(e.target.value))}
+        onKeyDown={handleKeyDown}
+        placeholder="Enter partial(s), e.g. 3, 5 7"
+        className="border rounded px-3 py-2 text-sm w-64"
       />
       <button
-        onClick={() => {
-          if (value) onAdd(parseInt(value));
-          setValue('');
-        }}
+        onClick={handleSubmit}
         className="p-3 px-6 text-lg bg-green-600 text-white font-semibold rounded-md transition hover:bg-green-700 hover:underline"
       >
         Add

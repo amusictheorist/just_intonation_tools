@@ -28,6 +28,7 @@ export function useSpiral(r0 = 30) {
     dot.setAttribute("cy", y);
     dot.setAttribute("r", 4);
     dot.setAttribute("fill", "black");
+    dot.setAttribute('data-value', a);
     dot.style.cursor = "pointer";
 
     dot.addEventListener("click", () => {
@@ -62,5 +63,5 @@ export function useSpiral(r0 = 30) {
     }
   }, [addPoint]);
 
-  return { values, selected, addPoint, svgGroupRef, pathRef };
+  return { values, selected, setSelected, addPoint, svgGroupRef, pathRef };
 }
