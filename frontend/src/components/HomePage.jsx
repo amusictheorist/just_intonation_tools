@@ -10,7 +10,7 @@ const HomePage = () => {
         <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-8">
           Explore various tools for working with just intonation that I am
           developing based on my dissertation work in music theory, including a
-          set calculator, a ratio lattice generator, and more to come soon. To
+          set calculator, an interactive harmonic spiral visualization, a ratio lattice generator, and more to come soon. To
           find out more about this project, please visit the{" "}
           <Link to="/about" className="text-blue-600 font-semibold hover:underline">
             About
@@ -29,6 +29,14 @@ const HomePage = () => {
               className="inline-block bg-green-600 text-white px-6 py-3 text-lg font-semibold rounded-md transition hover:bg-green-700 hover:underline"
             >
               Set Calculator
+            </Link>
+          </li>
+          <li className="my-4">
+            <Link
+              to='/spiral'
+              className="inline-block bg-green-600 text-white px-6 py-3 text-lg font-semibold rounded-md transition hover:bg-green-700 hover:underline"
+            >
+              Harmonic Spiral
             </Link>
           </li>
           <li className="my-4">
