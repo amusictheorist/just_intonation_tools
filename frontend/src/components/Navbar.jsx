@@ -50,6 +50,15 @@ const Navbar = () => {
         </li>
         <li>
           <Link
+            to='/spiral'
+            className="text-white hover:text-yellow-400 hover:underline transition"
+            onClick={() => setMenuOpen(false)}
+          >
+            Harmonic Spiral
+          </Link>
+        </li>
+        <li>
+          <Link
             to="/lattice"
             className="text-white hover:text-yellow-400 hover:underline transition"
             onClick={() => setMenuOpen(false)}
