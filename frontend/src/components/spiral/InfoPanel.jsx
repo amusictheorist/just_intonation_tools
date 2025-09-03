@@ -1,4 +1,4 @@
-import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPCInts, getPitchIntMatrix, getPitchInts, getSubsets, sumArray } from "../../utils/spiralSets";
+import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchIntMatrix,/* getSubsets, */sumArray } from "../../utils/spiralSets";
 
 const InfoPanel = ({ selected, onClear }) => {
   const selectedArr = [...selected].sort((a, b) => a - b);
@@ -23,7 +23,7 @@ const InfoPanel = ({ selected, onClear }) => {
   const pMatrix = getPitchIntMatrix(selectedArr);
   const pcMatrix = getPCIntMatrix(selectedArr);
 
-  const subsets = getSubsets(selectedArr);
+  // const subsets = getSubsets(selectedArr);
 
   const formatSet = (arr, braces = '{}', underline = false) => {
     const [open, close] = braces.split('');
