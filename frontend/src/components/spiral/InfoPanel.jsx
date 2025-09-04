@@ -1,6 +1,10 @@
-import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchIntMatrix,/* getSubsets, */sumArray } from "../../utils/spiralSets";
+import { useState } from "react";
+import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchIntMatrix, getSubsets, sumArray } from "../../utils/spiralSets";
 
 const InfoPanel = ({ selected, onClear }) => {
+  const [showMatrices, setShowMatrices] = useState(false);
+  const [showSubsets, setShowSubsets] = useState(false);
+
   const selectedArr = [...selected].sort((a, b) => a - b);
 
   if (selectedArr.length === 0) {
@@ -23,7 +27,7 @@ const InfoPanel = ({ selected, onClear }) => {
   const pMatrix = getPitchIntMatrix(selectedArr);
   const pcMatrix = getPCIntMatrix(selectedArr);
 
-  // const subsets = getSubsets(selectedArr);
+  const subsets = getSubsets(selectedArr);
 
   const formatSet = (arr, braces = '{}', underline = false) => {
     const [open, close] = braces.split('');
@@ -73,59 +77,74 @@ const InfoPanel = ({ selected, onClear }) => {
       >
         Clear
       </button>
-      <p>
-        <strong>Partial set:</strong> {formatSet(parset, '{}')}
-      </p>
-      <p>
-        <strong>Partial-class set:</strong>{' '}
-        {formatSet(parcset, '{}', true)}
-      </p>
-      <p>
-        <strong>Partial-set class:</strong> {formatSet(parSC, '[]')}
-      </p>
-      <p>
-        <strong>Partial-class set class:</strong>{' '}
-        {formatSet(parcSC, '[]', true)}
-      </p>
-      <p>
-        <strong>
-          Spectral Extension<sub>p</sub>:
-        </strong> {spectralExtP}
-      </p>
-      <p>
-        <strong>
-          Spectral Extension<sub>pc</sub>:
-        </strong> {spectralExtPC}
-      </p>
+      <p><strong>Partial set:</strong> {formatSet(parset, '{}')}</p>
+      <p><strong>Partial-class set:</strong> {formatSet(parcset, '{}', true)}</p>
+      <p><strong>Partial-set class:</strong> {formatSet(parSC, '[]')}</p>
+      <p><strong>Partial-class set class:</strong> {formatSet(parcSC, '[]', true)}</p>
+      <p><strong>Spectral Extension<sub>p</sub>:</strong> {spectralExtP}</p>
+      <p><strong>Spectral Extension<sub>pc</sub>:</strong> {spectralExtPC}</p>
+
       <hr className="my-2" />
-      {parset.length > 1 &&
-        <p>
-          <strong>Pitch intervals:</strong>
-          {renderMatrix(pMatrix.elements, pMatrix.matrix)}
-        </p>
-      }
-      {parcset.length > 1 &&
-        <p>
-          <strong>Pitch-class intervals</strong>
-          {renderMatrix(pcMatrix.elements, pcMatrix.matrix)}
-        </p>
-      }
-      {/* <hr className="my-2" />
-      {parset.length > 3 &&
-        <p>
-          <strong>Subsets:</strong>
-          {Object.keys(subsets).sort((a, b) => a - b).map(size => (
-            <div key={size} className="mt-2">
-              <p className="font-medium">Size {size}:</p>
-              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                {subsets[size].map((subset, idx) => (
-                  <li key={idx}>{formatSet(subset, '{}')}</li>
-                ))}
-              </ul>
+
+      {parset.length > 1 && (
+        <div className="mb-2">
+          <button
+            onClick={() => setShowMatrices(!showMatrices)}
+            className="text-xs text-blue-600 hover:underline mb-1"
+          >
+            {showMatrices ? 'Hide' : 'Show'} interval matrices
+          </button>
+          {showMatrices && (
+            <div>
+              <div>
+                <strong>Pitch intervals:</strong>
+                {renderMatrix(pMatrix.elements, pMatrix.matrix)}
+              </div>
+              {parcset.length > 1 && (
+                <div className="mt-2">
+                  <strong>Pitch-class intervals:</strong>
+                  {renderMatrix(pcMatrix.elements, pcMatrix.matrix)}
+                </div>
+              )}
             </div>
-          ))}
-        </p>
-      } */}
+          )}
+        </div>
+      )}
+
+      <hr className="my-2" />
+
+      {parset.length > 3 && (
+        <div>
+          <button
+            onClick={() => setShowSubsets(!showSubsets)}
+            className="text-xs text-blue-600 hover:underline mb-1"
+          >
+            {showSubsets ? 'Hide' : 'Show'} subsets
+          </button>
+          {showSubsets && Object.keys(subsets).sort((a, b) => a - b).map(size => {
+            const scMap = {};
+            subsets[size].forEach(subset => {
+              const sc = getParSC(subset);
+              const key = sc.join(',');
+              scMap[key] = sc;
+            });
+            const uniqueSCs = Object.values(scMap);
+            
+            return (
+              <div key={size} className="mt-2">
+                <p className="font-medium">
+                  Size {size}: ({uniqueSCs.length} classes)
+                </p>
+                <div className="grid grid-cols-3 gap-2 text-xs text-gray-700">
+                  {uniqueSCs.map((sc, idx) => (
+                    <div key={idx}>{formatSet(sc, '[]')}</div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
