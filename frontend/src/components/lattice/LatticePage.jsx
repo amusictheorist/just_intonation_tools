@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { generate3DLattice, undo3DLast, updateRadialPrimes } from '../utils/3DlatticeUtils';
+import { generate3DLattice, undo3DLast, updateRadialPrimes } from '../../utils/3DlatticeUtils';
 
 const LatticePage = () => {
   const mountRef = useRef(null);

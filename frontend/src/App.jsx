@@ -1,10 +1,10 @@
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
-import HomePage from './components/HomePage';
-import Navbar from './components/Navbar';
-import AboutPage from './components/AboutPage';
-import LatticePage from './components/LatticePage';
-import CalculatorPage from './components/CalculatorPage';
 import SpiralPage from './components/spiral/SpiralPage';
+import HomePage from './components/navigation/HomePage';
+import Navbar from './components/navigation/Navbar';
+import AboutPage from './components/navigation/AboutPage';
+import LatticePage from './components/lattice/LatticePage';
+import CalculatorPage from './components/calculator/CalculatorPage';
 
 
 function App() {

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import usePartialSetAPI from '../hooks/usePartialSetAPI';
+import usePartialSetAPI from '../../hooks/usePartialSetAPI';
 
 const CalculatorPage = () => {
   const [userInput, setUserInput] = useState('');
