@@ -1,6 +1,15 @@
-import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchIntMatrix,/* getSubsets, */sumArray } from "../../utils/spiralSets";
+import { useState } from "react";
+import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchIntMatrix, getSubsets, sumArray } from "../../utils/spiralSets";
+import MatrixTable from "./MatrixTable";
+import SubsetSection from "./SubsetSection";
+import SummarySection from "./SummarySection";
+import CollapsibleSection from "./CollapsibleSection";
 
 const InfoPanel = ({ selected, onClear }) => {
+  const [showMatrices, setShowMatrices] = useState(false);
+  const [showPitchSubsets, setShowPitchSubsets] = useState(false);
+  const [showPCSubsets, setShowPCSubsets] = useState(false);
+
   const selectedArr = [...selected].sort((a, b) => a - b);
 
   if (selectedArr.length === 0) {
@@ -23,46 +32,7 @@ const InfoPanel = ({ selected, onClear }) => {
   const pMatrix = getPitchIntMatrix(selectedArr);
   const pcMatrix = getPCIntMatrix(selectedArr);
 
-  // const subsets = getSubsets(selectedArr);
-
-  const formatSet = (arr, braces = '{}', underline = false) => {
-    const [open, close] = braces.split('');
-    return (
-      <span>
-        {open}
-        {arr.map((x, i) => (
-          <span key={i} className={underline ? 'underline' : ''}>
-            {x}
-            {i < arr.length - 1 ? ', ' : ''}
-          </span>
-        ))}
-        {close}
-      </span>
-    );
-  };
-
-  const renderMatrix = (elements, matrix) => (
-    <table className="border-collapse border border-gray-400 text-sm mx-auto">
-      <thead>
-        <tr>
-          <th className="border border-gray-400 p-1"></th>
-          {elements.map((e, idx) => (
-            <th key={idx} className="border border-gray-400 p-1">{e}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {matrix.map((row, i) => (
-          <tr key={i}>
-            <th className="border border-gray-400 p-1">{elements[i]}</th>
-            {row.map((cell, j) => (
-              <td key={j} className="border border-gray-400 p-1 text-center">{cell}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
+  const subsets = getSubsets(selectedArr);
 
   return (
     <div className="p-4 bg-white border border-gray-300 rounded-lg shadow w-full text-sm text-left space-y-2">
@@ -73,59 +43,63 @@ const InfoPanel = ({ selected, onClear }) => {
       >
         Clear
       </button>
-      <p>
-        <strong>Partial set:</strong> {formatSet(parset, '{}')}
-      </p>
-      <p>
-        <strong>Partial-class set:</strong>{' '}
-        {formatSet(parcset, '{}', true)}
-      </p>
-      <p>
-        <strong>Partial-set class:</strong> {formatSet(parSC, '[]')}
-      </p>
-      <p>
-        <strong>Partial-class set class:</strong>{' '}
-        {formatSet(parcSC, '[]', true)}
-      </p>
-      <p>
-        <strong>
-          Spectral Extension<sub>p</sub>:
-        </strong> {spectralExtP}
-      </p>
-      <p>
-        <strong>
-          Spectral Extension<sub>pc</sub>:
-        </strong> {spectralExtPC}
-      </p>
+      <SummarySection
+        parset={parset}
+        parcset={parcset}
+        parSC={parSC}
+        parcSC={parcSC}
+        spectralExtP={spectralExtP}
+        spectralExtPC={spectralExtPC}
+      />
+
       <hr className="my-2" />
-      {parset.length > 1 &&
-        <p>
-          <strong>Pitch intervals:</strong>
-          {renderMatrix(pMatrix.elements, pMatrix.matrix)}
-        </p>
-      }
-      {parcset.length > 1 &&
-        <p>
-          <strong>Pitch-class intervals</strong>
-          {renderMatrix(pcMatrix.elements, pcMatrix.matrix)}
-        </p>
-      }
-      {/* <hr className="my-2" />
-      {parset.length > 3 &&
-        <p>
-          <strong>Subsets:</strong>
-          {Object.keys(subsets).sort((a, b) => a - b).map(size => (
-            <div key={size} className="mt-2">
-              <p className="font-medium">Size {size}:</p>
-              <ul className="list-disc list-inside text-xs text-gray-700 space-y-1">
-                {subsets[size].map((subset, idx) => (
-                  <li key={idx}>{formatSet(subset, '{}')}</li>
-                ))}
-              </ul>
-            </div>
-          ))}
-        </p>
-      } */}
+
+      {parset.length > 1 && (
+        <CollapsibleSection title="interval matrices" show={showMatrices} onToggle={() => setShowMatrices(!showMatrices)}>
+          <div>
+            <strong>Pitch intervals:</strong>
+            <MatrixTable elements={pMatrix.elements} matrix={pMatrix.matrix} />
+            {parcset.length > 1 && (
+              <>
+                <strong>Pitch-class intervals:</strong>
+                <MatrixTable elements={pcMatrix.elements} matrix={pcMatrix.matrix} />
+              </>
+            )}
+          </div>
+        </CollapsibleSection>
+      )}
+
+      <hr className="my-2" />
+
+      {parset.length > 3 && (
+        <CollapsibleSection
+          title='pitch subsets'
+          show={showPitchSubsets}
+          onToggle={() => setShowPitchSubsets(!showPitchSubsets)}
+        >
+          <SubsetSection
+            subsets={subsets}
+            getSC={getParSC}
+            underline={false}
+          />
+        </CollapsibleSection>
+      )}
+
+      <hr className="my-2" />
+
+      {parcset.length > 3 && (
+        <CollapsibleSection
+          title='pitch-class subsets'
+          show={showPCSubsets}
+          onToggle={() => setShowPCSubsets(!showPCSubsets)}
+        >
+          <SubsetSection
+            subsets={subsets}
+            getSC={getParcSC}
+            underline={true}
+          />
+        </CollapsibleSection>
+      )}
     </div>
   );
 };
