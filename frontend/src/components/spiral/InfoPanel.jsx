@@ -3,7 +3,8 @@ import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchInt
 
 const InfoPanel = ({ selected, onClear }) => {
   const [showMatrices, setShowMatrices] = useState(false);
-  const [showSubsets, setShowSubsets] = useState(false);
+  const [showPitchSubsets, setPitchShowSubsets] = useState(false);
+  const [showPCSubsets, setShowPCSubsets] = useState(false);
 
   const selectedArr = [...selected].sort((a, b) => a - b);
 
@@ -116,12 +117,12 @@ const InfoPanel = ({ selected, onClear }) => {
       {parset.length > 3 && (
         <div>
           <button
-            onClick={() => setShowSubsets(!showSubsets)}
+            onClick={() => setPitchShowSubsets(!showPitchSubsets)}
             className="text-xs text-blue-600 hover:underline mb-1"
           >
-            {showSubsets ? 'Hide' : 'Show'} subsets
+            {showPitchSubsets ? 'Hide' : 'Show'} pitch subsets
           </button>
-          {showSubsets && Object.keys(subsets).sort((a, b) => a - b).map(size => {
+          {showPitchSubsets && Object.keys(subsets).sort((a, b) => a - b).map(size => {
             const scMap = {};
             subsets[size].forEach(subset => {
               const sc = getParSC(subset);
@@ -138,6 +139,45 @@ const InfoPanel = ({ selected, onClear }) => {
                 <div className="grid grid-cols-3 gap-2 text-xs text-gray-700">
                   {uniqueSCs.map((sc, idx) => (
                     <div key={idx}>{formatSet(sc, '[]')}</div>
+                  ))}
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
+      <hr className="my-2" />
+
+      {parcset.length > 3 && (
+        <div>
+          <button
+            onClick={() => setShowPCSubsets(!showPCSubsets)}
+            className="text-xs text-blue-600 hover:underline mb-1"
+          >
+            {showPCSubsets ? 'Hide' : 'Show'} pitch-class subsets
+          </button>
+          {showPCSubsets && Object.keys(subsets)
+            .map(Number)
+            .filter(size => size >= 3)
+            .sort((a, b) => a - b)
+            .map(size => {
+            const scMap = {};
+            subsets[size].forEach(subset => {
+              const sc = getParcSC(subset);
+              const key = sc.join(',');
+              scMap[key] = sc;
+            });
+            const uniqueSCs = Object.values(scMap);
+
+            return (
+              <div key={size} className="mt-2">
+                <p className="font-medium">
+                  Size {size}: ({uniqueSCs.length} classes)
+                </p>
+                <div className="grid grid-cols-3 gap-2 text-xs text-gray-700">
+                  {uniqueSCs.map((sc, idx) => (
+                    <div key={idx}>{formatSet(sc, '[]', true)}</div>
                   ))}
                 </div>
               </div>
