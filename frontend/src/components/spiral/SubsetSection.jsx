@@ -1,8 +1,6 @@
 import FormatSet from "./FormatSet";
 
-const SubsetSection = ({ title, subsets, getSC, show, minSize = 3, underline = false }) => {
-  if (!show) return null;
-
+const SubsetSection = ({ subsets, getSC, minSize = 3, underline = false }) => {
   return (
     <div>
       {Object.keys(subsets)

@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState } from "react";
 
 const NumberInput = ({ onAdd }) => {
   const [input, setInput] = useState('');

@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchIntMatrix, getSubsets, sumArray } from "../../utils/spiralSets";
-import FormatSet from "./FormatSet";
 import MatrixTable from "./MatrixTable";
 import SubsetSection from "./SubsetSection";
+import SummarySection from "./SummarySection";
+import CollapsibleSection from "./CollapsibleSection";
 
 const InfoPanel = ({ selected, onClear }) => {
   const [showMatrices, setShowMatrices] = useState(false);
-  const [showPitchSubsets, setPitchShowSubsets] = useState(false);
+  const [showPitchSubsets, setShowPitchSubsets] = useState(false);
   const [showPCSubsets, setShowPCSubsets] = useState(false);
 
   const selectedArr = [...selected].sort((a, b) => a - b);
@@ -42,82 +43,62 @@ const InfoPanel = ({ selected, onClear }) => {
       >
         Clear
       </button>
-      <p><strong>Partial set:</strong> <FormatSet arr={parset} braces="{}" /></p>
-      <p><strong>Partial-class set:</strong> <FormatSet arr={parcset} braces="{}" underline='true' /></p>
-      <p><strong>Partial-set class:</strong> <FormatSet arr={parSC} braces="[]" /></p>
-      <p><strong>Partial-class set class:</strong> <FormatSet arr={parcSC} braces="[]" underline='true' /></p>
-      <p><strong>Spectral Extension<sub>p</sub>:</strong> {spectralExtP}</p>
-      <p><strong>Spectral Extension<sub>pc</sub>:</strong> {spectralExtPC}</p>
+      <SummarySection
+        parset={parset}
+        parcset={parcset}
+        parSC={parSC}
+        parcSC={parcSC}
+        spectralExtP={spectralExtP}
+        spectralExtPC={spectralExtPC}
+      />
 
       <hr className="my-2" />
 
       {parset.length > 1 && (
-        <div className="mb-2">
-          <button
-            onClick={() => setShowMatrices(!showMatrices)}
-            className="text-xs text-blue-600 hover:underline mb-1"
-          >
-            {showMatrices ? 'Hide' : 'Show'} interval matrices
-          </button>
-          {showMatrices && (
-            <div>
-              <div>
-                <strong>Pitch intervals:</strong>
-                <MatrixTable elements={pMatrix.elements} matrix={pMatrix.matrix} />
-              </div>
-              {parcset.length > 1 && (
-                <div className="mt-2">
-                  <strong>Pitch-class intervals:</strong>
-                  <MatrixTable elements={pcMatrix.elements} matrix={pcMatrix.matrix} />
-                </div>
-              )}
-            </div>
-          )}
-        </div>
+        <CollapsibleSection title="interval matrices" show={showMatrices} onToggle={() => setShowMatrices(!showMatrices)}>
+          <div>
+            <strong>Pitch intervals:</strong>
+            <MatrixTable elements={pMatrix.elements} matrix={pMatrix.matrix} />
+            {parcset.length > 1 && (
+              <>
+                <strong>Pitch-class intervals:</strong>
+                <MatrixTable elements={pcMatrix.elements} matrix={pcMatrix.matrix} />
+              </>
+            )}
+          </div>
+        </CollapsibleSection>
       )}
 
       <hr className="my-2" />
 
       {parset.length > 3 && (
-        <div>
-          <button
-            onClick={() => setPitchShowSubsets(!showPitchSubsets)}
-            className="text-xs text-blue-600 hover:underline mb-1"
-          >
-            {showPitchSubsets ? 'Hide' : 'Show'} pitch subsets
-          </button>
-          {showPitchSubsets &&
-            <SubsetSection
-              title='Pitch subsets'
-              subsets={subsets}
-              getSC={getParSC}
-              show={showPitchSubsets}
-              underline={false}
-            />
-          }
-        </div>
+        <CollapsibleSection
+          title='pitch subsets'
+          show={showPitchSubsets}
+          onToggle={() => setShowPitchSubsets(!showPitchSubsets)}
+        >
+          <SubsetSection
+            subsets={subsets}
+            getSC={getParSC}
+            underline={false}
+          />
+        </CollapsibleSection>
       )}
 
       <hr className="my-2" />
 
       {parcset.length > 3 && (
-        <div>
-          <button
-            onClick={() => setShowPCSubsets(!showPCSubsets)}
-            className="text-xs text-blue-600 hover:underline mb-1"
-          >
-            {showPCSubsets ? 'Hide' : 'Show'} pitch-class subsets
-          </button>
-          {showPCSubsets &&
-            <SubsetSection
-              title='Pitch-class subsets'
-              subsets={subsets}
-              getSC={getParcSC}
-              show={showPCSubsets}
-              underline={true}
-            />
-          }
-        </div>
+        <CollapsibleSection
+          title='pitch-class subsets'
+          show={showPCSubsets}
+          onToggle={() => setShowPCSubsets(!showPCSubsets)}
+        >
+          <SubsetSection
+            subsets={subsets}
+            getSC={getParcSC}
+            underline={true}
+          />
+        </CollapsibleSection>
       )}
     </div>
   );
