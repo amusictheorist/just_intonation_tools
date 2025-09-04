@@ -2,6 +2,7 @@ import { useState } from "react";
 
 const NumberInput = ({ onAdd }) => {
   const [input, setInput] = useState('');
+  const [error, setError] = useState('');
 
   const handleSubmit = () => {
     if (!input.trim()) return;
@@ -9,10 +10,18 @@ const NumberInput = ({ onAdd }) => {
     const numbers = input
       .split(/[ ,]+/)
       .map((n) => parseInt(n, 10))
-      .filter((n) => !isNaN(n) && n > 0);
+      .filter((n) => !isNaN(n));
     
-    numbers.forEach((n) => onAdd(n));
+    const validNumbers = numbers.filter((n) => n > 0 && n <= 1024);
+
+    if (validNumbers.length === 0) {
+      setError('Please enter integers between 1 and 1024.');
+      return;
+    }
+
+    validNumbers.forEach((n) => onAdd(n));
     setInput('');
+    setError('');
   };
 
   const handleKeyDown = (e) => {
@@ -38,6 +47,7 @@ const NumberInput = ({ onAdd }) => {
       >
         Add
       </button>
+      {error && <p className="text-red-600 text-sm">{error}</p>}
     </div>
   );
 };
