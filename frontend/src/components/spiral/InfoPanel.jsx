@@ -1,5 +1,8 @@
 import { useState } from "react";
 import { getParcSC, getParcset, getParSC, getParset, getPCIntMatrix, getPitchIntMatrix, getSubsets, sumArray } from "../../utils/spiralSets";
+import FormatSet from "./FormatSet";
+import MatrixTable from "./MatrixTable";
+import SubsetSection from "./SubsetSection";
 
 const InfoPanel = ({ selected, onClear }) => {
   const [showMatrices, setShowMatrices] = useState(false);
@@ -30,45 +33,6 @@ const InfoPanel = ({ selected, onClear }) => {
 
   const subsets = getSubsets(selectedArr);
 
-  const formatSet = (arr, braces = '{}', underline = false) => {
-    const [open, close] = braces.split('');
-    return (
-      <span>
-        {open}
-        {arr.map((x, i) => (
-          <span key={i} className={underline ? 'underline' : ''}>
-            {x}
-            {i < arr.length - 1 ? ', ' : ''}
-          </span>
-        ))}
-        {close}
-      </span>
-    );
-  };
-
-  const renderMatrix = (elements, matrix) => (
-    <table className="border-collapse border border-gray-400 text-sm mx-auto">
-      <thead>
-        <tr>
-          <th className="border border-gray-400 p-1"></th>
-          {elements.map((e, idx) => (
-            <th key={idx} className="border border-gray-400 p-1">{e}</th>
-          ))}
-        </tr>
-      </thead>
-      <tbody>
-        {matrix.map((row, i) => (
-          <tr key={i}>
-            <th className="border border-gray-400 p-1">{elements[i]}</th>
-            {row.map((cell, j) => (
-              <td key={j} className="border border-gray-400 p-1 text-center">{cell}</td>
-            ))}
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-
   return (
     <div className="p-4 bg-white border border-gray-300 rounded-lg shadow w-full text-sm text-left space-y-2">
       <h3 className="text-lg font-semibold mb-2">Selected partials</h3>
@@ -78,10 +42,10 @@ const InfoPanel = ({ selected, onClear }) => {
       >
         Clear
       </button>
-      <p><strong>Partial set:</strong> {formatSet(parset, '{}')}</p>
-      <p><strong>Partial-class set:</strong> {formatSet(parcset, '{}', true)}</p>
-      <p><strong>Partial-set class:</strong> {formatSet(parSC, '[]')}</p>
-      <p><strong>Partial-class set class:</strong> {formatSet(parcSC, '[]', true)}</p>
+      <p><strong>Partial set:</strong> <FormatSet arr={parset} braces="{}" /></p>
+      <p><strong>Partial-class set:</strong> <FormatSet arr={parcset} braces="{}" underline='true' /></p>
+      <p><strong>Partial-set class:</strong> <FormatSet arr={parSC} braces="[]" /></p>
+      <p><strong>Partial-class set class:</strong> <FormatSet arr={parcSC} braces="[]" underline='true' /></p>
       <p><strong>Spectral Extension<sub>p</sub>:</strong> {spectralExtP}</p>
       <p><strong>Spectral Extension<sub>pc</sub>:</strong> {spectralExtPC}</p>
 
@@ -99,12 +63,12 @@ const InfoPanel = ({ selected, onClear }) => {
             <div>
               <div>
                 <strong>Pitch intervals:</strong>
-                {renderMatrix(pMatrix.elements, pMatrix.matrix)}
+                <MatrixTable elements={pMatrix.elements} matrix={pMatrix.matrix} />
               </div>
               {parcset.length > 1 && (
                 <div className="mt-2">
                   <strong>Pitch-class intervals:</strong>
-                  {renderMatrix(pcMatrix.elements, pcMatrix.matrix)}
+                  <MatrixTable elements={pcMatrix.elements} matrix={pcMatrix.matrix} />
                 </div>
               )}
             </div>
@@ -122,28 +86,15 @@ const InfoPanel = ({ selected, onClear }) => {
           >
             {showPitchSubsets ? 'Hide' : 'Show'} pitch subsets
           </button>
-          {showPitchSubsets && Object.keys(subsets).sort((a, b) => a - b).map(size => {
-            const scMap = {};
-            subsets[size].forEach(subset => {
-              const sc = getParSC(subset);
-              const key = sc.join(',');
-              scMap[key] = sc;
-            });
-            const uniqueSCs = Object.values(scMap);
-            
-            return (
-              <div key={size} className="mt-2">
-                <p className="font-medium">
-                  Size {size}: ({uniqueSCs.length} classes)
-                </p>
-                <div className="grid grid-cols-3 gap-2 text-xs text-gray-700">
-                  {uniqueSCs.map((sc, idx) => (
-                    <div key={idx}>{formatSet(sc, '[]')}</div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {showPitchSubsets &&
+            <SubsetSection
+              title='Pitch subsets'
+              subsets={subsets}
+              getSC={getParSC}
+              show={showPitchSubsets}
+              underline={false}
+            />
+          }
         </div>
       )}
 
@@ -157,32 +108,15 @@ const InfoPanel = ({ selected, onClear }) => {
           >
             {showPCSubsets ? 'Hide' : 'Show'} pitch-class subsets
           </button>
-          {showPCSubsets && Object.keys(subsets)
-            .map(Number)
-            .filter(size => size >= 3)
-            .sort((a, b) => a - b)
-            .map(size => {
-            const scMap = {};
-            subsets[size].forEach(subset => {
-              const sc = getParcSC(subset);
-              const key = sc.join(',');
-              scMap[key] = sc;
-            });
-            const uniqueSCs = Object.values(scMap);
-
-            return (
-              <div key={size} className="mt-2">
-                <p className="font-medium">
-                  Size {size}: ({uniqueSCs.length} classes)
-                </p>
-                <div className="grid grid-cols-3 gap-2 text-xs text-gray-700">
-                  {uniqueSCs.map((sc, idx) => (
-                    <div key={idx}>{formatSet(sc, '[]', true)}</div>
-                  ))}
-                </div>
-              </div>
-            );
-          })}
+          {showPCSubsets &&
+            <SubsetSection
+              title='Pitch-class subsets'
+              subsets={subsets}
+              getSC={getParcSC}
+              show={showPCSubsets}
+              underline={true}
+            />
+          }
         </div>
       )}
     </div>
