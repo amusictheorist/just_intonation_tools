@@ -41,9 +41,9 @@ const LatticeCanvas = ({ ratios, mode }) => {
         z = octave.value;
       }
 
-      manager.addPoint(x, y, z);
-    }, [ratios, mode]);
-  });
+      manager.addPoint(x, y, z, r.raw);
+    });
+  }, [ratios, mode]);
 
   return (
     <div

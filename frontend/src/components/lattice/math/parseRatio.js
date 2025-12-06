@@ -112,7 +112,7 @@ export const createRatio = (raw, options = {}) => {
   }
 
   return {
-    id: options.if || generateId(),
+    id: options.id || generateId(),
     raw: parsed.raw,
     valid: true,
     error: null,

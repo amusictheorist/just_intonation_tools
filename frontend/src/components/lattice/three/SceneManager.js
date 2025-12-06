@@ -45,25 +45,71 @@ export class SceneManager {
   }
 
   clearPoints() {
-    this.points.forEach(p => {
-      if (p.userData.label !== "1/1") {
-        this.scene.remove(p);
+    const keep = new Set();
+    keep.add(this.camera);
+    this.scene.children.forEach(obj => {
+      if (obj.isLight) keep.add(obj);
+    });
+
+    const center = this.points[0];
+    keep.add(center);
+    if (center.userData && center.userData.labelSprite) {
+      keep.add(center.userData.labelSprite);
+    }
+
+    this.scene.children.slice().forEach(obj => {
+      if (!keep.has(obj)) {
+        this.scene.remove(obj);
       }
     });
 
-    this.points = this.points.filter(p => p.userData.label === "1/1");
+    this.points = [center];
   }
 
-  addPoint(x, y, z, color = 0x3366ff, label = "") {
+  addPoint(x, y, z, label = "", color = 0x3366ff) {
     const geom = new THREE.SphereGeometry(0.2, 32, 32);
     const mat = new THREE.MeshStandardMaterial({ color });
     const sphere = new THREE.Mesh(geom, mat);
-
     sphere.position.set(x, y, z);
-    sphere.userData.label = label;
 
     this.scene.add(sphere);
     this.points.push(sphere);
+
+    if (label) {
+      const sprite = this.createLabel(label);
+      sprite.position.set(x, y + 0.4, z);
+      this.scene.add(sprite);
+      sphere.userData.labelSprite = sprite;
+    }
+  }
+
+  createLabel(text) {
+    const canvas = document.createElement('canvas');
+    canvas.width = 512;
+    canvas.height = 128;
+
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.fillStyle = 'black';
+    context.font = '64px Arial';
+    context.textAlign = 'center';
+    context.textBaseline = 'middle';
+    context.fillText(text, canvas.width / 2, canvas.height / 2);
+
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.needsUpdate = true;
+
+    const mat = new THREE.SpriteMaterial({
+      map: texture,
+      transparent: true,
+      depthTest: false,
+      depthWrite: false
+    });
+
+    const sprite = new THREE.Sprite(mat);
+    sprite.scale.set(2, 0.5, 1);
+
+    return sprite;
   }
 
   addCenterPoint() {
@@ -72,10 +118,14 @@ export class SceneManager {
     const sphere = new THREE.Mesh(geom, mat);
 
     sphere.position.set(0, 0, 0);
-    sphere.userData.label = "1/1";
 
     this.scene.add(sphere);
     this.points.push(sphere);
+
+    const sprite = this.createLabel('1/1');
+    sprite.position.set(0, 0.4, 0);
+    this.scene.add(sprite);
+    sphere.userData.labelSprite = sprite;
   }
 
   resize() {
