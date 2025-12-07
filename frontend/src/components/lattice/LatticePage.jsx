@@ -66,6 +66,22 @@ const LatticePage = () => {
       <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full max-w-[1000px] mx-auto">
         <LatticeCanvas ratios={ratios} mode={mode} />
       </div>
+      <div
+        id='lattice-tooltip'
+        style={{
+          position: "fixed",
+          display: 'none',
+          pointerEvents: 'none',
+          background: 'rgba(255, 255, 255, 0.95)',
+          padding: '6px 10px',
+          border: '1px solid #444',
+          borderRadius: '6px',
+          fontSize: '12px',
+          color: '#000',
+          whiteSpace: 'nowrap',
+          zIndex: '9999'
+        }}
+      />
     </div>
   );
 };

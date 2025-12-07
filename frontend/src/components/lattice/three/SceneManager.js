@@ -32,6 +32,9 @@ export class SceneManager {
 
     this.points = [];
     this.connections = [];
+    this.raycaster = new THREE.Raycaster();
+    this.mouse = new THREE.Vector2();
+    this.renderer.domElement.addEventListener('mousemove', this.onMouseMove);
 
     this.addCenterPoint();
 
@@ -72,13 +75,19 @@ export class SceneManager {
     this.connections = [];
   }
 
-  addPoint(x, y, z, label = "", color = 0x3366ff) {
+  addPoint(x, y, z, label = "", color = 0x3366ff, data = null) {
     const SPACING = 2;
     const geom = new THREE.SphereGeometry(0.2, 32, 32);
     const mat = new THREE.MeshStandardMaterial({ color });
     const sphere = new THREE.Mesh(geom, mat);
     sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
-    sphere.userData.lattice = [x, y, z];
+    sphere.userData = {
+      lattice: [x, y, z],
+      rawInput: label,
+      octaveLabel: label,
+      rawValue: data ? data.canonical.value : null,
+      octaveValue: data ? data.octave.value : null
+    };
 
     this.scene.add(sphere);
     this.points.push(sphere);
@@ -92,13 +101,10 @@ export class SceneManager {
 
     for (const other of this.points) {
       if (other !== sphere) {
-        this.connectIfVisible({
-          mesh: sphere,
-          lattice: sphere.userData.lattice
-        }, {
-          mesh: other,
-          lattice: other.userData.lattice
-        });
+        this.connectIfVisible(
+          { mesh: sphere, lattice: sphere.userData.lattice },
+          { mesh: other, lattice: other.userData.lattice }
+        );
       }
     }
   }
@@ -168,6 +174,52 @@ export class SceneManager {
 
     this.scene.add(line);
     this.connections.push(line);
+  }
+
+  onMouseMove = event => {
+    const rect = this.renderer.domElement.getBoundingClientRect();
+
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+
+    const candidates = this.points.filter(p => p !== this.points[0]);
+    const intersects = this.raycaster.intersectObjects(candidates, false);
+
+    if (intersects.length > 0) {
+      const hit = intersects[0].object;
+      this.showTooltip(hit.userData, event.clientX, event.clientY);
+    } else {
+      this.hideTooltip();
+    }
+  }
+
+  showTooltip(data, x, y) {
+    const div = document.getElementById('lattice-tooltip');
+    const [lx, ly, lz] = data.lattice || [0, 0, 0];
+    let extra = ''
+
+    if (data.rawValue && data.octaveValue) {
+      const octaveShift = Math.log2(data.rawValue / data.octaveValue);
+      extra = `<div><b>Octave shift:</b> ${octaveShift}</div>`;
+    }
+
+    const html = `
+      <div><b>Input:</b> ${data.rawInput}</div>
+      <div><b>Placed:</b> ${data.octaveLabel}</div>
+      <div><b>Coordinates:</b> (${lx}, ${ly}, ${lz})</div>
+      ${extra}
+    `;
+
+    div.innerHTML = html;
+    div.style.left = `${x + 10}px`;
+    div.style.top = `${y + 10}px`;
+    div.style.display = 'block';
+  }
+
+  hideTooltip() {
+    const div = document.getElementById('lattice-tooltip');
+    div.style.display = 'none';
   }
 
   resize() {

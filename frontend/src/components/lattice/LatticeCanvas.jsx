@@ -35,7 +35,7 @@ const LatticeCanvas = ({ ratios, mode }) => {
       }
       const { x, y, z } = coords;
       const label = `${r.octave.num}/${r.octave.den}`;
-      manager.addPoint(x, y, z, label);
+      manager.addPoint(x, y, z, label, 0x3366ff, r);
     });
   }, [ratios, mode]);
 
