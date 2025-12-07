@@ -31,6 +31,7 @@ export class SceneManager {
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
 
     this.points = [];
+    this.connections = [];
 
     this.addCenterPoint();
 
@@ -64,6 +65,11 @@ export class SceneManager {
     });
 
     this.points = [center];
+
+    for (let line of this.connections) {
+      this.scene.remove(line);
+    }
+    this.connections = [];
   }
 
   addPoint(x, y, z, label = "", color = 0x3366ff) {
@@ -72,6 +78,7 @@ export class SceneManager {
     const mat = new THREE.MeshStandardMaterial({ color });
     const sphere = new THREE.Mesh(geom, mat);
     sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
+    sphere.userData.lattice = [x, y, z];
 
     this.scene.add(sphere);
     this.points.push(sphere);
@@ -81,6 +88,18 @@ export class SceneManager {
       sprite.position.set(x * SPACING, y * SPACING + 0.4, z * SPACING);
       this.scene.add(sprite);
       sphere.userData.labelSprite = sprite;
+    }
+
+    for (const other of this.points) {
+      if (other !== sphere) {
+        this.connectIfVisible({
+          mesh: sphere,
+          lattice: sphere.userData.lattice
+        }, {
+          mesh: other,
+          lattice: other.userData.lattice
+        });
+      }
     }
   }
 
@@ -117,8 +136,8 @@ export class SceneManager {
     const geom = new THREE.SphereGeometry(0.2, 32, 32);
     const mat = new THREE.MeshStandardMaterial({ color: 0xff0000 });
     const sphere = new THREE.Mesh(geom, mat);
-
     sphere.position.set(0, 0, 0);
+    sphere.userData.lattice = [0, 0, 0];
 
     this.scene.add(sphere);
     this.points.push(sphere);
@@ -127,6 +146,28 @@ export class SceneManager {
     sprite.position.set(0, 0.4, 0);
     this.scene.add(sprite);
     sphere.userData.labelSprite = sprite;
+  }
+
+  connectIfVisible(p1, p2) {
+    const [x1, y1, z1] = p1.lattice;
+    const [x2, y2, z2] = p2.lattice;
+
+    const sameX = x1 === x2;
+    const sameY = y1 === y2;
+    const sameZ = z1 === z2;
+
+    const axesDifferent = (sameX ? 0 : 1) + (sameY ? 0 : 1) + (sameZ ? 0 : 1);
+    if (axesDifferent !== 1) return;
+
+    const geom = new THREE.BufferGeometry().setFromPoints([
+      p1.mesh.position,
+      p2.mesh.position
+    ]);
+    const mat = new THREE.LineBasicMaterial({ color: 0x999999 });
+    const line = new THREE.Line(geom, mat);
+
+    this.scene.add(line);
+    this.connections.push(line);
   }
 
   resize() {
