@@ -28,7 +28,12 @@ const LatticeCanvas = ({ ratios, mode }) => {
     manager.clearPoints();
 
     ratios.forEach(r => {
-      const { x, y, z } = placeRatio(r, 'classic');
+      const coords = placeRatio(r, 'classic');
+      if (!coords) {
+        console.warn(`Ratio ${r.raw} above 7-limit, please choose a 7-limit ratio`);
+        return;
+      }
+      const { x, y, z } = coords;
       const label = `${r.octave.num}/${r.octave.den}`;
       manager.addPoint(x, y, z, label);
     });
