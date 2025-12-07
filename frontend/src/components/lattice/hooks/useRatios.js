@@ -1,5 +1,6 @@
 import { useState, useCallback } from "react";
 import { createRatio } from "../math/parseRatio";
+import { place } from "../placement/classic";
 
 export const Modes = {
   CANONICAL: 'canonical',
@@ -24,11 +25,22 @@ export const useRatios = (initial = []) => {
       return { success: false, error: r.error };
     }
 
+    if (mode === Modes.CANONICAL) {
+      const coords = place(r);
+
+      if (!coords) {
+        return {
+          success: false,
+          error: 'Classic mode only allows 3-, 5-, and 7-limit ratios.'
+        }
+      }
+    }
+
     pushHistory();
 
     setRatios(prev => [...prev, r]);
     return { success: true, ratio: r };
-  }, [pushHistory]);
+  }, [pushHistory, mode]);
 
   const removeRatio = useCallback((id) => {
     pushHistory();
