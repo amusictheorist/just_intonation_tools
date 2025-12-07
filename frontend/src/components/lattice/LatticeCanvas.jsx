@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
 import { SceneManager } from "./three/SceneManager";
+import { placeRatio } from "./placement";
 
 const LatticeCanvas = ({ ratios, mode }) => {
   const containerRef = useRef(null);
@@ -27,21 +28,9 @@ const LatticeCanvas = ({ ratios, mode }) => {
     manager.clearPoints();
 
     ratios.forEach(r => {
-      const { canonical, octave } = r;
-
-      let x, y, z;
-
-      if (mode === 'canonical') {
-        x = canonical.num;
-        y = canonical.den;
-        z = canonical.value;
-      } else {
-        x = octave.num;
-        y = octave.den;
-        z = octave.value;
-      }
-
-      manager.addPoint(x, y, z, r.raw);
+      const { x, y, z } = placeRatio(r, 'classic');
+      const label = `${r.octave.num}/${r.octave.den}`;
+      manager.addPoint(x, y, z, label);
     });
   }, [ratios, mode]);
 

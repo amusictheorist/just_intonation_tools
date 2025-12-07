@@ -67,17 +67,18 @@ export class SceneManager {
   }
 
   addPoint(x, y, z, label = "", color = 0x3366ff) {
+    const SPACING = 2;
     const geom = new THREE.SphereGeometry(0.2, 32, 32);
     const mat = new THREE.MeshStandardMaterial({ color });
     const sphere = new THREE.Mesh(geom, mat);
-    sphere.position.set(x, y, z);
+    sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
 
     this.scene.add(sphere);
     this.points.push(sphere);
 
     if (label) {
       const sprite = this.createLabel(label);
-      sprite.position.set(x, y + 0.4, z);
+      sprite.position.set(x * SPACING, y * SPACING + 0.4, z * SPACING);
       this.scene.add(sprite);
       sphere.userData.labelSprite = sprite;
     }
