@@ -2,13 +2,19 @@ import { useEffect, useRef } from "react";
 import { SceneManager } from "./three/SceneManager";
 import { placeRatio } from "./placement";
 
-const LatticeCanvas = ({ ratios, mode }) => {
+const LatticeCanvas = ({ ratios, mode, removeRatio }) => {
   const containerRef = useRef(null);
   const managerRef = useRef(null);
 
   useEffect(() => {
     const container = containerRef.current;
-    managerRef.current = new SceneManager(container);
+    const manager = new SceneManager(container);
+
+    manager.onRemove = id => {
+      removeRatio(id);
+    };
+
+    managerRef.current = manager;
 
     const handleResize = () => managerRef.current.resize();
     window.addEventListener('resize', handleResize);
@@ -18,7 +24,7 @@ const LatticeCanvas = ({ ratios, mode }) => {
       container.removeChild(managerRef.current.renderer.domElement);
       managerRef.current = null;
     };
-  }, []);
+  }, [removeRatio]);
 
   useEffect(() => {
     if (!managerRef.current) return;
@@ -28,7 +34,7 @@ const LatticeCanvas = ({ ratios, mode }) => {
     manager.clearPoints();
 
     ratios.forEach(r => {
-      const coords = placeRatio(r, 'classic');
+      const coords = placeRatio(r, 'cubic');
       if (!coords) {
         console.warn(`Ratio ${r.raw} above 7-limit, please choose a 7-limit ratio`);
         return;

@@ -50,10 +50,10 @@ const LatticePage = () => {
             value={mode}
             onChange={(e) => setMode(e.target.value)}
           >
-            <option value={Modes.CANONICAL}>Canonical</option>
-            <option value={Modes.OCTAVE}>Octave</option>
+            <option value={Modes.CUBIC}>Cubic</option>
+            <option value={Modes.EXPANDED_CUBIC}>Expanded Cubic</option>
             <option value={Modes.RADIAL}>Radial</option>
-            <option value={Modes.SPHERICAL}>Spherical</option>
+            <option value={Modes.EXPANDED_RADIAL}>Expanded Radial</option>
           </select>
         </div>
 
@@ -64,7 +64,11 @@ const LatticePage = () => {
         )}
       </header>
       <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full max-w-[1000px] mx-auto">
-        <LatticeCanvas ratios={ratios} mode={mode} />
+        <LatticeCanvas
+          ratios={ratios}
+          mode={mode}
+          removeRatio={removeRatio}
+        />
       </div>
       <div
         id='lattice-tooltip'
