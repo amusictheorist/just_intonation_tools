@@ -1,18 +1,18 @@
 import { useState, useCallback } from "react";
 import { createRatio } from "../math/parseRatio";
-import { place } from "../placement/classic";
+import { place } from "../placement/cubic";
 
 export const Modes = {
-  CANONICAL: 'canonical',
-  OCTAVE: 'octave',
+  CUBIC: 'cubic',
+  EXPANDED_CUBIC: 'expanded_cubic',
   RADIAL: 'radial',
-  SPHERICAL: 'spherical'
+  EXPANDED_RADIAL: 'expanded_radial'
 };
 
 export const useRatios = (initial = []) => {
   const [ratios, setRatios] = useState(initial);
   const [history, setHistory] = useState([]);
-  const [mode, setMode] = useState(Modes.OCTAVE);
+  const [mode, setMode] = useState(Modes.CUBIC);
 
   const pushHistory = useCallback(() => {
     setHistory(prev => [...prev, ratios]);
@@ -25,13 +25,13 @@ export const useRatios = (initial = []) => {
       return { success: false, error: r.error };
     }
 
-    if (mode === Modes.CANONICAL) {
+    if (mode === Modes.CUBIC) {
       const coords = place(r);
 
       if (!coords) {
         return {
           success: false,
-          error: 'Classic mode only allows 3-, 5-, and 7-limit ratios.'
+          error: 'Cubic mode only allows 3-, 5-, and 7-limit ratios. Please switch to Expanded Cubic mode for higher limit ratios.'
         }
       }
     }
