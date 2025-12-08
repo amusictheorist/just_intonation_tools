@@ -37,10 +37,22 @@ const LatticeCanvas = ({ ratios, mode, removeRatio }) => {
     manager.clearPoints();
 
     ratios.forEach(r => {
-      const coords = placeRatio(r, 'cubic');
-      const { x, y, z } = coords;
+      const coords = placeRatio(r, mode);
+      const { x, y, z, lattice, latticeType, primeAnchor } = coords;
       const label = `${r.octave.num}/${r.octave.den}`;
-      manager.addPoint(x, y, z, label, 0x3366ff, r);
+      manager.addPoint(
+        x,
+        y,
+        z,
+        label,
+        0x3366ff,
+        {
+          ...r,
+          lattice,
+          latticeType,
+          primeAnchor
+        }
+      );
     });
   }, [ratios, mode]);
 
