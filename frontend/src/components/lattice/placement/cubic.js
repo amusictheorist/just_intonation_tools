@@ -16,9 +16,16 @@ export const place = (ratio) => {
 
   if (fn.leftover !== 1 || fd.leftover !== 1) return null;
 
+  const x = fn.a - fd.a;
+  const y = fn.b - fd.b;
+  const z = fn.c - fd.c;
+
   return {
-    x: fn.a - fd.a,
-    y: fn.b - fd.b,
-    z: fn.c - fd.c
+    x,
+    y,
+    z,
+    lattice: [x, y, z],
+    latticeType: 'global',
+    primeAnchor: null
   };
 };
