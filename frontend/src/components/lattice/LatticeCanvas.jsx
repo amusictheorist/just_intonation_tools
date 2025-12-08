@@ -8,37 +8,36 @@ const LatticeCanvas = ({ ratios, mode, removeRatio }) => {
 
   useEffect(() => {
     const container = containerRef.current;
-    const manager = new SceneManager(container);
+    if (!managerRef.current) {
+      managerRef.current = new SceneManager(container);
+      
+      const handleResize = () => managerRef.current.resize();
+      window.addEventListener('resize', handleResize);
+      
+      return () => {
+        window.removeEventListener('resize', handleResize);
+        container.removeChild(managerRef.current.renderer.domElement);
+        managerRef.current = null;
+      };
+    }
+  }, []);
 
-    manager.onRemove = id => {
-      removeRatio(id);
-    };
-
-    managerRef.current = manager;
-
-    const handleResize = () => managerRef.current.resize();
-    window.addEventListener('resize', handleResize);
-
-    return () => {
-      window.removeEventListener('resize', handleResize);
-      container.removeChild(managerRef.current.renderer.domElement);
-      managerRef.current = null;
-    };
+  useEffect(() => {
+    if (managerRef.current) {
+      managerRef.current.onRemove = id => {
+        removeRatio(id);
+      };
+    }
   }, [removeRatio]);
 
   useEffect(() => {
     if (!managerRef.current) return;
 
     const manager = managerRef.current;
-
     manager.clearPoints();
 
     ratios.forEach(r => {
       const coords = placeRatio(r, 'cubic');
-      if (!coords) {
-        console.warn(`Ratio ${r.raw} above 7-limit, please choose a 7-limit ratio`);
-        return;
-      }
       const { x, y, z } = coords;
       const label = `${r.octave.num}/${r.octave.den}`;
       manager.addPoint(x, y, z, label, 0x3366ff, r);
