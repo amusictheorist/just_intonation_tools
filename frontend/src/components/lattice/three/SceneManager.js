@@ -19,17 +19,19 @@ export class SceneManager {
       0.1,
       1000
     );
-    this.camera.position.set(0, 0, 20);
-
+    this.camera.position.set(10, 6, 14);
+    this.camera.lookAt(0, 0, 0);
+    
     const ambient = new THREE.AmbientLight(0xffffff, 0.4);
     this.scene.add(ambient);
-
+    
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(10, 10, 10);
     this.scene.add(light);
-
+    
     this.controls = new OrbitControls(this.camera, this.renderer.domElement);
     this.controls.target.set(0, 0, 0);
+    this.controls.update();
 
     this.points = [];
     this.connections = [];
