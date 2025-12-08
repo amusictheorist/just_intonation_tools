@@ -35,6 +35,7 @@ export class SceneManager {
     this.raycaster = new THREE.Raycaster();
     this.mouse = new THREE.Vector2();
     this.renderer.domElement.addEventListener('mousemove', this.onMouseMove);
+    this.renderer.domElement.addEventListener('click', this.onClick);
 
     this.addCenterPoint();
 
@@ -82,6 +83,7 @@ export class SceneManager {
     const sphere = new THREE.Mesh(geom, mat);
     sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
     sphere.userData = {
+      id: data ? data.id : null,
       lattice: [x, y, z],
       rawInput: label,
       octaveLabel: label,
@@ -191,6 +193,29 @@ export class SceneManager {
       this.showTooltip(hit.userData, event.clientX, event.clientY);
     } else {
       this.hideTooltip();
+    }
+  }
+
+  onClick = event => {
+    const rect = this.renderer.domElement.getBoundingClientRect();
+
+    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+    this.raycaster.setFromCamera(this.mouse, this.camera);
+
+    const candidates = this.points.filter(p => p !== this.points[0]);
+
+    const intersects = this.raycaster.intersectObjects(candidates, false);
+    if (intersects.length === 0) return;
+
+    const hit = intersects[0].object;
+
+    const id = hit.userData.id;
+    if (!id) return;
+
+    if (this.onRemove) {
+      this.onRemove(id);
     }
   }
 
