@@ -143,9 +143,15 @@ export class SceneManager {
 
     const sphere = new THREE.Mesh(geom, mat);
     sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
+
+    const lattice = data?.lattice ?? [x, y, z];
+    const latticeType = data?.latticeType ?? 'global';
+    const primeAnchor = data?.primeAnchor ?? null;
+
     sphere.userData = {
       id: data ? data.id : null,
-      lattice: [x, y, z],
+      lattice,
+      latticeType,
       rawInput: label,
       octaveLabel: label,
       rawValue: data ? data.canonical.value : null,
