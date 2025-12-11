@@ -169,14 +169,14 @@ export class SceneManager {
       sphere.userData.labelSprite = sprite;
     }
 
-    for (const other of this.points) {
-      if (other !== sphere && other.userData && Array.isArray(other.userData.lattice)) {
-        this.connectIfVisible(
-          { mesh: sphere, lattice: sphere.userData.lattice },
-          { mesh: other, lattice: other.userData.lattice }
-        );
-      }
-    }
+    // for (const other of this.points) {
+    //   if (other !== sphere && other.userData && Array.isArray(other.userData.lattice)) {
+    //     this.connectIfVisible(
+    //       { mesh: sphere, lattice: sphere.userData.lattice },
+    //       { mesh: other, lattice: other.userData.lattice }
+    //     );
+    //   }
+    // }
   }
 
   // method for creating sphere labels
