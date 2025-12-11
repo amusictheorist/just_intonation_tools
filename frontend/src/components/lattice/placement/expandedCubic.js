@@ -1,8 +1,28 @@
 import { place as placeCubic } from "./cubic";
 
-const SPACING = 2;
-const BASE_RADIUS = 2;
+const SPACING = 1;
+const BASE_RADIUS = 1.5;
 const SUB_PRIME_STEP = SPACING;
+const MAX_PRIME = 127;
+
+const sieve = n => {
+  const arr = Array(n + 1).fill(true);
+  arr[0] = arr[1] = false;
+  for (let i = 2; i * i <= n; i++) {
+    if (arr[i]) {
+      for (let j = i * i; j <= n; j += i) arr[j] = false;
+    }
+  }
+  return arr.map((b, i) => b ? i : null).filter(x => x);
+};
+
+const ALL_PRIMES = sieve(MAX_PRIME);
+const PRIME_INDEX = {};
+ALL_PRIMES.forEach((p, i) => PRIME_INDEX[p] = i);
+
+const GOLDEN_ANGLE = Math.PI * (3 - Math.sqrt(5));
+
+const N = ALL_PRIMES.length;
 
 const factorInt = n => {
   const factors = new Map();
@@ -70,33 +90,21 @@ const normalize = v => {
   return vec(v.x / len, v.y / len, v.z / len);
 };
 
-const primeIndex = new Map();
-
-const getPrimeIndex = p => {
-  if (!primeIndex.has(p)) {
-    primeIndex.set(p, primeIndex.size);
-  }
-  return primeIndex.get(p);
-};
-
 const primeFrames = new Map();
 
 const computePrimePosition = p => {
-  const k = getPrimeIndex(p);
-  const N = 64;
-  const golden = (1 + Math.sqrt(5)) / 2;
-  const t = (k + 0.5) / N;
+  const idx = PRIME_INDEX[p];
+  if (idx === undefined) throw new Error(`Prime ${p} not in PRIME_INDEX`);
+
+  const t = (idx + 0.5) / N;
   const z = 1 - 2 * t;
   const r = Math.sqrt(1 - z * z);
-  const theta = 2 * Math.PI * k / golden;
+  const theta = idx * GOLDEN_ANGLE;
 
   const x = r * Math.cos(theta);
   const y = r * Math.sin(theta);
 
-  const base = vec(x, y, z);
-
-  const rad = BASE_RADIUS;
-  return scale(normalize(base), rad);
+  return scale(normalize(vec(x,y,z)), BASE_RADIUS);
 };
 
 const getPrimeFrame = p => {
@@ -151,13 +159,26 @@ export const placeExpanded = ratio => {
     cur.p < min.p ? cur : min
   );
   const anchorPrime = anchorEntry.p;
+  const anchorExp = anchorEntry.e;
 
-  const frame = getPrimeFrame(anchorPrime);
-  let pos = { ...frame.origin };
+  const baseOrigin = computePrimePosition(anchorPrime);
+  const origin = anchorExp > 0 ? baseOrigin : scale(baseOrigin, -1);
+  const baseFrame = getPrimeFrame(anchorPrime);
 
-  if (a !== 0) pos = addScaled(pos, frame.Xp, a * SPACING);
-  if (b !== 0) pos = addScaled(pos, frame.Yp, b * SPACING);
-  if (c !== 0) pos = addScaled(pos, frame.Zp, c * SPACING);
+  let Xp = baseFrame.Xp;
+  let Yp = baseFrame.Yp;
+  let Zp = baseFrame.Zp;
+
+  if (anchorExp < 0) {
+    Zp = scale(Zp, -1);
+    Yp = scale(Yp, -1);
+  }
+
+  let pos = { ...origin };
+
+  if (a !== 0) pos = addScaled(pos, Xp, a * SPACING);
+  if (b !== 0) pos = addScaled(pos, Yp, b * SPACING);
+  if (c !== 0) pos = addScaled(pos, Zp, c * SPACING);
 
   for (const entry of highPrimes) {
     if (entry.p === anchorPrime) continue;
@@ -165,8 +186,9 @@ export const placeExpanded = ratio => {
     const p = entry.p;
     const e = entry.e;
 
-    const otherFrame = getPrimeFrame(p);
-    const dir = normalize(sub(otherFrame.origin, frame.origin));
+    const otherBase = computePrimePosition(p);
+    const otherOrigin = e > 0 ? otherBase : scale(otherBase, -1);
+    const dir = normalize(sub(otherOrigin, origin));
     pos = addScaled(pos, dir, e * SUB_PRIME_STEP);
   }
 
