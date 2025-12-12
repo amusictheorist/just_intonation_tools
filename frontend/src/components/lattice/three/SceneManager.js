@@ -146,10 +146,10 @@ export class SceneManager {
 
     const lattice = data?.lattice ?? [x, y, z];
     const latticeType = data?.latticeType ?? 'global';
-    const primeAnchor = data?.primeAnchor ?? null;
 
     sphere.userData = {
       id: data ? data.id : null,
+      ratio: data,
       lattice,
       latticeType,
       rawInput: label,
@@ -307,7 +307,6 @@ export class SceneManager {
   // method shows tooltip on mouse hover
   showTooltip(data, x, y) {
     const div = document.getElementById('lattice-tooltip');
-    const [lx, ly, lz] = data.lattice || [0, 0, 0];
     
     let extra = ''
     if (data.rawValue && data.octaveValue) {
@@ -318,7 +317,6 @@ export class SceneManager {
     const html = `
       <div><b>Input:</b> ${data.rawInput}</div>
       <div><b>Placed:</b> ${data.octaveLabel}</div>
-      <div><b>Coordinates:</b> (${lx}, ${ly}, ${lz})</div>
       ${extra}
     `;
 
