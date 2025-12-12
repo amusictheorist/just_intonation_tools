@@ -2,8 +2,8 @@ import { place as placeCubic } from "./cubic";
 
 // constants
 const SPACING = 1;
-const BASE_RADIUS = 1.5;
-const SUB_PRIME_STEP = SPACING;
+const BASE_RADIUS = 1;
+const SUB_PRIME_STEP = 0.5;
 const MAX_PRIME = 127;
 
 // prime indexing
@@ -97,8 +97,48 @@ const normalize = v => {
   return len === 0 ? vec(0, 0, 0) : vec(v.x / len, v.y / len, v.z / len);
 };
 
+// rotation helpers
+const toRad = deg => (deg * Math.PI) / 180;
+
+const rotateX = (v, angleDeg) => {
+  const a = toRad(angleDeg);
+  const c = Math.cos(a);
+  const s = Math.sin(a);
+  const y = v.y * c - v.z * s;
+  const z = v.y * s + v.z * c;
+  return vec(v.x, y, z);
+};
+
+const rotateY = (v, angleDeg) => {
+  const a = toRad(angleDeg);
+  const c = Math.cos(a);
+  const s = Math.sin(a);
+  const x = v.x * c + v.z * s;
+  const z = -v.x * s + v.z * c;
+  return vec(x, v.y, z);
+};
+
+const rotateZ = (v, angleDeg) => {
+  const a = toRad(angleDeg);
+  const c = Math.cos(a);
+  const s = Math.sin(a);
+  const x = v.x * c - v.y * s;
+  const y = v.x * s + v.y * c;
+  return vec(x, y, v.z);
+};
+
+const applyRotation = (v, rotation = {}) => {
+  const { rotX = 0, rotY = 0, rotZ = 0 } = rotation;
+  let out = { ...v };
+  out = rotateY(out, rotY);
+  out = rotateX(out, rotX);
+  out = rotateZ(out, rotZ);
+  return out;
+};
+
 // computing spherical prime positioning
-const computePrimePosition = (p, radiusScale = 1) => {
+const computePrimePosition = (p, radiusScale) => {
+  if (radiusScale == null) radiusScale = 1;
   const idx = PRIME_INDEX[p];
   if (idx === undefined) throw new Error(`Prime ${p} not in PRIME_INDEX`);
 
@@ -113,7 +153,7 @@ const computePrimePosition = (p, radiusScale = 1) => {
 
 const primeFrames = new Map();
 
-const getPrimeFrame = (p, radiusScale = 1, rotationAngle = 0, sign = +1) => {
+const getPrimeFrame = (p, radiusScale, rotationAngle = 0, sign = +1) => {
   const key = `${p}_${radiusScale}+${rotationAngle}_${sign}`;
   if (primeFrames.has(key)) return primeFrames.get(key);
 
@@ -130,27 +170,6 @@ const getPrimeFrame = (p, radiusScale = 1, rotationAngle = 0, sign = +1) => {
   let Yp = normalize(cross(radial, Xp));
   const Zp = radial;
 
-  if (rotationAngle !== 0) {
-    const ang = rotationAngle * Math.PI / 180;
-    const c = Math.cos(ang);
-    const s = Math.sin(ang);
-
-    const rotXp = vec(
-      Xp.x * c - Yp.x * s,
-      Xp.y * c - Yp.y * s,
-      Xp.z * c - Yp.z * s
-    );
-
-    const rotYp = vec(
-      Xp.x * s - Yp.x * c,
-      Xp.y * s - Yp.y * c,
-      Xp.z * s - Yp.z * c
-    );
-
-    Xp = rotXp;
-    Yp = rotYp;
-  }
-
   const frame = { origin, Xp, Yp, Zp };
   primeFrames.set(key, frame);
   return frame;
@@ -158,7 +177,7 @@ const getPrimeFrame = (p, radiusScale = 1, rotationAngle = 0, sign = +1) => {
 
 // main sphere placement
 export const placeExpanded = (ratio, controls = {}) => {
-  const { radiusScale = 1, rotationAngle = 0 } = controls;
+  const { radiusScale = 1, rotation = {} } = controls;
   const factors = factorRatio(ratio);
 
   const a = factors.get(3) || 0;
@@ -171,10 +190,15 @@ export const placeExpanded = (ratio, controls = {}) => {
     const base = placeCubic(ratio);
     if (!base) return null;
 
+    const rotatedPos = applyRotation(
+      vec(base.x, base.y, base.z),
+      rotation
+    );
+
     return {
-      x: base.x,
-      y: base.y,
-      z: base.z,
+      x: rotatedPos.x,
+      y: rotatedPos.y,
+      z: rotatedPos.z,
       lattice: base.lattice || [base.x, base.y, base.z],
       latticeType: 'global',
       primeAnchor: null
@@ -185,7 +209,7 @@ export const placeExpanded = (ratio, controls = {}) => {
   const [anchorPrime, anchorExp] = anchor;
   const sign = anchorExp > 0 ? +1 : -1;
 
-  const frame = getPrimeFrame(anchorPrime, radiusScale, rotationAngle, sign);
+  const frame = getPrimeFrame(anchorPrime, radiusScale, 0, sign);
 
   let pos = { ...frame.origin };
 
@@ -201,10 +225,12 @@ export const placeExpanded = (ratio, controls = {}) => {
     pos = addScaled(pos, dir, Math.abs(e) * SUB_PRIME_STEP);
   }
 
+  const rotatedPos = applyRotation(pos, rotation);
+
   return {
-    x: pos.x,
-    y: pos.y,
-    z: pos.z,
+    x: rotatedPos.x,
+    y: rotatedPos.y,
+    z: rotatedPos.z,
     lattice: [a, b, c],
     latticeType: 'prime',
     primeAnchor: anchorPrime
