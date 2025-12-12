@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { SceneManager } from "./three/SceneManager";
 import { placeRatio } from "./placement";
 
-const LatticeCanvas = ({ ratios, mode, controls, removeRatio }) => {
+const LatticeCanvas = ({ ratios, mode, controls, controlsReady, removeRatio }) => {
   const containerRef = useRef(null);
   const managerRef = useRef(null);
 
@@ -15,25 +15,24 @@ const LatticeCanvas = ({ ratios, mode, controls, removeRatio }) => {
     managerRef.current = manager;
 
     const handleResize = () => manager.resize();
-    window.addEventListener('resize', handleResize);
+    window.addEventListener("resize", handleResize);
 
     return () => {
-      window.removeEventListener('resize', handleResize);
+      window.removeEventListener("resize", handleResize);
       container.removeChild(manager.renderer.domElement);
       managerRef.current = null;
     };
   }, [removeRatio]);
 
-  // update points whenever ratios or controls change
   useEffect(() => {
     if (!managerRef.current) return;
+    if (!controlsReady) return;
 
     const manager = managerRef.current;
     manager.clearPoints();
 
     ratios.forEach(r => {
       const coords = placeRatio(r, mode, controls);
-
       if (!coords) {
         console.warn(`Could not place ratio ${r.raw}`);
         return;
@@ -43,12 +42,14 @@ const LatticeCanvas = ({ ratios, mode, controls, removeRatio }) => {
       const label = `${r.octave.num}/${r.octave.den}`;
       manager.addPoint(x, y, z, label, 0x3366ff, r);
     });
-  }, [ratios, mode]);
+  }, [ratios, mode, controlsReady]);
 
   useEffect(() => {
     if (!managerRef.current) return;
+    if (!controlsReady) return;
 
     const manager = managerRef.current;
+    const SPACING = 2;
 
     manager.points.forEach(point => {
       if (!point.userData || !point.userData.ratio) return;
@@ -57,13 +58,26 @@ const LatticeCanvas = ({ ratios, mode, controls, removeRatio }) => {
       const coords = placeRatio(r, mode, controls);
       if (!coords) return;
 
-      point.position.set(coords.x, coords.y, coords.z);
+      point.position.set(
+        coords.x * SPACING,
+        coords.y * SPACING,
+        coords.z * SPACING
+      );
 
       if (point.userData.labelSprite) {
-        point.userData.labelSprite.position.set(coords.x, coords.y + 0.4, coords.z);
+        point.userData.labelSprite.position.set(
+          coords.x * SPACING,
+          coords.y * SPACING + 0.4,
+          coords.z * SPACING
+        );
       }
     });
-  }, [controls.radiusScale, controls.rotationAngle]);
+  }, [
+    controls.radiusScale,
+    controls.rotation?.rotX,
+    controls.rotation?.rotY,
+    controls.rotation?.rotZ
+  ]);
 
   return (
     <div

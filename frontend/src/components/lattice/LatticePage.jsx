@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { useRatios, Modes } from "./hooks/useRatios";
-import RatioInput from './RatioInput';
-import LatticeCanvas from './LatticeCanvas';
+import RatioInput from "./RatioInput";
+import LatticeCanvas from "./LatticeCanvas";
 import { factorRatio } from "./placement/expandedCubic";
 
 const LatticePage = () => {
@@ -12,14 +12,16 @@ const LatticePage = () => {
     undo,
     reset,
     mode,
-    setMode,
+    setMode
   } = useRatios();
 
   const [inputError, setInputError] = useState(null);
-  const [radiusScale, setRadiusScale] = useState(1);
-  const [rotationAngle, setRotationAngle] = useState(0);
+  const [radiusScale, setRadiusScale] = useState(2);
+  const [rotX, setRotX] = useState(0);
+  const [rotY, setRotY] = useState(0);
+  const [rotZ, setRotZ] = useState(0);
 
-  const handleAdd = (raw) => {
+  const handleAdd = raw => {
     const { success, error } = addRatio(raw);
     if (!success) setInputError(error);
     else setInputError(null);
@@ -35,10 +37,16 @@ const LatticePage = () => {
   const controls = useMemo(
     () => ({
       radiusScale,
-      rotationAngle
+      rotation: { rotX, rotY, rotZ }
     }),
-    [radiusScale, rotationAngle]
+    [radiusScale, rotX, rotY, rotZ]
   );
+
+  const controlsReady =
+    radiusScale !== undefined &&
+    rotX !== undefined &&
+    rotY !== undefined &&
+    rotZ !== undefined;
 
   return (
     <div className="pt-[100px] px-8 py-12 text-center bg-gray-50">
@@ -67,7 +75,7 @@ const LatticePage = () => {
           <select
             className="px-3 py-2 border rounded"
             value={mode}
-            onChange={(e) => setMode(e.target.value)}
+            onChange={e => setMode(e.target.value)}
           >
             <option value={Modes.CUBIC}>Cubic</option>
             <option value={Modes.EXPANDED_CUBIC}>Expanded Cubic</option>
@@ -77,9 +85,7 @@ const LatticePage = () => {
         </div>
 
         {inputError && (
-          <div className="text-red-600 text-sm mt-2">
-            {inputError}
-          </div>
+          <div className="text-red-600 text-sm mt-2">{inputError}</div>
         )}
 
         {/* sliders for expanded cubic mode */}
@@ -87,12 +93,12 @@ const LatticePage = () => {
           {hasHighPrime && (
             <div className="flex flex-row gap-8 w-full max-w-xl justify-center">
               <div className="flex flex-col items-center">
-                <label className="dont-medium mb-1">Sphere Radius</label>
+                <label className="font-medium mb-1">Sphere Radius</label>
                 <input
                   type="range"
-                  min='0.5'
-                  max='2'
-                  step='0.01'
+                  min="0.5"
+                  max="3"
+                  step="0.01"
                   value={radiusScale}
                   onChange={e => setRadiusScale(parseFloat(e.target.value))}
                   className="w-40"
@@ -101,17 +107,45 @@ const LatticePage = () => {
               </div>
 
               <div className="flex flex-col items-center">
-                <label className="font-medium mb-1">Local Lattice Rotation</label>
+                <label className="font-medium mb-1">Rotate X</label>
                 <input
                   type="range"
-                  min='0'
-                  max='360'
-                  step='1'
-                  value={rotationAngle}
-                  onChange={e => setRotationAngle(parseFloat(e.target.value))}
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotX}
+                  onChange={e => setRotX(parseFloat(e.target.value))}
                   className="w-40"
                 />
-                <div className="text-sm">Angle: {rotationAngle}º</div>
+                <div className="text-sm">X: {rotX}°</div>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <label className="font-medium mb-1">Rotate Y</label>
+                <input
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotY}
+                  onChange={e => setRotY(parseFloat(e.target.value))}
+                  className="w-40"
+                />
+                <div className="text-sm">Y: {rotY}°</div>
+              </div>
+
+              <div className="flex flex-col items-center">
+                <label className="font-medium mb-1">Rotate Z</label>
+                <input
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotZ}
+                  onChange={e => setRotZ(parseFloat(e.target.value))}
+                  className="w-40"
+                />
+                <div className="text-sm">Z: {rotZ}°</div>
               </div>
             </div>
           )}
@@ -124,23 +158,26 @@ const LatticePage = () => {
           ratios={ratios}
           mode={mode}
           controls={controls}
+          controlsReady={controlsReady}
           removeRatio={removeRatio}
         />
       </div>
+
+      {/* tooltip element */}
       <div
-        id='lattice-tooltip'
+        id="lattice-tooltip"
         style={{
           position: "fixed",
-          display: 'none',
-          pointerEvents: 'none',
-          background: 'rgba(255, 255, 255, 0.95)',
-          padding: '6px 10px',
-          border: '1px solid #444',
-          borderRadius: '6px',
-          fontSize: '12px',
-          color: '#000',
-          whiteSpace: 'nowrap',
-          zIndex: '9999'
+          display: "none",
+          pointerEvents: "none",
+          background: "rgba(255, 255, 255, 0.95)",
+          padding: "6px 10px",
+          border: "1px solid #444",
+          borderRadius: "6px",
+          fontSize: "12px",
+          color: "#000",
+          whiteSpace: "nowrap",
+          zIndex: "9999"
         }}
       />
     </div>
