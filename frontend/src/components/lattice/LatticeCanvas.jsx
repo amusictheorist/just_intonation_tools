@@ -1,10 +1,12 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SceneManager } from "./three/SceneManager";
 import { placeRatio } from "./placement";
 
 const LatticeCanvas = ({ ratios, mode, controls, controlsReady, removeRatio }) => {
   const containerRef = useRef(null);
   const managerRef = useRef(null);
+  const [dragging, setDragging] = useState(false);
+  const last = useRef({ x: 0, y: 0 });
 
   // initialize scene
   useEffect(() => {
