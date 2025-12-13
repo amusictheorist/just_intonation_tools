@@ -17,9 +17,15 @@ const LatticePage = () => {
 
   const [inputError, setInputError] = useState(null);
   const [radiusScale, setRadiusScale] = useState(2);
+
   const [rotX, setRotX] = useState(0);
   const [rotY, setRotY] = useState(0);
   const [rotZ, setRotZ] = useState(0);
+
+  const [masterRot, setMasterRot] = useState(0);
+  const [rotXY, setRotXY] = useState(0);
+  const [rotYZ, setRotYZ] = useState(0);
+  const [rotXZ, setRotXZ] = useState(0);
 
   const handleAdd = raw => {
     const { success, error } = addRatio(raw);
@@ -34,19 +40,25 @@ const LatticePage = () => {
     });
   }, [ratios]);
 
+  const combinedRot = {
+    rotX: rotX + masterRot + rotXY + rotXZ,
+    rotY: rotY + masterRot + rotXY + rotYZ,
+    rotZ: rotZ + masterRot + rotYZ + rotXZ
+  };
+
   const controls = useMemo(
     () => ({
       radiusScale,
-      rotation: { rotX, rotY, rotZ }
+      rotation: combinedRot
     }),
-    [radiusScale, rotX, rotY, rotZ]
+    [radiusScale, combinedRot]
   );
 
   const controlsReady =
     radiusScale !== undefined &&
-    rotX !== undefined &&
-    rotY !== undefined &&
-    rotZ !== undefined;
+    combinedRot.rotX !== undefined &&
+    combinedRot.rotY !== undefined &&
+    combinedRot.rotZ !== undefined;
 
   return (
     <div className="pt-[100px] px-8 py-12 text-center bg-gray-50">
@@ -89,65 +101,138 @@ const LatticePage = () => {
         )}
 
         {/* sliders for expanded cubic mode */}
-        <div className="w-full flex flex-col items-center gap-4">
+        <div className="w-full flex flex-col items-center gap-10 mt-6">
           {hasHighPrime && (
-            <div className="flex flex-row gap-8 w-full max-w-xl justify-center">
-              <div className="flex flex-col items-center">
-                <label className="font-medium mb-1">Sphere Radius</label>
-                <input
-                  type="range"
-                  min="0.5"
-                  max="3"
-                  step="0.01"
-                  value={radiusScale}
-                  onChange={e => setRadiusScale(parseFloat(e.target.value))}
-                  className="w-40"
-                />
-                <div className="text-sm">Scale: {radiusScale.toFixed(2)}</div>
+            <>
+              {/* radius + fine rotation */}
+              <div className="flex flex-row gap-12 w-full max-w-5xl justify-center">
+
+                {/* radius slider */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Radius</label>
+                  <input
+                    type="range"
+                    min="0.5"
+                    max="3"
+                    step="0.01"
+                    value={radiusScale}
+                    onChange={e => setRadiusScale(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{radiusScale.toFixed(2)}</div>
+                </div>
+
+                {/* rotX */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Rotate X</label>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="1"
+                    value={rotX}
+                    onChange={e => setRotX(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{rotX}°</div>
+                </div>
+
+                {/* rotY */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Rotate Y</label>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="1"
+                    value={rotY}
+                    onChange={e => setRotY(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{rotY}°</div>
+                </div>
+
+                {/* rotZ */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Rotate Z</label>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="1"
+                    value={rotZ}
+                    onChange={e => setRotZ(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{rotZ}°</div>
+                </div>
               </div>
 
-              <div className="flex flex-col items-center">
-                <label className="font-medium mb-1">Rotate X</label>
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  step="1"
-                  value={rotX}
-                  onChange={e => setRotX(parseFloat(e.target.value))}
-                  className="w-40"
-                />
-                <div className="text-sm">X: {rotX}°</div>
-              </div>
+              {/* master rotation  + coupled rotations */}
+              <div className="flex flex-row gap-12 w-full max-w-5xl justify-center">
 
-              <div className="flex flex-col items-center">
-                <label className="font-medium mb-1">Rotate Y</label>
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  step="1"
-                  value={rotY}
-                  onChange={e => setRotY(parseFloat(e.target.value))}
-                  className="w-40"
-                />
-                <div className="text-sm">Y: {rotY}°</div>
-              </div>
+                {/* master rotator */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Master Rotation</label>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="1"
+                    value={masterRot}
+                    onChange={e => setMasterRot(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{masterRot}°</div>
+                </div>
 
-              <div className="flex flex-col items-center">
-                <label className="font-medium mb-1">Rotate Z</label>
-                <input
-                  type="range"
-                  min="-180"
-                  max="180"
-                  step="1"
-                  value={rotZ}
-                  onChange={e => setRotZ(parseFloat(e.target.value))}
-                  className="w-40"
-                />
-                <div className="text-sm">Z: {rotZ}°</div>
+                {/* rotXY */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Rotate XY</label>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="1"
+                    value={rotXY}
+                    onChange={e => setRotXY(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{rotXY}°</div>
+                </div>
+
+                {/* rotYZ */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Rotate YZ</label>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="1"
+                    value={rotYZ}
+                    onChange={e => setRotYZ(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{rotYZ}°</div>
+                </div>
+
+                {/* rotXZ */}
+                <div className="flex flex-col items-center">
+                  <label className="font-medium mb-1">Rotate XZ</label>
+                  <input
+                    type="range"
+                    min="-180"
+                    max="180"
+                    step="1"
+                    value={rotXZ}
+                    onChange={e => setRotXZ(parseFloat(e.target.value))}
+                    className="w-40"
+                  />
+                  <div className="text-sm">{rotXZ}°</div>
+                </div>
+
               </div>
-            </div>
+            </>
           )}
         </div>
       </header>
