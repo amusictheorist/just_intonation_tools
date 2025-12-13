@@ -10,7 +10,7 @@ const RotationSliders = ({
   setRotZ,
   masterRot,
   setMasterRot,
-  rotYX,
+  rotXY,
   setRotXY,
   rotYZ,
   setRotYZ,
