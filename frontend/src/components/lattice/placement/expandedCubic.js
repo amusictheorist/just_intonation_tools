@@ -190,15 +190,10 @@ export const placeExpanded = (ratio, controls = {}) => {
     const base = placeCubic(ratio);
     if (!base) return null;
 
-    const rotatedPos = applyRotation(
-      vec(base.x, base.y, base.z),
-      rotation
-    );
-
     return {
-      x: rotatedPos.x,
-      y: rotatedPos.y,
-      z: rotatedPos.z,
+      x: base.x,
+      y: base.y,
+      z: base.z,
       lattice: base.lattice || [base.x, base.y, base.z],
       latticeType: 'global',
       primeAnchor: null
@@ -225,12 +220,15 @@ export const placeExpanded = (ratio, controls = {}) => {
     pos = addScaled(pos, dir, Math.abs(e) * SUB_PRIME_STEP);
   }
 
-  const rotatedPos = applyRotation(pos, rotation);
+  let finalPos = pos;
+  if (highPrimes.length > 0) {
+    finalPos = applyRotation(pos, rotation);
+  }
 
   return {
-    x: rotatedPos.x,
-    y: rotatedPos.y,
-    z: rotatedPos.z,
+    x: finalPos.x,
+    y: finalPos.y,
+    z: finalPos.z,
     lattice: [a, b, c],
     latticeType: 'prime',
     primeAnchor: anchorPrime
