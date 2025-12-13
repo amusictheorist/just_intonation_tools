@@ -6,14 +6,15 @@ const RatioControls = ({
   reset,
   mode,
   setMode,
-  inputError
+  inputError,
+  modeOptions
 }) => {
   return (
     <header className="mb-8">
       <h1 className="text-3xl font-bold mb-4">Ratio lattice Generator</h1>
 
       <div className="flex justify-center gap-4 mb-4">
-        <RatioInput onAdd={onaAdd} />
+        <RatioInput onAdd={onAdd} />
 
         <button
           onClick={undo}
@@ -38,10 +39,11 @@ const RatioControls = ({
           value={mode}
           onChange={e => setMode(e.target.value)}
         >
-          <option value="cubic">Cubic</option>
-          <option value="expanded_cubic">Expanded Cubic</option>
-          <option value="radial">Radial</option>
-          <option value="expanded_radial">Expanded Radial</option>
+          {modeOptions.map(opt => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
         </select>
       </div>
 
