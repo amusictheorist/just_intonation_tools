@@ -44,7 +44,7 @@ const HomePage = () => {
               to="/lattice"
               className="inline-block bg-green-600 text-white px-6 py-3 text-lg font-semibold rounded-md transition hover:bg-green-700 hover:underline"
             >
-              Ratio Lattice Generator
+              Ratio Lattice Visualizer
             </Link>
           </li>
         </ul>
