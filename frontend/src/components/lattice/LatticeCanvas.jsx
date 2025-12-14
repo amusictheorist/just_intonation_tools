@@ -36,21 +36,22 @@ const LatticeCanvas = ({ ratios, mode, controls, removeRatio }) => {
       if (!coords) return;
 
       const { x, y, z } = coords;
-      const label = `${r.octave.num}/${r.octave.den}`;
+      const octaveLabel = `${r.octave.num}/${r.octave.den}`;
       const isHighPrime = coords.latticeType === 'prime';
 
-      const data = {
-        ...r,
-        lattice: coords.lattice || [x, y, z],
-        latticeType: coords.latticeType || 'global'
-      };
-      manager.addPoint(
+       manager.addPoint(
         x,
         y,
         z,
-        label,
+        octaveLabel,
         isHighPrime ? controls.primeColor : 0x3366ff,
-        data
+        {
+          ...r,
+          rawInput: r.raw,
+          octaveLabel,
+          lattice: coords.lattice,
+          latticeType: coords.latticeType
+        },
       );
     });
   }, [ratios, mode]);

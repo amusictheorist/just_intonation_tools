@@ -152,10 +152,10 @@ export class SceneManager {
       ratio: data,
       lattice,
       latticeType,
-      rawInput: label,
-      octaveLabel: label,
-      rawValue: data ? data.canonical.value : null,
-      octaveValue: data ? data.octave.value : null
+      rawInput: data?.rawInput ?? null,
+      octaveLabel: data?.octaveLabel ?? label,
+      rawValue: data?.canonical?.value ?? null,
+      octaveValue: data?.octave?.value ?? null
     };
 
     this.scene.add(sphere);
