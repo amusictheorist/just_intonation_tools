@@ -1,12 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import { SceneManager } from "./three/SceneManager";
 import { placeRatio } from "./placement";
+import * as THREE from "three";
 
-const LatticeCanvas = ({ ratios, mode, controls, controlsReady, removeRatio }) => {
+const LatticeCanvas = ({ ratios, mode, controls, removeRatio }) => {
   const containerRef = useRef(null);
   const managerRef = useRef(null);
-  const [dragging, setDragging] = useState(false);
-  const last = useRef({ x: 0, y: 0 });
 
   // initialize scene
   useEffect(() => {
@@ -28,27 +27,36 @@ const LatticeCanvas = ({ ratios, mode, controls, controlsReady, removeRatio }) =
 
   useEffect(() => {
     if (!managerRef.current) return;
-    if (!controlsReady) return;
 
     const manager = managerRef.current;
     manager.clearPoints();
 
     ratios.forEach(r => {
       const coords = placeRatio(r, mode, controls);
-      if (!coords) {
-        console.warn(`Could not place ratio ${r.raw}`);
-        return;
-      }
+      if (!coords) return;
 
       const { x, y, z } = coords;
       const label = `${r.octave.num}/${r.octave.den}`;
-      manager.addPoint(x, y, z, label, 0x3366ff, r);
+      const isHighPrime = coords.latticeType === 'prime';
+
+      const data = {
+        ...r,
+        lattice: coords.lattice || [x, y, z],
+        latticeType: coords.latticeType || 'global'
+      };
+      manager.addPoint(
+        x,
+        y,
+        z,
+        label,
+        isHighPrime ? controls.primeColor : 0x3366ff,
+        data
+      );
     });
-  }, [ratios, mode, controlsReady]);
+  }, [ratios, mode]);
 
   useEffect(() => {
     if (!managerRef.current) return;
-    if (!controlsReady) return;
 
     const manager = managerRef.current;
     const SPACING = 2;
@@ -80,6 +88,23 @@ const LatticeCanvas = ({ ratios, mode, controls, controlsReady, removeRatio }) =
     controls.rotation?.rotY,
     controls.rotation?.rotZ
   ]);
+
+  useEffect(() => {
+    if (!managerRef.current) return;
+
+    const manager = managerRef.current;
+    const color = new THREE.Color(controls.primeColor);
+
+    manager.points.forEach(point => {
+      if (!point.userData?.ratio) return;
+
+      const isHighPrime = point.userData.latticeType === 'prime';
+      if (isHighPrime && point.material?.color) {
+        point.material.color.copy(color);
+        point.material.needsUpdate = true;
+      }
+    });
+  }, [controls.primeColor]);
 
   return (
     <div

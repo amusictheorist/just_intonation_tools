@@ -6,6 +6,8 @@ import RatioControls from "./RatioControls";
 import RotationSliders from "./RotationSliders";
 import RotationPanel from "./RotationPanel";
 import Modal from "./Modal";
+import CollapsibleSection from "./CollapsibleSection";
+import Appear from "./Appear";
 
 const LatticePage = () => {
   const {
@@ -20,6 +22,7 @@ const LatticePage = () => {
 
   const [inputError, setInputError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [primeColor, setPrimeColor] = useState('#ff3366');
 
   const [radiusScale, setRadiusScale] = useState(2);
 
@@ -77,9 +80,10 @@ const LatticePage = () => {
         rotX: combinedRot.rotX,
         rotY: combinedRot.rotY,
         rotZ: combinedRot.rotZ
-      }
+      },
+      primeColor
     }),
-    [radiusScale, combinedRot]
+    [radiusScale, combinedRot, primeColor]
   );
 
   const toggleModal = () => {
@@ -101,24 +105,32 @@ const LatticePage = () => {
       />
 
       {/* rotation sliders */}
-      <RotationSliders
-        hasHighPrime={hasHighPrime}
-        radiusScale={radiusScale} setRadiusScale={setRadiusScale}
-        rotX={rotX} setRotX={setRotX}
-        rotY={rotY} setRotY={setRotY}
-        rotZ={rotZ} setRotZ={setRotZ}
-        masterRot={masterRot} setMasterRot={setMasterRot}
-        rotXY={rotXY} setRotXY={setRotXY}
-        rotYZ={rotYZ} setRotYZ={setRotYZ}
-        rotXZ={rotXZ} setRotXZ={setRotXZ}
-      />
-
-      {/* effective rotation panel */}
       {hasHighPrime && (
-        <RotationPanel
-          combinedRot={combinedRot}
-          onResetRotation={resetRotation}
-        />
+        <Appear className="mt-4">
+          <CollapsibleSection title='Advanced Controls'>
+            <RotationSliders
+              hasHighPrime={hasHighPrime}
+              radiusScale={radiusScale} setRadiusScale={setRadiusScale}
+              rotX={rotX} setRotX={setRotX}
+              rotY={rotY} setRotY={setRotY}
+              rotZ={rotZ} setRotZ={setRotZ}
+              masterRot={masterRot} setMasterRot={setMasterRot}
+              rotXY={rotXY} setRotXY={setRotXY}
+              rotYZ={rotYZ} setRotYZ={setRotYZ}
+              rotXZ={rotXZ} setRotXZ={setRotXZ}
+            />
+
+            {/* effective rotation panel */}
+            {hasHighPrime && (
+              <RotationPanel
+                combinedRot={combinedRot}
+                onResetRotation={resetRotation}
+                primeColor={primeColor}
+                setPrimeColor={setPrimeColor}
+              />
+            )}
+          </CollapsibleSection>
+        </Appear>
       )}
 
       {/* 3D canvas */}

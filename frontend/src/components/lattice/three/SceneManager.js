@@ -136,7 +136,7 @@ export class SceneManager {
     const SPACING = 2;
     const geom = new THREE.SphereGeometry(0.2, 32, 32);
     const mat = new THREE.MeshStandardMaterial({
-      color,
+      color: new THREE.Color(color),
       transparent: true,
       opacity: 0
     });
