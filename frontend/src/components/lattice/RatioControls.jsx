@@ -11,31 +11,31 @@ const RatioControls = ({
 }) => {
   return (
     <header className="mb-8">
-      <h1 className="text-3xl font-bold mb-4">Ratio lattice Generator</h1>
+      <h1 className="text-3xl font-bold mb-4">Ratio Lattice Visualizer</h1>
 
-      <div className="flex justify-center gap-4 mb-4">
+      <div className="flex justify-center gap-3 mb-4">
         <RatioInput onAdd={onAdd} />
 
         <button
           onClick={undo}
-          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded text-sm font-medium h-10"
         >
           Undo
         </button>
 
         <button
           onClick={reset}
-          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded text-sm font-medium h-10"
         >
           Reset
         </button>
       </div>
 
-      <div className="flex justify-center gap-4 mb-2">
+      <div className="flex justify-center items-center gap-3 mb-2">
         <label className="text-sm font-medium">Mode:</label>
 
         <select
-          className="px-3 py-2 border rounded"
+          className="px-3 py-2 border rounded text-sm h-10"
           value={mode}
           onChange={e => setMode(e.target.value)}
         >
