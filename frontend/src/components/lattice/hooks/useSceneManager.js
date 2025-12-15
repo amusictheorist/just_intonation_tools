@@ -48,6 +48,6 @@ export const useSceneManager = (containerRef, { ratios, mode, controls, removeRa
   // color update for high primes
   useEffect(() => {
     if (!managerRef.current) return;
-    updatePrimeColor(managerRef.current, controls.primeColoe);
+    updatePrimeColor(managerRef.current, controls.primeColor);
   }, [controls.primeColor]);
 };
