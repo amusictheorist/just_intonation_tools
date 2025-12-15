@@ -1,5 +1,8 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { fadeInLines, fadeInPoints, fadeOutRemoving } from "./FadeSystem";
+import { InteractionSystem } from "./InteractionSystem";
+import { createLabel } from "./LabelFactory";
 
 export class SceneManager {
   constructor(container) {
@@ -37,11 +40,7 @@ export class SceneManager {
     this.connections = [];
     this.toRemove = [];
 
-    this.raycaster = new THREE.Raycaster();
-    this.mouse = new THREE.Vector2();
-
-    this.renderer.domElement.addEventListener('mousemove', this.onMouseMove);
-    this.renderer.domElement.addEventListener('click', this.onClick);
+    this.interactions = new InteractionSystem(this);
 
     this.addCenterPoint();
 
@@ -54,50 +53,9 @@ export class SceneManager {
     this.controls.update();
     this.renderer.render(this.scene, this.camera);
 
-    // fade-in for objects being added
-    for (const p of this.points) {
-      if (!p.material) continue;
-
-      if (p.material.opacity < 1) {
-        p.material.opacity = Math.min(1, p.material.opacity + 0.05, 1);
-      }
-
-      if (p.userData.labelSprite) {
-        const mat = p.userData.labelSprite.material;
-        mat.opacity = Math.min(mat.opacity + 0.05, 1);
-      }
-    }
-
-    // fade-in for lines
-    for (const line of this.connections) {
-      if (!line.material) continue;
-      if (line.material.opacity < 1) {
-        line.material.opacity = Math.min(1, line.material.opacity + 0.05);
-      }
-    }
-
-    // fade-out for items being removed
-    for (let i = this.toRemove.length - 1; i >= 0; i--) {
-      const obj = this.toRemove[i];
-
-      if (obj.material) {
-        obj.material.opacity -= 0.05;
-      }
-
-      if (obj.userData && obj.userData.labelSprite) {
-        obj.userData.labelSprite.material.opacity -= 0.05;
-      }
-
-      if (obj.material && obj.material.opacity <= 0) {
-        this.scene.remove(obj);
-
-        if (obj.userData && obj.userData.labelSprite) {
-          this.scene.remove(obj.userData.labelSprite);
-        }
-
-        this.toRemove.splice(i, 1);
-      }
-    }
+    fadeInPoints(this.points);
+    fadeInLines(this.connections);
+    fadeOutRemoving(this.toRemove, this.scene);
 
     requestAnimationFrame(this.animate);
   }
@@ -162,7 +120,7 @@ export class SceneManager {
     this.points.push(sphere);
 
     if (label) {
-      const sprite = this.createLabel(label);
+      const sprite = createLabel(label);
       sprite.position.set(x * SPACING, y * SPACING + 0.4, z * SPACING);
       sprite.material.opacity = 0;
       this.scene.add(sprite);
@@ -177,37 +135,6 @@ export class SceneManager {
     //     );
     //   }
     // }
-  }
-
-  // method for creating sphere labels
-  createLabel(text) {
-    const canvas = document.createElement('canvas');
-    canvas.width = 512;
-    canvas.height = 128;
-
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-    context.fillStyle = 'black';
-    context.font = '64px Arial';
-    context.textAlign = 'center';
-    context.textBaseline = 'middle';
-    context.fillText(text, canvas.width / 2, canvas.height / 2);
-
-    const texture = new THREE.CanvasTexture(canvas);
-    texture.needsUpdate = true;
-
-    const mat = new THREE.SpriteMaterial({
-      map: texture,
-      transparent: true,
-      depthTest: false,
-      depthWrite: false,
-      opacity: 0
-    });
-
-    const sprite = new THREE.Sprite(mat);
-    sprite.scale.set(2, 0.5, 1);
-
-    return sprite;
   }
 
   // loads lattice with center sphere already added
@@ -226,7 +153,7 @@ export class SceneManager {
     this.scene.add(sphere);
     this.points.push(sphere);
 
-    const sprite = this.createLabel('1/1');
+    const sprite = createLabel('1/1');
     sprite.position.set(0, 0.4, 0);
     sprite.material.opacity = 1;
     this.scene.add(sprite);
@@ -261,47 +188,6 @@ export class SceneManager {
     this.scene.add(line);
     this.connections.push(line);
     mat.opacity = 0;
-  }
-
-  // onClick handler deletes spheres from scene
-  onClick = event => {
-    const rect = this.renderer.domElement.getBoundingClientRect();
-    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-
-    const candidates = this.points.filter(p => p !== this.points[0]);
-    const intersects = this.raycaster.intersectObjects(candidates, false);
-    if (intersects.length === 0) return;
-
-    const hit = intersects[0].object;
-    const id = hit.userData.id;
-    if (!id) return;
-
-    this.toRemove.push(hit);
-
-    if (this.onRemove) {
-      setTimeout(() => this.onRemove(id), 300);
-    }
-  }
-
-  // method detects mouse movement for on hover events
-  onMouseMove = event => {
-    const rect = this.renderer.domElement.getBoundingClientRect();
-
-    this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
-    this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
-    this.raycaster.setFromCamera(this.mouse, this.camera);
-
-    const candidates = this.points.filter(p => p !== this.points[0]);
-    const intersects = this.raycaster.intersectObjects(candidates, false);
-
-    if (intersects.length > 0) {
-      const hit = intersects[0].object;
-      this.showTooltip(hit.userData, event.clientX, event.clientY);
-    } else {
-      this.hideTooltip();
-    }
   }
 
   // method shows tooltip on mouse hover
