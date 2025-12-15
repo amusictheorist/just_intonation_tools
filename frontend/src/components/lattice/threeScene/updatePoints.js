@@ -4,9 +4,9 @@ export const updatePoints = (manager, ratios, mode, controls) => {
   const SPACING = 2;
 
   manager.points.forEach(point => {
-    const r = point.userData?.ratio;
-    if (!r) return;
+    if (!point.userData?.ratio) return;
 
+    const r = point.userData.ratio;
     const coords = placeRatio(r, mode, controls);
     if (!coords) return;
 
@@ -24,4 +24,6 @@ export const updatePoints = (manager, ratios, mode, controls) => {
       );
     }
   });
+
+  manager.connections.update();
 };

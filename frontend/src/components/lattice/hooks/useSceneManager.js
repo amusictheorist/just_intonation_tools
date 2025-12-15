@@ -38,6 +38,7 @@ export const useSceneManager = (containerRef, { ratios, mode, controls, removeRa
   useEffect(() => {
     if (!managerRef.current) return;
     updatePoints(managerRef.current, ratios, mode, controls);
+    managerRef.current.connections.update();
   }, [
     controls.radiusScale,
     controls.rotation?.rotX,

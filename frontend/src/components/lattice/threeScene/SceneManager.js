@@ -4,49 +4,63 @@ import { InteractionSystem } from "./InteractionSystem";
 import { CameraSystem } from "./CameraSystems";
 import { createCenterPoint } from "./CenterPointSystem";
 import { createPoint } from "./PointFactory";
+import { TooltipSystem } from "./TooltipSystem";
+import { ConnectionSystem } from "./ConnectionSystem";
 
 export class SceneManager {
+  // constructor method builds scene on initialization
   constructor(container) {
-    // constructor method builds scene on initialization
     this.container = container;
-
+      
+    // renderer
     this.renderer = new THREE.WebGLRenderer({ antialias: true });
     this.renderer.setSize(container.clientWidth, container.clientHeight);
     container.appendChild(this.renderer.domElement);
 
+    // scene
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xf9fafb);
 
+    // camera and orbit controls
     this.cameraSystem = new CameraSystem(this.renderer.domElement);
     this.camera = this.cameraSystem.camera;
     this.controls = this.cameraSystem.controls;
 
+    // lights
     const ambient = new THREE.AmbientLight(0xffffff, 0.4);
     this.scene.add(ambient);
-
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(10, 10, 10);
     this.scene.add(light);
 
+    // data structures
     this.points = [];
-    this.connections = [];
     this.toRemove = [];
 
+    // hover and click interactions
     this.interactions = new InteractionSystem(this);
+    this.tooltip = new TooltipSystem();
 
+    // lattice connections
+    this.connections = new ConnectionSystem(this.scene);
+
+    // initialize lattice
     createCenterPoint(this.scene, this.points);
 
+    // bind animation loop
     this.animate = this.animate.bind(this);
     requestAnimationFrame(this.animate);
   }
 
-  // animate method renders and animates scene
+  // animation loop
   animate() {
     this.cameraSystem.update();
 
     fadeInPoints(this.points);
-    fadeInLines(this.connections);
+    fadeInLines(this.connections.lines);
     fadeOutRemoving(this.toRemove, this.scene);
+    
+    this.connections.update();
 
     this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(this.animate);
@@ -63,7 +77,12 @@ export class SceneManager {
     }
   }
 
-  // reset lattice, keep lights, camera, and center point
+  // rebuild lines after points change
+  rebuildConnections() {
+    this.connections.rebuild(this.points);
+  }
+
+  // reset scene, keep lights, camera, and center point
   clearPoints() {
     const keep = new Set();
     keep.add(this.camera);
@@ -85,115 +104,8 @@ export class SceneManager {
     });
 
     this.points = [center];
-    for (let line of this.connections) {
-      this.scene.remove(line);
-    }
-    this.connections = [];
+    this.connections.clear();
     this.toRemove = [];
-  }
-
-  // addPoint(x, y, z, label = "", color = 0x3366ff, data = null) {
-  //   const SPACING = 2;
-  //   const geom = new THREE.SphereGeometry(0.2, 32, 32);
-  //   const mat = new THREE.MeshStandardMaterial({
-  //     color: new THREE.Color(color),
-  //     transparent: true,
-  //     opacity: 0
-  //   });
-
-  //   const sphere = new THREE.Mesh(geom, mat);
-  //   sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
-
-  //   const lattice = data?.lattice ?? [x, y, z];
-  //   const latticeType = data?.latticeType ?? 'global';
-
-  //   sphere.userData = {
-  //     id: data ? data.id : null,
-  //     ratio: data,
-  //     lattice,
-  //     latticeType,
-  //     rawInput: data?.rawInput ?? null,
-  //     octaveLabel: data?.octaveLabel ?? label,
-  //     rawValue: data?.canonical?.value ?? null,
-  //     octaveValue: data?.octave?.value ?? null
-  //   };
-
-  //   this.scene.add(sphere);
-  //   this.points.push(sphere);
-
-  //   if (label) {
-  //     const sprite = createLabel(label);
-  //     sprite.position.set(x * SPACING, y * SPACING + 0.4, z * SPACING);
-  //     sprite.material.opacity = 0;
-  //     this.scene.add(sprite);
-  //     sphere.userData.labelSprite = sprite;
-  //   }
-
-  //   // for (const other of this.points) {
-  //   //   if (other !== sphere && other.userData && Array.isArray(other.userData.lattice)) {
-  //   //     this.connectIfVisible(
-  //   //       { mesh: sphere, lattice: sphere.userData.lattice },
-  //   //       { mesh: other, lattice: other.userData.lattice }
-  //   //     );
-  //   //   }
-  //   // }
-  // }
-
-  // method draws lines between spheres in the scene
-  connectIfVisible(p1, p2) {
-    const [x1, y1, z1] = p1.lattice;
-    const [x2, y2, z2] = p2.lattice;
-
-    const sameX = x1 === x2;
-    const sameY = y1 === y2;
-    const sameZ = z1 === z2;
-
-    const axesDifferent = (sameX ? 0 : 1) + (sameY ? 0 : 1) + (sameZ ? 0 : 1);
-    if (axesDifferent !== 1) return;
-
-    const geom = new THREE.BufferGeometry().setFromPoints([
-      p1.mesh.position,
-      p2.mesh.position
-    ]);
-    const mat = new THREE.LineBasicMaterial({
-      color: 0x999999,
-      transparent: true,
-      opacity: 0
-    });
-
-    const line = new THREE.Line(geom, mat);
-
-    this.scene.add(line);
-    this.connections.push(line);
-    mat.opacity = 0;
-  }
-
-  // method shows tooltip on mouse hover
-  showTooltip(data, x, y) {
-    const div = document.getElementById('lattice-tooltip');
-    
-    let extra = ''
-    if (data.rawValue && data.octaveValue) {
-      const octaveShift = Math.log2(data.rawValue / data.octaveValue);
-      extra = `<div><b>Octave shift:</b> ${octaveShift}</div>`;
-    }
-
-    const html = `
-      <div><b>Input:</b> ${data.rawInput}</div>
-      <div><b>Placed:</b> ${data.octaveLabel}</div>
-      ${extra}
-    `;
-
-    div.innerHTML = html;
-    div.style.left = `${x + 10}px`;
-    div.style.top = `${y + 10}px`;
-    div.style.display = 'block';
-  }
-
-  // hides tooltip after mouse hover
-  hideTooltip() {
-    const div = document.getElementById('lattice-tooltip');
-    div.style.display = 'none';
   }
 
   // handles canvas resizing

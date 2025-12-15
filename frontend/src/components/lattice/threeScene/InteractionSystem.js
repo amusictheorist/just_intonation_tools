@@ -30,7 +30,7 @@ export class InteractionSystem {
     this.raycaster.setFromCamera(this.mouse, sm.camera);
 
     const hits = this.raycaster.intersectObjects(
-      sm.points.filter(p => p !== sm.opints[0])
+      sm.points.filter(p => p !== sm.points[0])
     );
     if (hits.length === 0) return;
 
@@ -52,9 +52,9 @@ export class InteractionSystem {
 
     if (hits.length > 0) {
       const hit = hits[0].object;
-      this.showTooltip(hit.userData, event.clientX, event.clientY);
+      sm.tooltip.show(hit.userData, event.clientX, event.clientY);
     } else {
-      this.hideTooltip();
+      sm.tooltip.hide();
     }
   };
 }
