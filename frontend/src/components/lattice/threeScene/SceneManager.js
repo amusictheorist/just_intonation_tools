@@ -1,8 +1,9 @@
 import * as THREE from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { fadeInLines, fadeInPoints, fadeOutRemoving } from "./FadeSystem";
 import { InteractionSystem } from "./InteractionSystem";
-import { createLabel } from "./LabelFactory";
+import { CameraSystem } from "./CameraSystems";
+import { createCenterPoint } from "./CenterPointSystem";
+import { createPoint } from "./PointFactory";
 
 export class SceneManager {
   constructor(container) {
@@ -16,25 +17,16 @@ export class SceneManager {
     this.scene = new THREE.Scene();
     this.scene.background = new THREE.Color(0xf9fafb);
 
-    this.camera = new THREE.PerspectiveCamera(
-      45,
-      container.clientWidth / container.clientHeight,
-      0.1,
-      1000
-    );
-    this.camera.position.set(10, 6, 14);
-    this.camera.lookAt(0, 0, 0);
-    
+    this.cameraSystem = new CameraSystem(this.renderer.domElement);
+    this.camera = this.cameraSystem.camera;
+    this.controls = this.cameraSystem.controls;
+
     const ambient = new THREE.AmbientLight(0xffffff, 0.4);
     this.scene.add(ambient);
-    
+
     const light = new THREE.DirectionalLight(0xffffff, 1);
     light.position.set(10, 10, 10);
     this.scene.add(light);
-    
-    this.controls = new OrbitControls(this.camera, this.renderer.domElement);
-    this.controls.target.set(0, 0, 0);
-    this.controls.update();
 
     this.points = [];
     this.connections = [];
@@ -42,7 +34,7 @@ export class SceneManager {
 
     this.interactions = new InteractionSystem(this);
 
-    this.addCenterPoint();
+    createCenterPoint(this.scene, this.points);
 
     this.animate = this.animate.bind(this);
     requestAnimationFrame(this.animate);
@@ -50,14 +42,25 @@ export class SceneManager {
 
   // animate method renders and animates scene
   animate() {
-    this.controls.update();
-    this.renderer.render(this.scene, this.camera);
+    this.cameraSystem.update();
 
     fadeInPoints(this.points);
     fadeInLines(this.connections);
     fadeOutRemoving(this.toRemove, this.scene);
 
+    this.renderer.render(this.scene, this.camera);
     requestAnimationFrame(this.animate);
+  }
+
+  // method for adding spheres and labels
+  addPoint(x, y, z, label, color, data) {
+    const mesh = createPoint({ x, y, z, label, color, data });
+    this.scene.add(mesh);
+    this.points.push(mesh);
+
+    if (mesh.userData.labelSprite) {
+      this.scene.add(mesh.userData.labelSprite);
+    }
   }
 
   // reset lattice, keep lights, camera, and center point
@@ -89,77 +92,52 @@ export class SceneManager {
     this.toRemove = [];
   }
 
-  // method for adding spheres and labels
-  addPoint(x, y, z, label = "", color = 0x3366ff, data = null) {
-    const SPACING = 2;
-    const geom = new THREE.SphereGeometry(0.2, 32, 32);
-    const mat = new THREE.MeshStandardMaterial({
-      color: new THREE.Color(color),
-      transparent: true,
-      opacity: 0
-    });
+  // addPoint(x, y, z, label = "", color = 0x3366ff, data = null) {
+  //   const SPACING = 2;
+  //   const geom = new THREE.SphereGeometry(0.2, 32, 32);
+  //   const mat = new THREE.MeshStandardMaterial({
+  //     color: new THREE.Color(color),
+  //     transparent: true,
+  //     opacity: 0
+  //   });
 
-    const sphere = new THREE.Mesh(geom, mat);
-    sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
+  //   const sphere = new THREE.Mesh(geom, mat);
+  //   sphere.position.set(x * SPACING, y * SPACING, z * SPACING);
 
-    const lattice = data?.lattice ?? [x, y, z];
-    const latticeType = data?.latticeType ?? 'global';
+  //   const lattice = data?.lattice ?? [x, y, z];
+  //   const latticeType = data?.latticeType ?? 'global';
 
-    sphere.userData = {
-      id: data ? data.id : null,
-      ratio: data,
-      lattice,
-      latticeType,
-      rawInput: data?.rawInput ?? null,
-      octaveLabel: data?.octaveLabel ?? label,
-      rawValue: data?.canonical?.value ?? null,
-      octaveValue: data?.octave?.value ?? null
-    };
+  //   sphere.userData = {
+  //     id: data ? data.id : null,
+  //     ratio: data,
+  //     lattice,
+  //     latticeType,
+  //     rawInput: data?.rawInput ?? null,
+  //     octaveLabel: data?.octaveLabel ?? label,
+  //     rawValue: data?.canonical?.value ?? null,
+  //     octaveValue: data?.octave?.value ?? null
+  //   };
 
-    this.scene.add(sphere);
-    this.points.push(sphere);
+  //   this.scene.add(sphere);
+  //   this.points.push(sphere);
 
-    if (label) {
-      const sprite = createLabel(label);
-      sprite.position.set(x * SPACING, y * SPACING + 0.4, z * SPACING);
-      sprite.material.opacity = 0;
-      this.scene.add(sprite);
-      sphere.userData.labelSprite = sprite;
-    }
+  //   if (label) {
+  //     const sprite = createLabel(label);
+  //     sprite.position.set(x * SPACING, y * SPACING + 0.4, z * SPACING);
+  //     sprite.material.opacity = 0;
+  //     this.scene.add(sprite);
+  //     sphere.userData.labelSprite = sprite;
+  //   }
 
-    // for (const other of this.points) {
-    //   if (other !== sphere && other.userData && Array.isArray(other.userData.lattice)) {
-    //     this.connectIfVisible(
-    //       { mesh: sphere, lattice: sphere.userData.lattice },
-    //       { mesh: other, lattice: other.userData.lattice }
-    //     );
-    //   }
-    // }
-  }
-
-  // loads lattice with center sphere already added
-  addCenterPoint() {
-    const geom = new THREE.SphereGeometry(0.2, 32, 32);
-    const mat = new THREE.MeshStandardMaterial({
-      color: 0xff0000,
-      transparent: true,
-      opacity: 1
-    });
-
-    const sphere = new THREE.Mesh(geom, mat);
-    sphere.position.set(0, 0, 0);
-    sphere.userData.lattice = [0, 0, 0];
-
-    this.scene.add(sphere);
-    this.points.push(sphere);
-
-    const sprite = createLabel('1/1');
-    sprite.position.set(0, 0.4, 0);
-    sprite.material.opacity = 1;
-    this.scene.add(sprite);
-
-    sphere.userData.labelSprite = sprite;
-  }
+  //   // for (const other of this.points) {
+  //   //   if (other !== sphere && other.userData && Array.isArray(other.userData.lattice)) {
+  //   //     this.connectIfVisible(
+  //   //       { mesh: sphere, lattice: sphere.userData.lattice },
+  //   //       { mesh: other, lattice: other.userData.lattice }
+  //   //     );
+  //   //   }
+  //   // }
+  // }
 
   // method draws lines between spheres in the scene
   connectIfVisible(p1, p2) {
