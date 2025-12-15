@@ -1,7 +1,6 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { useRatios, Modes } from "./hooks/useRatios";
 import LatticeCanvas from "./LatticeCanvas";
-import { factorRatio } from "./placement/expandedCubic";
 import RatioControls from "./RatioControls";
 import RotationSliders from "./RotationSliders";
 import RotationPanel from "./RotationPanel";
