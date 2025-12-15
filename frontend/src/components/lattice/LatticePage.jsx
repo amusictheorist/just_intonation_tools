@@ -8,6 +8,9 @@ import RotationPanel from "./RotationPanel";
 import Modal from "./Modal";
 import CollapsibleSection from "./CollapsibleSection";
 import Appear from "./Appear";
+import { useRotationControls } from "./hooks/useRotationControls";
+import { useHighPrimeFlag } from "./hooks/useHighPrimeFlag";
+import { useControls } from "./hooks/useControls";
 
 const LatticePage = () => {
   const {
@@ -23,17 +26,11 @@ const LatticePage = () => {
   const [inputError, setInputError] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
   const [primeColor, setPrimeColor] = useState('#ff3366');
-
   const [radiusScale, setRadiusScale] = useState(2);
 
-  const [rotX, setRotX] = useState(0);
-  const [rotY, setRotY] = useState(0);
-  const [rotZ, setRotZ] = useState(0);
-
-  const [masterRot, setMasterRot] = useState(0);
-  const [rotXY, setRotXY] = useState(0);
-  const [rotYZ, setRotYZ] = useState(0);
-  const [rotXZ, setRotXZ] = useState(0);
+  const rotation = useRotationControls();
+  const hasHighPrime = useHighPrimeFlag(ratios);
+  const controls = useControls(radiusScale, rotation.combinedRot, primeColor);
 
   const handleAdd = raw => {
     const { success, error } = addRatio(raw);
@@ -41,50 +38,12 @@ const LatticePage = () => {
     else setInputError(null);
   };
 
-  const hasHighPrime = useMemo(() => {
-    return ratios.some(r => {
-      const factors = factorRatio(r);
-      return [...factors.keys()].some(p => p > 7);
-    });
-  }, [ratios]);
-
   const modeOptions = [
     { value: Modes.CUBIC, label: 'Cubic' },
     { value: Modes.EXPANDED_CUBIC, label: 'Expanded Cubic' },
     { value: Modes.RADIAL, label: 'Radial' },
     { value: Modes.EXPANDED_RADIAL, label: 'Expanded Radial' },
   ];
-
-  const combinedRot = useMemo(() => {
-    return {
-      rotX: rotX + masterRot + rotXY + rotXZ,
-      rotY: rotY + masterRot + rotXY + rotYZ,
-      rotZ: rotZ + masterRot + rotYZ + rotXZ
-    };
-  }, [rotX, rotY, rotZ, masterRot, rotXY, rotYZ, rotXZ]);
-
-  const resetRotation = () => {
-    setRotX(0);
-    setRotY(0);
-    setRotZ(0);
-    setMasterRot(0);
-    setRotXY(0);
-    setRotYZ(0);
-    setRotXZ(0);
-  };
-
-  const controls = useMemo(
-    () => ({
-      radiusScale,
-      rotation: {
-        rotX: combinedRot.rotX,
-        rotY: combinedRot.rotY,
-        rotZ: combinedRot.rotZ
-      },
-      primeColor
-    }),
-    [radiusScale, combinedRot, primeColor]
-  );
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
@@ -111,24 +70,18 @@ const LatticePage = () => {
             <RotationSliders
               hasHighPrime={hasHighPrime}
               radiusScale={radiusScale} setRadiusScale={setRadiusScale}
-              rotX={rotX} setRotX={setRotX}
-              rotY={rotY} setRotY={setRotY}
-              rotZ={rotZ} setRotZ={setRotZ}
-              masterRot={masterRot} setMasterRot={setMasterRot}
-              rotXY={rotXY} setRotXY={setRotXY}
-              rotYZ={rotYZ} setRotYZ={setRotYZ}
-              rotXZ={rotXZ} setRotXZ={setRotXZ}
+              primeColor={primeColor}
+              setPrimeColor={setPrimeColor}
+              {...rotation}
             />
 
             {/* effective rotation panel */}
-            {hasHighPrime && (
-              <RotationPanel
-                combinedRot={combinedRot}
-                onResetRotation={resetRotation}
+            <RotationPanel
+                combinedRot={rotation.combinedRot}
+                onResetRotation={rotation.resetRotation}
                 primeColor={primeColor}
                 setPrimeColor={setPrimeColor}
               />
-            )}
           </CollapsibleSection>
         </Appear>
       )}
