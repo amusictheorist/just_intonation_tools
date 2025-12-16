@@ -10,7 +10,7 @@ export const addPoints = (manager, ratios, mode, controls) => {
     const { x, y, z } = coords;
     const octaveLabel = `${ratio.octave.num}/${ratio.octave.den}`;
     const isHighPrime = coords.latticeType === 'prime';
-    const color = isHighPrime ? controls.primeColor : 0x3366ff;
+    const color = isHighPrime ? controls.primeColor : 0xff0000;
 
 
     manager.addPoint(
