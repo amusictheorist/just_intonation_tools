@@ -16,6 +16,15 @@ export class ConnectionSystem {
 
     if (points.length === 0) return;
 
+    const radialMode = points.some(
+      p => p.userData.latticeType === 'radial'
+    );
+
+    if (radialMode) {
+      this._connectRadial(points);
+      return;
+    }
+
     const groups = this._groupByLattice(points);
     for (const [key, group] of groups) {
       this._connectGroup(group);
@@ -38,6 +47,47 @@ export class ConnectionSystem {
         line.userData.p2.position
       ]);
       line.geometry.verticesNeedUpdate = true;
+    }
+  }
+
+  _connectRadial(points) {
+    if (points.length < 2) return;
+
+    const map = new Map();
+    for (const p of points) {
+      if (!p.userData?.canonical) continue;
+      map.set(p.userData.canonical.value, p);
+    }
+
+    const center = points[0];
+
+    for (const p of points) {
+      if (!p.userData?.canonical) continue;
+
+      const value = p.userData.canonical.value;
+      const factors = p.userData.factors;
+
+      if (!factors) continue;
+
+      const entries = Array.from(factors.entries());
+
+      if (entries.length === 1) {
+        if (p !== center) {
+          this.lines.push(this._createLine(center, p));
+        }
+      }
+
+      for (const [prime, exp] of entries) {
+        const sign = exp > 0 ? +1 : -1;
+        const step = Math.abs(exp);
+
+        const neighborVal = value / Math.pow(prime, sign);
+
+        const neighbor = map.get(neighborVal);
+        if (neighbor) {
+          this.lines.push(this._createLine(neighbor, p))
+        }
+      }
     }
   }
 

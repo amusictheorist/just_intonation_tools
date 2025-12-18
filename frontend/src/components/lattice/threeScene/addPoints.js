@@ -1,4 +1,5 @@
 import { placeRatio } from "../placement";
+import { factorRatio } from "../placement/expandedCubic";
 
 export const addPoints = (manager, ratios, mode, controls) => {
   manager.clearPoints();
@@ -12,6 +13,10 @@ export const addPoints = (manager, ratios, mode, controls) => {
     const isHighPrime = coords.latticeType === 'prime';
     const color = isHighPrime ? controls.primeColor : 0xff0000;
 
+    const canonical = ratio.canonical;
+    const canonicalValue = canonical ? canonical.value : null;
+    const factors = factorRatio(ratio);
+
     manager.addPoint(
       x,
       y,
@@ -24,7 +29,10 @@ export const addPoints = (manager, ratios, mode, controls) => {
         octaveLabel,
         lattice: coords.lattice,
         latticeType: coords.latticeType,
-        primeAnchor: coords.primeAnchor
+        primeAnchor: coords.primeAnchor,
+        canonical,
+        canonicalValue,
+        factors
       }
     );
   });

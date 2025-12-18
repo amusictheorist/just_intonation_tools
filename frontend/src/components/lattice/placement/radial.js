@@ -56,26 +56,20 @@ export const placeRadial = (ratio, controls = {}) => {
 
   let pos = vec(0, 0, 0);
   let totalSteps = 0;
-  let primeAnchor = null;
 
   for (const [p, e] of factors.entries()) {
     if (e === 0) continue;
 
     const sign = e > 0 ? +1 : -1;
     const steps = Math.abs(e);
+    totalSteps += steps;
 
     const dir = getPrimeStepDir(p, sign);
     pos.x += dir.x * BASE_STEP_RADIUS * steps;
     pos.z += dir.z * BASE_STEP_RADIUS * steps;
-
-    totalSteps += steps;
-    if (!primeAnchor) primeAnchor = p;
   }
 
-  let y = 0;
-  if (totalSteps > 1) {
-    y = (totalSteps - 1) * Y_STEP;
-  }
+  const y = totalSteps * Y_STEP;
 
   return {
     x: pos.x,
@@ -83,6 +77,6 @@ export const placeRadial = (ratio, controls = {}) => {
     z: pos.z,
     lattice: Array.from(factors.entries()),
     latticeType: 'radial',
-    primeAnchor
+    primeAnchor: null
   };
 };
