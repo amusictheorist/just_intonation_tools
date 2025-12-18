@@ -29,6 +29,7 @@ const LatticePage = () => {
 
   const rotation = useRotationControls();
   const hasHighPrime = useHighPrimeFlag(ratios);
+  const showAdvanced = mode === Modes.EXPANDED_CUBIC && hasHighPrime;
   const controls = useControls(radiusScale, rotation.combinedRot, primeColor);
 
   const handleAdd = raw => {
@@ -63,7 +64,7 @@ const LatticePage = () => {
       />
 
       {/* rotation sliders */}
-      {hasHighPrime && (
+      {showAdvanced && (
         <Appear className="mt-4">
           <CollapsibleSection title='Advanced Controls'>
             <RotationSliders
