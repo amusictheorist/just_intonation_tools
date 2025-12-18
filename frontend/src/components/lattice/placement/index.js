@@ -1,5 +1,6 @@
 import { place as placeCubic } from './cubic';
 import { placeExpanded } from './expandedCubic';
+import { placeRadial } from './radial';
 
 export const placeRatio = (ratio, mode, controls = {}) => {
   switch (mode) {
@@ -8,6 +9,12 @@ export const placeRatio = (ratio, mode, controls = {}) => {
     
     case 'expanded_cubic':
       return placeExpanded(ratio, controls);
+    
+    case 'radial':
+      return placeRadial(ratio, controls);
+    
+    // case 'expanded_radial':
+    //   return placeExpandedRadial(ratio, controls);
     
     default:
       return placeCubic(ratio);
