@@ -32,7 +32,15 @@ export const useSceneManager = (containerRef, { ratios, mode, controls, removeRa
   useEffect(() => {
     if (!managerRef.current) return;
     addPoints(managerRef.current, ratios, mode, controls);
-  }, [ratios, mode]);
+  }, [
+    ratios,
+    mode,
+    controls.radiusScale,
+    controls.rotation?.rotX,
+    controls.rotation?.rotY,
+    controls.rotation?.rotZ,
+    controls.primeColor
+  ]);
 
   // update points for radius and rotation
   useEffect(() => {
