@@ -117,32 +117,4 @@ export class SceneManager {
     this.camera.aspect = w / h;
     this.camera.updateProjectionMatrix();
   }
-
-  addRadialCircle() {
-    if (this.radialCircle) return;
-
-    const geometry = new THREE.RingGeometry(0.98, 1.02, 256);
-    const material = new THREE.MeshBasicMaterial({
-      coloe: 0x999999,
-      opacity: 0.25,
-      transparent: true,
-      side: THREE.DoubleSide
-    });
-
-    const ring = new THREE.Mesh(geometry, material);
-    ring.rotation.x = -Math.PI / 2;
-    ring.position.set(0, 0, 0);
-
-    this.radialCircle = ring;
-    this.scene.add(ring);
-  }
-
-  removeRadialCircle() {
-    if (this.radialCircle) {
-      this.scene.remove(this.radialCircle);
-      this.radialCircle.geometry.dispose();
-      this.radialCircle.material.dispose();
-      this.radialCircle = null;
-    }
-  }
 }

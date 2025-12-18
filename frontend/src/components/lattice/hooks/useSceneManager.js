@@ -46,17 +46,4 @@ export const useSceneManager = (containerRef, { ratios, mode, controls, removeRa
     if (!managerRef.current) return;
     updatePrimeColor(managerRef.current, controls.primeColor);
   }, [controls.primeColor]);
-
-  // show / hide radial circle depending on mode
-  useEffect(() => {
-    if (!managerRef.current) return;
-
-    const manager = managerRef.current;
-
-    if (mode === 'radial' || mode === 'expanded_radial') {
-      manager.addRadialCircle();
-    } else {
-      manager.removeRadialCircle();
-    }
-  }, [mode]);
 };
