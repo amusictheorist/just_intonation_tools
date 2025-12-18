@@ -9,5 +9,11 @@ export const useControls = (radiusScale, combinedRot, primeColor) => {
       rotZ: combinedRot.rotZ
     },
     primeColor
-  }), [radiusScale, combinedRot, primeColor]);
+  }), [
+    radiusScale,
+    combinedRot.rotX,
+    combinedRot.rotY,
+    combinedRot.rotZ,
+    primeColor
+  ]);
 };

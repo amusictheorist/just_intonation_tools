@@ -3,10 +3,10 @@ import { placeRatio } from "../placement";
 export const updatePoints = (manager, ratios, mode, controls) => {
   const SPACING = 2;
 
-  manager.points.forEach(point => {
-    if (!point.userData?.ratio) return;
+  manager.points.forEach((point, idx) => {
+    const r = point.userData;
+    if (!r?.canonical) return;
 
-    const r = point.userData.ratio;
     const coords = placeRatio(r, mode, controls);
     if (!coords) return;
 

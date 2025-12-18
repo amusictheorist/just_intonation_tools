@@ -32,27 +32,14 @@ export const useSceneManager = (containerRef, { ratios, mode, controls, removeRa
   useEffect(() => {
     if (!managerRef.current) return;
     addPoints(managerRef.current, ratios, mode, controls);
-  }, [
-    ratios,
-    mode,
-    controls.radiusScale,
-    controls.rotation?.rotX,
-    controls.rotation?.rotY,
-    controls.rotation?.rotZ,
-    controls.primeColor
-  ]);
+  }, [ratios, mode]);
 
   // update points for radius and rotation
   useEffect(() => {
     if (!managerRef.current) return;
     updatePoints(managerRef.current, ratios, mode, controls);
     managerRef.current.connections.update();
-  }, [
-    controls.radiusScale,
-    controls.rotation?.rotX,
-    controls.rotation?.rotY,
-    controls.rotation?.rotZ
-  ]);
+  }, [controls, ratios, mode]);
 
   // color update for high primes
   useEffect(() => {

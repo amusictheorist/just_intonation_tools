@@ -12,7 +12,6 @@ export const addPoints = (manager, ratios, mode, controls) => {
     const isHighPrime = coords.latticeType === 'prime';
     const color = isHighPrime ? controls.primeColor : 0xff0000;
 
-
     manager.addPoint(
       x,
       y,
