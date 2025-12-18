@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { reduceFraction } from '../math/helpers';
 
 export class ConnectionSystem {
   constructor(scene) {
@@ -53,37 +54,53 @@ export class ConnectionSystem {
   _connectRadial(points) {
     if (points.length < 2) return;
 
+    const factorsToFraction = factors => {
+      let num = 1;
+      let den = 1;
+
+      for (const [p, e] of factors.entries()) {
+        if (e > 0) num *= p ** e;
+        if (e < 0) den *= p ** (-e);
+      }
+
+      const reduced = reduceFraction(num, den);
+      return reduced;
+    };
+
     const map = new Map();
     for (const p of points) {
-      if (!p.userData?.canonical) continue;
-      map.set(p.userData.canonical.value, p);
+      if (!p.userData?.canonicalKey) continue;
+      map.set(p.userData.canonicalKey, p);
     }
 
     const center = points[0];
 
     for (const p of points) {
-      if (!p.userData?.canonical) continue;
-
-      const value = p.userData.canonical.value;
+      if (!p.userData?.canonicalKey) continue;
       const factors = p.userData.factors;
-
       if (!factors) continue;
 
       const entries = Array.from(factors.entries());
 
-      if (entries.length === 1) {
-        if (p !== center) {
+      if (entries.length === 1 && p !== center) {
           this.lines.push(this._createLine(center, p));
-        }
       }
 
       for (const [prime, exp] of entries) {
+        if (exp === 0) continue;
         const sign = exp > 0 ? +1 : -1;
-        const step = Math.abs(exp);
 
-        const neighborVal = value / Math.pow(prime, sign);
+        const neighborFactors = new Map(factors);
+        neighborFactors.set(prime, exp - sign);
 
-        const neighbor = map.get(neighborVal);
+        if (neighborFactors.get(prime) === 0) {
+          neighborFactors.delete(prime);
+        }
+
+        const { num, den } = factorsToFraction(neighborFactors);
+        const key = `${num}/${den}`;
+
+        const neighbor = map.get(key);
         if (neighbor) {
           this.lines.push(this._createLine(neighbor, p))
         }

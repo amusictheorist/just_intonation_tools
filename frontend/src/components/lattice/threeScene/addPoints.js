@@ -15,6 +15,7 @@ export const addPoints = (manager, ratios, mode, controls) => {
 
     const canonical = ratio.canonical;
     const canonicalValue = canonical ? canonical.value : null;
+    const canonicalKey = `${ratio.canonical.num}/${ratio.canonical.den}`;
     const factors = factorRatio(ratio);
 
     manager.addPoint(
@@ -32,6 +33,7 @@ export const addPoints = (manager, ratios, mode, controls) => {
         primeAnchor: coords.primeAnchor,
         canonical,
         canonicalValue,
+        canonicalKey,
         factors
       }
     );
