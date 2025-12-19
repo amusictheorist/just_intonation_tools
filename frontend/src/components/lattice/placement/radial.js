@@ -1,18 +1,18 @@
 import { factorRatio } from "./expandedCubic";
 
-const vec = (x, y, z) => ({ x, y, z });
+export const vec = (x, y, z) => ({ x, y, z });
 const length = v => Math.sqrt(v.x * v.x + v.y * v.y + v.z * v.z);
 const normalize = v => {
   const len = length(v);
   return len === 0 ? vec(0, 0, 0) : vec(v.x / len, v.y / len, v.z / len);
 };
 
-const BASE_STEP_RADIUS = 1;
-const Y_STEP = 0.6;
+export const BASE_STEP_RADIUS = 1;
+export const Y_STEP = 0.6;
 
 const primeStepDirCache = new Map();
 
-const getPrimeStepDir = (p, sign) => {
+export const getPrimeStepDir = (p, sign) => {
   const key = `${p}_${sign}`;
   if (primeStepDirCache.has(key)) return primeStepDirCache.get(key);
   
