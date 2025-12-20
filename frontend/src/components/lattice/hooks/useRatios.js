@@ -11,7 +11,7 @@ export const Modes = {
 
 export const useRatios = (initial = []) => {
   const [ratios, setRatios] = useState(initial);
-  const [history, setHistory] = useState([]);
+  const [, setHistory] = useState([]);
   const [mode, setMode] = useState(Modes.CUBIC);
 
   const pushHistory = useCallback(() => {
