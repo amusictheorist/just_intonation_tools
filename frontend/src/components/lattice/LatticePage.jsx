@@ -1,15 +1,15 @@
 import { useState } from "react";
 import { useRatios, Modes } from "./hooks/useRatios";
-import LatticeCanvas from "./LatticeCanvas";
-import RatioControls from "./RatioControls";
-import RotationSliders from "./RotationSliders";
-import RotationPanel from "./RotationPanel";
 import Modal from "./Modal";
-import CollapsibleSection from "./CollapsibleSection";
-import Appear from "./Appear";
 import { useRotationControls } from "./hooks/useRotationControls";
 import { useHighPrimeFlag } from "./hooks/useHighPrimeFlag";
 import { useControls } from "./hooks/useControls";
+import LatticeCanvas from "./ui/LatticeCanvas";
+import RatioControls from "./ui/RatioControls";
+import RotationSliders from "./ui/RotationSliders";
+import RotationPanel from "./ui/RotationPanel";
+import CollapsibleSection from "./ui/CollapsibleSection";
+import Appear from "./ui/Appear";
 
 const LatticePage = () => {
   const {

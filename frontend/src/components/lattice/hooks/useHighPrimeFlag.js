@@ -1,5 +1,5 @@
 import { useMemo } from "react";
-import { factorRatio } from "../placement/expandedCubic";
+import { factorRatio } from "../utils/math/helpers";
 
 export const useHighPrimeFlag = ratios => {
   return useMemo(() => {

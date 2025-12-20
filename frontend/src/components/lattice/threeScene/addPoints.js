@@ -1,12 +1,5 @@
-import { placeRatio } from "../placement";
-import { factorRatio } from "../placement/expandedCubic";
-
-const normalizeBelowOne = (num, den) => {
-  while (num / den < 0.5) {
-    num *= 2;
-  }
-  return { num, den };
-};
+import { factorRatio, normalizeBelowOne } from "../utils/math/helpers";
+import { placeRatio } from "../utils/placement/index";
 
 export const addPoints = (manager, ratios, mode, controls) => {
   manager.clearPoints();

@@ -1,6 +1,6 @@
 import { useState, useCallback } from "react";
-import { createRatio } from "../math/parseRatio";
-import { place } from "../placement/cubic";
+import { createRatio } from "../utils/math/parseRatio";
+import { place } from "../utils/placement/cubic";
 
 export const Modes = {
   CUBIC: 'cubic',
@@ -31,7 +31,7 @@ export const useRatios = (initial = []) => {
       if (!coords) {
         return {
           success: false,
-          error: 'Cubic mode only allows 3-, 5-, and 7-limit ratios. Please switch to Expanded Cubic mode for higher limit ratios.'
+          error: 'Cubic mode only allows 3-, 5-, and 7-limit ratios. Please switch to Expanded Cubic mode or one of the Radial modes for higher limit ratios.'
         }
       }
     }

@@ -1,8 +1,7 @@
-import { placeRatio } from "../placement";
+import { SPACING } from "../utils/math/constants";
+import { placeRatio } from "../utils/placement/index";
 
 export const updatePoints = (manager, ratios, mode, controls) => {
-  const SPACING = 2;
-
   manager.points.forEach(point => {
     const r = point.userData;
     if (!r?.canonical) return;
