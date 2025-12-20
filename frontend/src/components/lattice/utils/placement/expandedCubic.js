@@ -1,5 +1,7 @@
 import { BASE_RADIUS, GOLDEN_ANGLE, MAX_PRIME, SPACING, SUB_PRIME_STEP } from "../../utils/math/constants";
-import { addScaled, applyRotation, cross, dot, factorRatio, normalize, scale, sieve, sub, vec } from "../../utils/math/helpers";
+import { factorRatio } from "../math/factors";
+import { sieve } from "../math/primes";
+import { vec, scale, normalize, dot, cross, addScaled, sub, applyRotation } from "../math/vectors";
 import { place as placeCubic } from "./cubic";
 
 const ALL_PRIMES = sieve(MAX_PRIME);

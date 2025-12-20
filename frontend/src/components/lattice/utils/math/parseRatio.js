@@ -1,4 +1,4 @@
-import { reduceFraction, rationalApproximation, octaveReduce } from "./helpers.js";
+import { octaveReduce, rationalApproximation, reduceFraction } from "./fractions";
 
 export const parseRatio = (inputRaw, options = {}) => {
   const { maxDen = 1000, allowNegatives = false } = options;

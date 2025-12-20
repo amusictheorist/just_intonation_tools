@@ -1,5 +1,6 @@
 import { BASE_RADIUS, Y_STEP } from "../math/constants";
-import { factorRatio, vec } from "../math/helpers";
+import { factorRatio } from "../math/factors";
+import { vec } from "../math/vectors";
 import { getPrimeStepDir } from "./radial";
 
 export const placeExpandedRadial = (ratio, controls = {}) => {

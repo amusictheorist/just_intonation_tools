@@ -1,4 +1,4 @@
-import { factorRatio, normalizeBelowOne } from "../utils/math/helpers";
+import { factorRatio, normalizeBelowOne } from "../utils/math/factors";
 import { placeRatio } from "../utils/placement/index";
 
 export const addPoints = (manager, ratios, mode, controls) => {

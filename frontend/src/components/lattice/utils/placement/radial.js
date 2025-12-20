@@ -1,5 +1,6 @@
 import { BASE_RADIUS, Y_STEP } from "../math/constants";
-import { factorRatio, normalize, vec } from "../math/helpers";
+import { factorRatio } from "../math/factors";
+import { normalize, vec } from "../math/vectors";
 
 const primeStepDirCache = new Map();
 

@@ -1,4 +1,4 @@
-import { factor357 } from '../../utils/math/helpers';
+import { factor357 } from "../math/factors";
 
 export const place = (ratio) => {
   const { num, den } = ratio.octave;

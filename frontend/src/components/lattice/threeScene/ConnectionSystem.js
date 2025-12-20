@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { reduceFraction } from '../utils/math/helpers';
+import { reduceFraction } from '../utils/math/fractions';
 
 export class ConnectionSystem {
   constructor(scene) {
