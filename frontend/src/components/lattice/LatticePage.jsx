@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useRatios, Modes } from "./hooks/useRatios";
-import Modal from "./Modal";
 import { useRotationControls } from "./hooks/useRotationControls";
 import { useHighPrimeFlag } from "./hooks/useHighPrimeFlag";
 import { useControls } from "./hooks/useControls";
@@ -10,6 +9,8 @@ import RotationSliders from "./ui/RotationSliders";
 import RotationPanel from "./ui/RotationPanel";
 import CollapsibleSection from "./ui/CollapsibleSection";
 import Appear from "./ui/Appear";
+import HelpButton from "./ui/HelpButton";
+import HelpPanel from "./ui/HelpPanel";
 
 const LatticePage = () => {
   const {
@@ -23,7 +24,7 @@ const LatticePage = () => {
   } = useRatios();
 
   const [inputError, setInputError] = useState(null);
-  const [modalOpen, setModalOpen] = useState(false);
+  const [helpOpen, setHelpOpen] = useState(false);
   const [primeColor, setPrimeColor] = useState('#ff3366');
   const [radiusScale, setRadiusScale] = useState(2);
 
@@ -44,10 +45,6 @@ const LatticePage = () => {
     { value: Modes.RADIAL, label: 'Radial' },
     { value: Modes.EXPANDED_RADIAL, label: 'Expanded Radial' },
   ];
-
-  const toggleModal = () => {
-    setModalOpen(!modalOpen);
-  };
 
   return (
     <div className="pt-[100px] px-8 py-12 text-center bg-gray-50">
@@ -113,13 +110,9 @@ const LatticePage = () => {
           zIndex: 9999
         }}
       />
-      <button className="fixed bottom-5 right-5 w-12 h-12 bg-blue-600 text-white text-2xl rounded-full flex items-center justify-center shadow-md hover:bg-blue-800" onClick={toggleModal}>
-        ℹ️
-      </button>
 
-      {modalOpen && (
-        <Modal isOpen={modalOpen} onClose={toggleModal} />
-      )}
+      <HelpButton onClick={() => setHelpOpen(true)} />
+      <HelpPanel isOpen={helpOpen} onClose={() => setHelpOpen(false)} />
     </div>
   );
 };
