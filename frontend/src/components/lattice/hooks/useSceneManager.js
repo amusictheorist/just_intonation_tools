@@ -26,12 +26,14 @@ export const useSceneManager = (containerRef, { ratios, mode, controls, removeRa
 
       managerRef.current = null;
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // add points when ratios or mode changes
   useEffect(() => {
     if (!managerRef.current) return;
     addPoints(managerRef.current, ratios, mode, controls);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [ratios, mode]);
 
   // update points for radius and rotation
