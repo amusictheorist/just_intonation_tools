@@ -8,3 +8,9 @@ export const sieve = n => {
   }
   return arr.map((b, i) => b ? i : null).filter(x => x);
 };
+
+const MAX_PRIME = 127;
+const ALL_PRIMES = sieve(MAX_PRIME);
+export const PRIME_INDEX = {};
+ALL_PRIMES.forEach((p, i) => PRIME_INDEX[p] = i);
+export const N = ALL_PRIMES.length;
