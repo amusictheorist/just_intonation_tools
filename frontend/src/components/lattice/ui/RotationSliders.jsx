@@ -20,8 +20,8 @@ const RotationSliders = ({
   if (!hasHighPrime) return null;
 
   return (
-    <div className="mt-6 w-full flex flex-col items-center gap-6">
-      <div className="grid grid-cols-4 gap-x-8 gap-y-4 max-w-4xl mx-auto">
+    <div className="mt-2 w-full flex flex-col items-center gap-3">
+      <div className="grid grid-cols-4 gap-x-6 gap-y-2 max-w-4xl mx-auto">
         <div className="flex flex-col items-center text-sm">
           {/* radius control */}
           <label className="font-medium mb-1">Radius</label>

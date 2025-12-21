@@ -7,10 +7,10 @@ import LatticeCanvas from "./ui/LatticeCanvas";
 import RatioControls from "./ui/RatioControls";
 import RotationSliders from "./ui/RotationSliders";
 import RotationPanel from "./ui/RotationPanel";
-import CollapsibleSection from "./ui/CollapsibleSection";
 import Appear from "./ui/Appear";
 import HelpButton from "./ui/HelpButton";
 import HelpPanel from "./ui/HelpPanel";
+import Collapsible from "./ui/Collapsible";
 
 const LatticePage = () => {
   const {
@@ -63,7 +63,13 @@ const LatticePage = () => {
       {/* rotation sliders */}
       {showAdvanced && (
         <Appear className="mt-4">
-          <CollapsibleSection title='Advanced Controls'>
+          <Collapsible
+            title='Advanced Controls'
+            animated={true}
+            className="max-w-3xl mx-auto mt-4"
+            titleClass="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded"
+            contentClass="p-2 bg-gray-100 rounded-b space-y-2"
+          >
             <RotationSliders
               hasHighPrime={hasHighPrime}
               radiusScale={radiusScale} setRadiusScale={setRadiusScale}
@@ -79,7 +85,7 @@ const LatticePage = () => {
                 primeColor={primeColor}
                 setPrimeColor={setPrimeColor}
               />
-          </CollapsibleSection>
+          </Collapsible>
         </Appear>
       )}
 

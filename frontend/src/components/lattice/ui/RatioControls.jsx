@@ -10,10 +10,10 @@ const RatioControls = ({
   modeOptions
 }) => {
   return (
-    <header className="mb-8">
-      <h1 className="text-3xl font-bold mb-4">Ratio Lattice Visualizer</h1>
+    <header className="mb-4">
+      <h1 className="text-3xl font-bold mb-2">Ratio Lattice Visualizer</h1>
 
-      <div className="flex justify-center gap-3 mb-4">
+      <div className="flex justify-center gap-3 mb-3">
         <RatioInput onAdd={onAdd} />
 
         <button
@@ -31,7 +31,7 @@ const RatioControls = ({
         </button>
       </div>
 
-      <div className="flex justify-center items-center gap-3 mb-2">
+      <div className="flex justify-center items-center gap-3 mb-1">
         <label className="text-sm font-medium">Mode:</label>
 
         <select

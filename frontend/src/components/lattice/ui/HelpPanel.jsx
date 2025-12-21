@@ -1,5 +1,5 @@
 import { X } from 'lucide-react';
-import CollapsibleHelp from './CollapsibleHelp';
+import Collapsible from './Collapsible';
 
 const HelpPanel = ({ isOpen, onClose }) => {
   const pClass = 'text-sm text-left text-gray-600 italic';
@@ -21,7 +21,11 @@ const HelpPanel = ({ isOpen, onClose }) => {
 
       <div className="overflow-y-auto px-4 py-3 space-y-6" style={{ height: "calc(100% - 56px)" }}>
 
-        <CollapsibleHelp title="What You're Looking At">
+        <Collapsible
+          title="What You're Looking At"
+          animated={false}
+          titleClass='font-medium text-gray-800'
+        >
           <section>
             <div className={pClass}>
               <p>
@@ -36,25 +40,33 @@ const HelpPanel = ({ isOpen, onClose }) => {
               </p>
             </div>
           </section>
-        </CollapsibleHelp>
+        </Collapsible>
         
-        <CollapsibleHelp title='What You Can Input'>
+        <Collapsible
+          title='What You Can Input'
+          animated={false}
+          titleClass='font-medium text-gray-800'
+        >
           <div className={pClass}>
             <p>Accepted inputs:</p>
             <ul className='list-disc ml-4'>
               <li>Whole numbers (e.g., <code>3</code> → <code>3/1</code>)</li>
               <li>Fractions like <code>5/4</code>, <code>9/8</code>, <code>7/6</code>, <code>11/8</code></li>
-              <li>Ratios &gt; 2/1 are octave-reduced unless in Expanded Radial</li>
-              <li>Ratios &lt; 1/1 appear only in Expanded Radial</li>
-              <li>Higher primes (11, 13, 17…) allowed only in Expanded modes</li>
+              <li>All ratios are octave-reduced</li>
+              <li>Ratios &lt; 1/1 appear only in Expanded Radial mode</li>
+              <li>Higher primes (11, 13, 17…) disallowed only in Cubic mode</li>
             </ul>
             <p>
               Inputs are reduced to simplest form, factored, and positioned according to the chosen mode.
             </p>
           </div>
-        </CollapsibleHelp>
+        </Collapsible>
 
-        <CollapsibleHelp title="Navigation">
+        <Collapsible
+          title="Navigation"
+          animated={false}
+          titleClass='font-medium text-gray-800'
+        >
           <section>
             <div className={pClass}>
               <p>
@@ -65,9 +77,13 @@ const HelpPanel = ({ isOpen, onClose }) => {
               </p>
             </div>
           </section>
-        </CollapsibleHelp>
+        </Collapsible>
 
-        <CollapsibleHelp title='Prime Controls'>
+        <Collapsible
+          title='Prime Controls'
+          animated={false}
+          titleClass='font-medium text-gray-800'
+        >
           <section>
             <div className={pClass}>
               <p>
@@ -83,9 +99,13 @@ const HelpPanel = ({ isOpen, onClose }) => {
               </p>
             </div>
           </section>
-        </CollapsibleHelp>
+        </Collapsible>
 
-        <CollapsibleHelp title='Modes (When to Use Each)'>
+        <Collapsible
+          title='Modes (When to Use Each)'
+          animated={false}
+          titleClass='font-medium text-gray-800'
+        >
           <section>
             <ul className="list-disc text-left ml-5 text-sm text-gray-600 italic space-y-1">
               <li><strong>Cubic</strong> – Classic 3D JI lattice for 3-, 5-, 7-limit harmony.</li>
@@ -94,9 +114,13 @@ const HelpPanel = ({ isOpen, onClose }) => {
               <li><strong>Expanded Radial</strong> – Radial layout + ratios below 1/1.</li>
             </ul>
           </section>
-        </CollapsibleHelp>
+        </Collapsible>
 
-        <CollapsibleHelp title='Rotation Settings'>
+        <Collapsible
+          title='Rotation Settings'
+          animated={false}
+          titleClass='font-medium text-gray-800'
+        >
           <section>
             <div className={pClass}>
               <p>
@@ -104,9 +128,13 @@ const HelpPanel = ({ isOpen, onClose }) => {
               </p>
             </div>
           </section>
-        </CollapsibleHelp>
+        </Collapsible>
 
-        <CollapsibleHelp title='Tips & Examples'>
+        <Collapsible
+          title='Tips & Examples'
+          animated={false}
+          titleClass='font-medium text-gray-800'
+        >
           <section>
             <div className={pClass}>
             <p>
@@ -116,7 +144,7 @@ const HelpPanel = ({ isOpen, onClose }) => {
             </p>
             </div>
           </section>
-        </CollapsibleHelp>
+        </Collapsible>
 
       </div>
     </div>
