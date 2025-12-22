@@ -19,7 +19,8 @@ const NumberInput = ({ onAdd }) => {
       return;
     }
 
-    validNumbers.forEach((n) => onAdd(n));
+    onAdd(validNumbers);
+
     setInput('');
     setError('');
   };
