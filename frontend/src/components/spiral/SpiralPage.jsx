@@ -1,14 +1,13 @@
 import { useState } from "react";
-import { useSpiral } from "../../hooks/useSpiral"
 import InfoPanel from "./InfoPanel";
 import NumberInput from "./NumberInput";
 import SpiralCanvas from "./SpiralCanvas";
 import Modal from "./Modal";
+import { useSpiral } from "./hooks/useSpiral";
 
 const SpiralPage = () => {
   const {
     values,
-    batches,
     selected,
     setSelected,
     addPointBatch,
