@@ -6,7 +6,18 @@ import SpiralCanvas from "./SpiralCanvas";
 import Modal from "./Modal";
 
 const SpiralPage = () => {
-  const { addPointBatch, values, selected, svgGroupRef, pathRef, setSelected } = useSpiral();
+  const {
+    values,
+    batches,
+    selected,
+    setSelected,
+    addPointBatch,
+    removeValue,
+    undoLastBatch,
+    resetToOne,
+    svgGroupRef,
+    pathRef
+  } = useSpiral();
   const [modalOpen, setModalOpen] = useState(false);
 
   const toggleModal = () => {
@@ -21,6 +32,9 @@ const SpiralPage = () => {
         <header className="mb-8 text-center">
           <h1 className="text-3xl font-bold mb-4">Harmonic Spiral</h1>
           <NumberInput onAdd={addPointBatch} />
+          <button onClick={undoLastBatch} className="px-4 py-2 bg-yellow-500 text-white rounded">Undo</button>
+          <button onClick={() => removeValue(selected.values().next().value)} className="px-4 py-2 bg-red-500 text-white rounded">Remove Selected</button>
+          <button onClick={resetToOne} className="px-4 py-2 bg-gray-500 text-white rounded">Reset</button>
         </header>
         <div className="w-full max-w-[1200px] mx-auto md:grid md:grid-cols-2 gap-8 items-start">
           <div className="bg-white p-4 rounded-lg shadow border border-gray-200 flex justify-center">
