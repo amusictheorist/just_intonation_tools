@@ -15,7 +15,8 @@ const SpiralPage = () => {
     undoLastBatch,
     resetToOne,
     svgGroupRef,
-    pathRef
+    pathRef,
+    maxTheta
   } = useSpiral();
   const [modalOpen, setModalOpen] = useState(false);
 
@@ -43,9 +44,15 @@ const SpiralPage = () => {
           />
         </header>
         
-        <div className="w-full max-w-[1200px] mx-auto md:grid md:grid-cols-2 gap-8 items-start">
-          <div className="bg-white p-4 rounded-lg shadow border border-gray-200 flex justify-center">
-            <SpiralCanvas svgGroupRef={svgGroupRef} pathRef={pathRef} values={values} selected={selected} />
+        <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
+          <div className="aspect-square w-full max-w-[720px] mx-auto">
+            <SpiralCanvas
+              svgGroupRef={svgGroupRef}
+              pathRef={pathRef}
+              values={values}
+              selected={selected}
+              maxTheta={maxTheta}
+            />
           </div>
           <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full">
             <InfoPanel selected={selected} onClear={handleClear} />

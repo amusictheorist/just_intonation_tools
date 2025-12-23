@@ -1,6 +1,12 @@
 import { useEffect } from "react"
 
-const SpiralCanvas = ({ svgGroupRef, pathRef, selected }) => {
+const SpiralCanvas = ({
+  svgGroupRef,
+  pathRef,
+  selected,
+  maxTheta,
+  r0 = 30
+}) => {
   useEffect(() => {
     if (!svgGroupRef.current) return;
 
@@ -12,13 +18,30 @@ const SpiralCanvas = ({ svgGroupRef, pathRef, selected }) => {
     });
   }, [selected, svgGroupRef]);
 
+  const rMax = r0 * (maxTheta / 360);
+  const padding = 60;
+  const extent = Math.max(rMax + padding, 120);
+
+  const viewBox = [
+    -extent,
+    -extent,
+    extent * 2,
+    extent * 2
+  ].join(' ');
+
   return (
     <svg
-      viewBox="-200 -200 400 400"
-      className="w-[600px] h-[600px] border border-gray-400 bg-white rounded-lg shadow"
+      viewBox={viewBox}
+      className="w-full h-full border border-gray-400 bg-white rounded-lg shadow"
+      preserveAspectRatio="xMidYMid meet"
     >
       <g ref={svgGroupRef}>
-        <path ref={pathRef} stroke="gray" fill="none" strokeWidth="1" />
+        <path
+          ref={pathRef}
+          stroke="gray"
+          fill="none"
+          strokeWidth="1"
+        />
       </g>
     </svg>
   );

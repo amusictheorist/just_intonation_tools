@@ -6,7 +6,7 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
   }
 
   const drawPoint = (a, theta, onClick) => {
-    const r = r0 * Math.log(a);
+    const r = r0 * Math.log2(a);
     const { x, y } = polarToXY(r, theta);
 
     const dot = document.createElementNS(
