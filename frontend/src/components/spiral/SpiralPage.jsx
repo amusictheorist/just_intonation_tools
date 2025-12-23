@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import InfoPanel from "./InfoPanel";
 import SpiralCanvas from "./SpiralCanvas";
 import Modal from "./Modal";
 import { useSpiral } from "./hooks/useSpiral";
 import InputControls from "./ui/InputControls";
+import { useSpiralCamera } from "./hooks/useSpiralCamera";
+import SpiralCameraControls from "./ui/SpiralCameraControls";
 
 const SpiralPage = () => {
   const {
@@ -18,76 +20,18 @@ const SpiralPage = () => {
     pathRef,
     maxTheta
   } = useSpiral();
+
+  const {
+    zoom,
+    setTargetZoom,
+    pan,
+    setPan,
+    resetView
+  } = useSpiralCamera();
+
   const [modalOpen, setModalOpen] = useState(false);
-  const [targetZoom, setTargetZoom] = useState(1);
-  const [zoom, setZoom] = useState(1);
-  const [pan, setPan] = useState({ x: 0, y: 0 });
-
-  const toggleModal = () => {
-    setModalOpen(!modalOpen);
-  };
-
+  const toggleModal = () => setModalOpen(!modalOpen);
   const handleClear = () => setSelected(new Set());
-
-  useEffect(() => {
-    let raf;
-    const duration = 180;
-    const start = performance.now();
-    const startZoom = zoom;
-    const delta = targetZoom - startZoom;
-
-    if (Math.abs(delta) < 0.001) return;
-
-    const animate = t => {
-      const elapsed = t - start;
-      const lin = Math.min(elapsed / duration, 1);
-      const eased = 1 - Math.pow(1 - lin, 3);
-
-      setZoom(startZoom + delta * eased);
-
-      if (lin < 1) {
-        raf = requestAnimationFrame(animate);
-      }
-    };
-
-    raf = requestAnimationFrame(animate);
-
-    return () => cancelAnimationFrame(raf);
-  }, [targetZoom]);
-
-  useEffect(() => {
-    const step = 30;
-
-    const onKeyDown = e => {
-      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
-
-      setPan(p => {
-        switch (e.key) {
-          case 'ArrowUp':
-          case 'w':
-          case 'W':
-            return { ...p, y: p.y - step };
-          case 'ArrowDown':
-          case 's':
-          case 'S':
-            return { ...p, y: p.y + step };
-          case 'ArrowLeft':
-          case 'a':
-          case 'A':
-            return { ...p, x: p.x - step };
-          case 'ArrowRight':
-          case 'd':
-          case 'D':
-            return { ...p, x: p.x + step };
-          default:
-            return p;
-        }
-      });
-    };
-
-    window.addEventListener('keydown', onKeyDown);
-    return () => window.removeEventListener('keydown', onKeyDown);
-  }, []);
 
   return (
     <div>
@@ -109,35 +53,17 @@ const SpiralPage = () => {
         
         <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
           <div className="aspect-square w-full max-w-[720px] mx-auto">
-            <div className="flex justify-center items-center space-x-4 mt-4">
-              <button
-                onClick={() => setTargetZoom(z => Math.min(z * 1.25, 8))}
-                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                +
-              </button>
+            <SpiralCameraControls
+              zoom={zoom}
+              onZoomIn={() =>
+              setTargetZoom(z => Math.min(z * 1.25, 8))
+            }
+              onZoomOut={() =>
+              setTargetZoom(z => Math.max(z / 1.25, 0.25))
+            }
+              onReset={resetView}
+            />
 
-              <span className="text-sm text-gray-600">
-                Zoom: {zoom.toFixed(2)}
-              </span>
-
-              <button
-                onClick={() => setTargetZoom(z => Math.max(z / 1.25, 0.25))}
-                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                -
-              </button>
-
-              <button
-                onClick={() => {
-                  setTargetZoom(1);
-                  setPan({ x: 0, y: 0 });
-                }}
-                className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
-              >
-                Reset View
-              </button>
-            </div>
             <SpiralCanvas
               svgGroupRef={svgGroupRef}
               pathRef={pathRef}
@@ -149,11 +75,13 @@ const SpiralPage = () => {
               setPan={setPan}
             />
           </div>
+
           <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full">
             <InfoPanel selected={selected} onClear={handleClear} />
           </div>
         </div>
       </div>
+
       <button className="fixed bottom-5 right-5 w-12 h-12 bg-blue-600 text-white text-2xl rounded-full flex items-center justify-center shadow-md hover:bg-blue-800" onClick={toggleModal}>
         ℹ️
       </button>
