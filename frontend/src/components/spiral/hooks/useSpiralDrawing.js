@@ -28,8 +28,15 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
       'http://www.w3.org/2000/svg',
       'text'
     );
-    label.setAttribute('x', x + 6);
-    label.setAttribute('y', y);
+
+    const mag = Math.sqrt(x * x + y * y) || 1;
+    const ux = x / mag;
+    const uy = y / mag;
+    const baseOffset = 8;
+    const scaledOffset = baseOffset + 2 * Math.log2(a);
+
+    label.setAttribute('x', x + ux * scaledOffset);
+    label.setAttribute('y', y + uy * scaledOffset);
     label.setAttribute('font-size', 12);
     label.setAttribute('data-value', a);
     label.textContent = a;
