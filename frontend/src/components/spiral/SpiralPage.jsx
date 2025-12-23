@@ -21,6 +21,7 @@ const SpiralPage = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [targetZoom, setTargetZoom] = useState(1);
   const [zoom, setZoom] = useState(1);
+  const [pan, setPan] = useState({ x: 0, y: 0 });
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
@@ -53,6 +54,40 @@ const SpiralPage = () => {
 
     return () => cancelAnimationFrame(raf);
   }, [targetZoom]);
+
+  useEffect(() => {
+    const step = 30;
+
+    const onKeyDown = e => {
+      if (['INPUT', 'TEXTAREA'].includes(e.target.tagName)) return;
+
+      setPan(p => {
+        switch (e.key) {
+          case 'ArrowUp':
+          case 'w':
+          case 'W':
+            return { ...p, y: p.y - step };
+          case 'ArrowDown':
+          case 's':
+          case 'S':
+            return { ...p, y: p.y + step };
+          case 'ArrowLeft':
+          case 'a':
+          case 'A':
+            return { ...p, x: p.x - step };
+          case 'ArrowRight':
+          case 'd':
+          case 'D':
+            return { ...p, x: p.x + step };
+          default:
+            return p;
+        }
+      });
+    };
+
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, []);
 
   return (
     <div>
@@ -94,7 +129,10 @@ const SpiralPage = () => {
               </button>
 
               <button
-                onClick={() => setTargetZoom(1)}
+                onClick={() => {
+                  setTargetZoom(1);
+                  setPan({ x: 0, y: 0 });
+                }}
                 className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
               >
                 Reset View
@@ -107,6 +145,8 @@ const SpiralPage = () => {
               selected={selected}
               maxTheta={maxTheta}
               zoom={zoom}
+              pan={pan}
+              setPan={setPan}
             />
           </div>
           <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full">
