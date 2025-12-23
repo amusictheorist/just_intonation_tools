@@ -5,7 +5,8 @@ const SpiralCanvas = ({
   pathRef,
   selected,
   maxTheta,
-  r0 = 30
+  r0 = 30,
+  zoom = 1
 }) => {
   useEffect(() => {
     if (!svgGroupRef.current) return;
@@ -20,7 +21,8 @@ const SpiralCanvas = ({
 
   const rMax = r0 * (maxTheta / 360);
   const padding = 60;
-  const extent = Math.max(rMax + padding, 120);
+  const baseExtent = Math.max(rMax + padding, 120);
+  const extent = baseExtent / zoom;
 
   const viewBox = [
     -extent,

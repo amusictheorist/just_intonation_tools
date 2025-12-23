@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import InfoPanel from "./InfoPanel";
 import SpiralCanvas from "./SpiralCanvas";
 import Modal from "./Modal";
@@ -19,12 +19,40 @@ const SpiralPage = () => {
     maxTheta
   } = useSpiral();
   const [modalOpen, setModalOpen] = useState(false);
+  const [targetZoom, setTargetZoom] = useState(1);
+  const [zoom, setZoom] = useState(1);
 
   const toggleModal = () => {
     setModalOpen(!modalOpen);
   };
 
   const handleClear = () => setSelected(new Set());
+
+  useEffect(() => {
+    let raf;
+    const duration = 180;
+    const start = performance.now();
+    const startZoom = zoom;
+    const delta = targetZoom - startZoom;
+
+    if (Math.abs(delta) < 0.001) return;
+
+    const animate = t => {
+      const elapsed = t - start;
+      const lin = Math.min(elapsed / duration, 1);
+      const eased = 1 - Math.pow(1 - lin, 3);
+
+      setZoom(startZoom + delta * eased);
+
+      if (lin < 1) {
+        raf = requestAnimationFrame(animate);
+      }
+    };
+
+    raf = requestAnimationFrame(animate);
+
+    return () => cancelAnimationFrame(raf);
+  }, [targetZoom]);
 
   return (
     <div>
@@ -46,12 +74,39 @@ const SpiralPage = () => {
         
         <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
           <div className="aspect-square w-full max-w-[720px] mx-auto">
+            <div className="flex justify-center items-center space-x-4 mt-4">
+              <button
+                onClick={() => setTargetZoom(z => Math.min(z * 1.25, 8))}
+                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                +
+              </button>
+
+              <span className="text-sm text-gray-600">
+                Zoom: {zoom.toFixed(2)}
+              </span>
+
+              <button
+                onClick={() => setTargetZoom(z => Math.max(z / 1.25, 0.25))}
+                className="px-3 py-1 bg-gray-200 rounded hover:bg-gray-300"
+              >
+                -
+              </button>
+
+              <button
+                onClick={() => setTargetZoom(1)}
+                className="px-3 py-1 bg-gray-300 rounded hover:bg-gray-400"
+              >
+                Reset View
+              </button>
+            </div>
             <SpiralCanvas
               svgGroupRef={svgGroupRef}
               pathRef={pathRef}
               values={values}
               selected={selected}
               maxTheta={maxTheta}
+              zoom={zoom}
             />
           </div>
           <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full">
