@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import { useDragPan } from "./hooks/useDragPan";
 import { useSpiralSelectionStyling } from "./hooks/useSpiralSelectionStyling";
 import { useSpiralViewBox } from "./hooks/useSpiralViewBox";

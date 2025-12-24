@@ -29,6 +29,7 @@ export const useSpiralCamera = () => {
     raf = requestAnimationFrame(animate);
 
     return () => cancelAnimationFrame(raf);
+    // eslint-disable-next-line
   }, [targetZoom]);
 
   useEffect(() => {
