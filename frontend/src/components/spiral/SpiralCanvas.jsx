@@ -1,24 +1,54 @@
-import { useEffect } from "react"
+import { useDragPan } from "./hooks/useDragPan";
+import { useSpiralSelectionStyling } from "./hooks/useSpiralSelectionStyling";
+import { useSpiralViewBox } from "./hooks/useSpiralViewBox";
 
-const SpiralCanvas = ({ svgGroupRef, pathRef, selected }) => {
-  useEffect(() => {
-    if (!svgGroupRef.current) return;
+const SpiralCanvas = ({
+  svgGroupRef,
+  pathRef,
+  selected,
+  maxTheta,
+  r0 = 30,
+  zoom,
+  pan,
+  setPan
+}) => {
+  useSpiralSelectionStyling(svgGroupRef, selected);
 
-    svgGroupRef.current.querySelectorAll('circle').forEach((dot) => {
-      const val = Number(dot.getAttribute('data-value'));
-      if (!isNaN(val)) {
-        dot.setAttribute('fill', selected.has(val) ? 'red' : 'black');
-      }
-    });
-  }, [selected, svgGroupRef]);
+  const { viewBox, extent, baseExtent } = useSpiralViewBox({
+    maxTheta,
+    zoom,
+    pan,
+    r0
+  });
+
+  const {
+    onMouseDown,
+    onMouseMove,
+    onMouseUp
+  } = useDragPan({
+    extent,
+    setPan,
+    baseExtent
+  });
 
   return (
     <svg
-      viewBox="-200 -200 400 400"
-      className="w-[600px] h-[600px] border border-gray-400 bg-white rounded-lg shadow"
+      viewBox={viewBox}
+      className="w-full h-full border border-gray-400 bg-white rounded-lg shadow"
+      preserveAspectRatio="xMidYMid meet"
+      onMouseDown={onMouseDown}
+      onMouseMove={onMouseMove}
+      onMouseUp={onMouseUp}
+      onMouseLeave={onMouseUp}
     >
       <g ref={svgGroupRef}>
-        <path ref={pathRef} stroke="gray" fill="none" strokeWidth="1" />
+        <path
+          ref={pathRef}
+          stroke="gray"
+          fill="none"
+          strokeWidth="1"
+          pointerEvents='none'
+        />
       </g>
     </svg>
   );

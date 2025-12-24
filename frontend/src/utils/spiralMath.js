@@ -7,7 +7,7 @@ export function polarToXY(r, thetaDeg) {
 }
 
 export function rOfTheta(thetaDeg, r0 = 30) {
-  return (r0 * Math.log(2) / 360) * thetaDeg;
+  return r0 * (thetaDeg / 360);
 }
 
 export function drawSpiral(pathEl, thetaStart, thetaEnd, animate = false, r0 = 30) {
