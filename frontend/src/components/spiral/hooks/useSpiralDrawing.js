@@ -45,11 +45,10 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
     const mag = Math.sqrt(x * x + y * y) || 1;
     const ux = x / mag;
     const uy = y / mag;
-    const baseOffset = 8;
-    const scaledOffset = baseOffset + 2 * Math.log2(a);
+    const offset = 16;
 
-    label.setAttribute('x', x + ux * scaledOffset);
-    label.setAttribute('y', y + uy * scaledOffset);
+    label.setAttribute('x', x + ux * offset);
+    label.setAttribute('y', y + uy * offset);
     label.setAttribute('font-size', 10);
     label.setAttribute('data-value', a);
     label.textContent = a;
