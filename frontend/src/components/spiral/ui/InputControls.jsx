@@ -10,18 +10,45 @@ const InputControls = ({
   const [input, setInput] = useState('');
   const [error, setError] = useState('');
 
+  const parseInput = input => {
+    const normalized = input.replace(/[–—]/g, "-");
+    const tokens = normalized.split(/[,\s]+/);
+    const result = [];
+
+    tokens.forEach(token => {
+      if (!token) return;
+
+      const rangeMatch = token.match(/^(\d+)-(\d+)$/);
+      if (rangeMatch) {
+        let a = parseInt(rangeMatch[1], 10);
+        let b = parseInt(rangeMatch[2], 10);
+
+        if (a > b) [a, b] = [b, a];
+
+        for (let n = a; n <= b; n++) {
+          result.push(n);
+        }
+        return;
+      }
+
+      const n = parseInt(token, 10);
+      if (!isNaN(n)) {
+        result.push(n);
+      }
+    });
+
+    return result;
+  };
+
   const handleSubmit = () => {
     if (!input.trim()) return;
 
-    const numbers = input
-      .split(/[ ,]+/)
-      .map(n => parseInt(n, 10))
-      .filter(n => !isNaN(n));
+    const numbers = parseInput(input);
     
     const validNumbers = numbers.filter(n => n > 0 && n <= 1024);
 
     if (validNumbers.length === 0) {
-      setError('Please enter integers between 1 and 1024');
+      setError('Please enter integers or ranges between 1 and 1024');
       return;
     }
 
