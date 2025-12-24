@@ -53,7 +53,7 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
       const mag = Math.sqrt(x * x + y * y) || 1;
       const ux = x / mag;
       const uy = y / mag;
-      const offset = 16;
+      const offset = 14;
 
       lx = x + ux * offset;
       ly = y + uy * offset
