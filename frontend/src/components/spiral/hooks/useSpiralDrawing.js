@@ -18,9 +18,22 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
     dot.setAttribute('r', 4);
     dot.setAttribute('fill', 'black');
     dot.setAttribute('data-value', a);
+    dot.setAttribute('tabindex', '0');
+    dot.setAttribute('role', 'button');
+    dot.setAttribute('aria-label', `Partial ${a}`);
     dot.style.cursor = 'pointer';
 
     if (onClick) dot.addEventListener('click', onClick);
+    
+    dot.addEventListener('focus', () => {
+      dot.setAttribute('stroke', '#2563eb');
+      dot.setAttribute('strike-width', '2');
+    });
+
+    dot.addEventListener('blur', () => {
+      dot.removeAttribute('stroke');
+      dot.removeAttribute('stroke-width');
+    });
 
     svgGroupRef.current.appendChild(dot);
 
@@ -37,7 +50,7 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
 
     label.setAttribute('x', x + ux * scaledOffset);
     label.setAttribute('y', y + uy * scaledOffset);
-    label.setAttribute('font-size', 12);
+    label.setAttribute('font-size', 10);
     label.setAttribute('data-value', a);
     label.textContent = a;
 

@@ -1,6 +1,8 @@
+import { useEffect } from "react";
 import { useDragPan } from "./hooks/useDragPan";
 import { useSpiralSelectionStyling } from "./hooks/useSpiralSelectionStyling";
 import { useSpiralViewBox } from "./hooks/useSpiralViewBox";
+import { useSpiralVisibility } from "./hooks/useSpiralVisibility";
 
 const SpiralCanvas = ({
   svgGroupRef,
@@ -30,6 +32,27 @@ const SpiralCanvas = ({
     setPan,
     baseExtent
   });
+
+  useSpiralVisibility(svgGroupRef);
+
+  useEffect(() => {
+    if (!svgGroupRef.current) return;
+
+    const SHOW_ALL_ZOOM = 1.75;
+
+    svgGroupRef.current.querySelectorAll('text[data-value]').forEach(label => {
+      const val = Number(label.getAttribute('data-value'));
+      if (Number.isNaN(val)) return;
+
+      if (val < 120) {
+        label.style.display = '';
+        return;
+      }
+
+      const shouldHide = zoom < SHOW_ALL_ZOOM && (val % 2 === 1);
+      label.style.display = shouldHide ? 'none' : '';
+    });
+  }, [zoom, svgGroupRef]);
   
   return (
     <svg
