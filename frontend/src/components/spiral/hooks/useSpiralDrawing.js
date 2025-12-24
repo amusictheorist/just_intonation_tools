@@ -42,13 +42,25 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
       'text'
     );
 
-    const mag = Math.sqrt(x * x + y * y) || 1;
-    const ux = x / mag;
-    const uy = y / mag;
-    const offset = 16;
+    let lx = x;
+    let ly = y;
 
-    label.setAttribute('x', x + ux * offset);
-    label.setAttribute('y', y + uy * offset);
+    if (a === 1) {
+      lx = x + 4;
+      ly = y - 4;
+    } else {
+      
+      const mag = Math.sqrt(x * x + y * y) || 1;
+      const ux = x / mag;
+      const uy = y / mag;
+      const offset = 16;
+
+      lx = x + ux * offset;
+      ly = y + uy * offset
+    }
+
+    label.setAttribute('x', lx);
+    label.setAttribute('y', ly);
     label.setAttribute('font-size', 10);
     label.setAttribute('data-value', a);
     label.textContent = a;
