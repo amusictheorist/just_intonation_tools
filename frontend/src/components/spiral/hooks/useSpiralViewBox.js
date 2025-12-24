@@ -18,6 +18,7 @@ export const useSpiralViewBox = ({
 
   return {
     viewBox,
-    extent
+    extent,
+    baseExtent
   };
 };

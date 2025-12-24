@@ -14,17 +14,22 @@ const SpiralCanvas = ({
 }) => {
   useSpiralSelectionStyling(svgGroupRef, selected);
 
-  const { viewBox, extent } = useSpiralViewBox({
+  const { viewBox, extent, baseExtent } = useSpiralViewBox({
     maxTheta,
     zoom,
-    pan, r0
+    pan,
+    r0
   });
 
   const {
     onMouseDown,
     onMouseMove,
     onMouseUp
-  } = useDragPan({ extent, setPan });
+  } = useDragPan({
+    extent,
+    setPan,
+    baseExtent
+  });
   
   return (
     <svg
