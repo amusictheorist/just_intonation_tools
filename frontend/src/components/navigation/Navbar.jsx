@@ -63,7 +63,7 @@ const Navbar = () => {
             className="text-white hover:text-yellow-400 hover:underline transition"
             onClick={() => setMenuOpen(false)}
           >
-            Ratio Lattice Generator
+            Ratio Lattice Visualizer
           </Link>
         </li>
       </ul>
