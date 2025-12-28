@@ -1,17 +1,4 @@
-export function gcd(a, b) {
-  return b === 0 ? a : gcd(b, a % b);
-}
-
-export function gcdArray(arr) {
-  return arr.reduce((acc, val) => gcd(acc, val), arr[0]);
-}
-
-export function stripPowersOf2(n) {
-  while (n % 2 === 0 && n > 1) {
-    n = n / 2;
-  }
-  return n;
-}
+import {  gcd, gcdArray, stripPowersOf2 } from "./helpers";
 
 export function getParset(arr) {
   return [...arr].sort((a, b) => a - b);

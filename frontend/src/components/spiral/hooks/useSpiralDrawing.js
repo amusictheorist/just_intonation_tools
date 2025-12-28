@@ -1,4 +1,4 @@
-import { drawOctaveLines, drawSpiral, polarToXY } from "../../../utils/spiralMath";
+import { drawOctaveLines, drawSpiral, polarToXY } from "../utils/drawing/spiralMath";
 
 export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
   if (!svgGroupRef || !pathRef) {
