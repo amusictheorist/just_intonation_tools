@@ -5,64 +5,80 @@ export const createSpiralDrawing = (svgGroupRef, pathRef, r0) => {
     throw new Error('createSpiralDrawing requires valid refs');
   }
 
-  const drawPoint = (a, theta, onClick) => {
+  const drawPoint = (a, theta, onToggle) => {
     const r = r0 * Math.log2(a);
     const { x, y } = polarToXY(r, theta);
 
     const dot = document.createElementNS(
-      'http://www.w3.org/2000/svg',
-      'circle'
+      "http://www.w3.org/2000/svg",
+      "circle"
     );
-    dot.setAttribute('cx', x);
-    dot.setAttribute('cy', y);
-    dot.setAttribute('r', 4);
-    dot.setAttribute('fill', 'black');
-    dot.setAttribute('data-value', a);
-    dot.setAttribute('tabindex', '0');
-    dot.setAttribute('role', 'button');
-    dot.setAttribute('aria-label', `Partial ${a}`);
-    dot.style.cursor = 'pointer';
 
-    if (onClick) dot.addEventListener('click', onClick);
-    
-    dot.addEventListener('focus', () => {
-      dot.setAttribute('stroke', '#2563eb');
-      dot.setAttribute('strike-width', '2');
+    dot.setAttribute("cx", x);
+    dot.setAttribute("cy", y);
+    dot.setAttribute("r", 4);
+    dot.setAttribute("fill", "black");
+    dot.setAttribute("data-value", a);
+
+    dot.setAttribute("tabindex", "0");
+    dot.setAttribute("role", "button");
+    dot.setAttribute("aria-label", `Partial ${a}`);
+    dot.setAttribute("focusable", "true");
+    dot.style.cursor = "pointer";
+
+    const toggle = () => {
+      if (onToggle) onToggle();
+    };
+
+    dot.addEventListener("click", (e) => {
+      e.preventDefault();
+      toggle();
     });
 
-    dot.addEventListener('blur', () => {
-      dot.removeAttribute('stroke');
-      dot.removeAttribute('stroke-width');
+    dot.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        toggle();
+      }
+    });
+
+    dot.addEventListener("focus", () => {
+      dot.setAttribute("stroke", "#2563eb");
+      dot.setAttribute("stroke-width", "2");
+    });
+
+    dot.addEventListener("blur", () => {
+      dot.removeAttribute("stroke");
+      dot.removeAttribute("stroke-width");
     });
 
     svgGroupRef.current.appendChild(dot);
 
     const label = document.createElementNS(
-      'http://www.w3.org/2000/svg',
-      'text'
+      "http://www.w3.org/2000/svg",
+      "text"
     );
 
     let lx = x;
     let ly = y;
 
     if (a === 1) {
-      lx = x + 4;
-      ly = y - 4;
+      lx = x + 6;
+      ly = y - 6;
     } else {
-      
       const mag = Math.sqrt(x * x + y * y) || 1;
       const ux = x / mag;
       const uy = y / mag;
       const offset = 14;
 
       lx = x + ux * offset;
-      ly = y + uy * offset
+      ly = y + uy * offset;
     }
 
-    label.setAttribute('x', lx);
-    label.setAttribute('y', ly);
-    label.setAttribute('font-size', 10);
-    label.setAttribute('data-value', a);
+    label.setAttribute("x", lx);
+    label.setAttribute("y", ly);
+    label.setAttribute("font-size", "10");
+    label.setAttribute("data-value", a);
     label.textContent = a;
 
     svgGroupRef.current.appendChild(label);
