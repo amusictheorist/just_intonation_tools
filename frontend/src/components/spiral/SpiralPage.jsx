@@ -52,32 +52,38 @@ const SpiralPage = () => {
         </header>
         
         <div className="bg-white p-4 rounded-lg shadow border border-gray-200">
-          <div className="aspect-square w-full max-w-[720px] mx-auto">
-            <SpiralCameraControls
-              zoom={zoom}
-              onZoomIn={() =>
-              setTargetZoom(z => Math.min(z * 1.25, 8))
-            }
-              onZoomOut={() =>
-              setTargetZoom(z => Math.max(z / 1.25, 0.25))
-            }
-              onReset={resetView}
-            />
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="lg:col-span-2 flex flex-col items-center">
+              <div className="w-full max-w-[560px]">
+                <SpiralCameraControls
+                  zoom={zoom}
+                  onZoomIn={() =>
+                    setTargetZoom(z => Math.min(z * 1.25, 8))
+                  }
+                  onZoomOut={() =>
+                    setTargetZoom(z => Math.max(z / 1.25, 0.25))
+                  }
+                  onReset={resetView}
+                />
+                <div className="aspect-square w-full mt-2">
 
-            <SpiralCanvas
-              svgGroupRef={svgGroupRef}
-              pathRef={pathRef}
-              values={values}
-              selected={selected}
-              maxTheta={maxTheta}
-              zoom={zoom}
-              pan={pan}
-              setPan={setPan}
-            />
-          </div>
+                  <SpiralCanvas
+                    svgGroupRef={svgGroupRef}
+                    pathRef={pathRef}
+                    values={values}
+                    selected={selected}
+                    maxTheta={maxTheta}
+                    zoom={zoom}
+                    pan={pan}
+                    setPan={setPan}
+                  />
+                </div>
+              </div>
+            </div>
 
-          <div className="bg-white p-4 rounded-lg shadow border border-gray-200 w-full">
-            <InfoPanel selected={selected} onClear={handleClear} />
+            <div className="lg:col-span-1">
+              <InfoPanel selected={selected} onClear={handleClear} />
+            </div>
           </div>
         </div>
       </div>
