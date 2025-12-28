@@ -3,7 +3,7 @@ import MatrixTable from "./MatrixTable";
 import SubsetSection from "./SubsetSection";
 import SummarySection from "./SummarySection";
 import CollapsibleSection from "./CollapsibleSection";
-import { getParset, getParcset, getParSC, getParcSC, sumArray, getPitchIntMatrix, getPCIntMatrix, getSubsets } from "./utils/math/sets";
+import { getParset, getParcset, getParSC, getParcSC, sumArray, getPitchIntMatrix, getPCIntMatrix, getSubsets } from "../utils/math/sets";
 
 const InfoPanel = ({ selected, onClear }) => {
   const [showMatrices, setShowMatrices] = useState(false);
