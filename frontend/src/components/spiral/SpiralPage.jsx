@@ -1,11 +1,12 @@
 import { useState } from "react";
-import InfoPanel from "./InfoPanel";
-import SpiralCanvas from "./SpiralCanvas";
-import Modal from "./Modal";
+import InfoPanel from "./ui/InfoPanel";
+import SpiralCanvas from "./ui/SpiralCanvas";
 import { useSpiral } from "./hooks/useSpiral";
 import InputControls from "./ui/InputControls";
 import { useSpiralCamera } from "./hooks/useSpiralCamera";
 import SpiralCameraControls from "./ui/SpiralCameraControls";
+import HelpButton from "./ui/HelpButton";
+import HelpPanel from "./ui/HelpPanel";
 
 const SpiralPage = () => {
   const {
@@ -29,8 +30,8 @@ const SpiralPage = () => {
     resetView
   } = useSpiralCamera();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const toggleModal = () => setModalOpen(!modalOpen);
+  const [helpOpen, setHelpOpen] = useState(false);
+
   const handleClear = () => setSelected(new Set());
 
   return (
@@ -88,13 +89,12 @@ const SpiralPage = () => {
         </div>
       </div>
 
-      <button className="fixed bottom-5 right-5 w-12 h-12 bg-blue-600 text-white text-2xl rounded-full flex items-center justify-center shadow-md hover:bg-blue-800" onClick={toggleModal}>
-        ℹ️
-      </button>
+      <HelpButton onClick={() => setHelpOpen(true)} />
+      <HelpPanel
+        isOpen={helpOpen}
+        onClose={() => setHelpOpen(false)}
+      />
 
-      {modalOpen && (
-        <Modal isOpen={modalOpen} onClose={toggleModal} />
-      )}
     </div>
   );
 };
