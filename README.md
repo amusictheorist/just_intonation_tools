@@ -1,56 +1,75 @@
-# Just Intonation Tools
+# React + TypeScript + Vite
 
-An interactive web tool for exploring pitch relationships, ratios, and tuning systems based in Just Intonation (JI).
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-🔗 **Live site**: [amusictheorist-just-intonation-tools.netlify.app](https://amusictheorist-just-intonation-tools.netlify.app/)
+Currently, two official plugins are available:
 
----
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-## 🎯 What It Does
+## React Compiler
 
-This app provides a suite of interactive tools for analyzing and experimenting with Just Intonation, including:
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-- Ratio input and simplification
-- Prime factorization of pitch ratios
-- Ratio lattice generator
-- Visualization of tuning structures and their relationships
+## Expanding the ESLint configuration
 
-Whether you're studying microtonality, building custom tuning systems, or just curious about the inner workings of JI, this tool offers a hands-on way to explore.
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
----
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-## 🧭 How to Use
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-- Enter pitch ratios or prime limits to see their structure and interpretation
-- Navigate through harmonic/subharmonic series using simple UI controls
-- Use the lattice generator to visualize multidimensional tuning relationships
-- Most tools are responsive, keyboard-friendly, and update in real time
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-Designed for composers, theorists, and students interested in tuning systems beyond 12-TET.
+```
 
----
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-## 🔍 Technologies Used
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
 
-- **React + JavaScript** frontend and **Python + Django** backend
-- **CSS** for custom UI
-- Hosted on **Netlify** and **Render**
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
----
-
-## 💡 Inspiration
-
-Built as a practical companion to music theory research in microtonality and Just Intonation. Inspired by historical systems and modern computational approaches to tuning.
-
----
-
-## 🙋‍♂️ Maintainer
-
-Created by [@amusictheorist](https://github.com/amusictheorist).  
-This is a personal, exploratory project — feedback or suggestions are always welcome via GitHub issues.
-
----
-
-## 📝 License
-
-[MIT License](./LICENSE)
+```
