@@ -15,3 +15,8 @@ export const radiusAtTheta = (
   thetaDegrees: number,
   radiusPerOctave = DEFAULT_SPIRAL_RADIUS,
 ): number => radiusPerOctave * (thetaDegrees / 360);
+
+export const thetaOfRadius = (
+  radius: number,
+  radiusPerOctave = DEFAULT_SPIRAL_RADIUS,
+): number => 360 * (radius / radiusPerOctave);
