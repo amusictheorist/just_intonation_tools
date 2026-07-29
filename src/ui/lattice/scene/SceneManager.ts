@@ -1,12 +1,12 @@
 import * as THREE from "three";
-import { CameraSystem } from "./cameraSystem";
-import { TooltipSystem } from "./tooltipSystem";
-import { ConnectionSystem } from "./connectionSystem";
-import { InteractionSystem } from "./interactionSystem";
 import type { LatticePointData, LatticePointMesh } from "./types";
 import { createCenterPoint } from "./centerPointSystem";
 import { createPoint } from "./pointFactory";
 import { fadeInLines, fadeInPoints, fadeOutRemoving } from "./fadeSystem";
+import { CameraSystem } from "./CameraSystem";
+import { TooltipSystem } from "./TooltipSystem";
+import { ConnectionSystem } from "./ConnectionSystem";
+import { InteractionSystem } from "./InteractionSystem";
 
 export class SceneManager {
   readonly container: HTMLElement;

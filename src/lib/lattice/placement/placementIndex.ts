@@ -21,9 +21,9 @@ export const placeRatio = (
     case "expanded_cubic":
       return placeExpandedCubic(ratio, controls);
     case "radial":
-      return placeRadial(ratio, controls);
+      return placeRadial(ratio);
     case "expanded_radial":
-      return placeExpandedRadial(ratio, controls);
+      return placeExpandedRadial(ratio);
 
     default: {
       const exhaustiveCheck: never = mode;

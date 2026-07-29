@@ -2,7 +2,7 @@ import type { Dispatch, RefObject, SetStateAction } from "react";
 import { DEFAULT_SPIRAL_RADIUS } from "../../../lib/spiral/math";
 import type { SpiralPan } from "../../../lib/spiral/types";
 import { useSpiralViewBox } from "../hooks/useSpiralViewBox";
-import { useSpiralSelectionStyling } from "../drawing/useSpiralSelectionStyling";
+import { useSpiralSelectionStyling } from "../hooks/useSpiralSelectionStyling";
 import { useDragPan } from "../hooks/useDragPan";
 
 type SpiralCanvasProps = {

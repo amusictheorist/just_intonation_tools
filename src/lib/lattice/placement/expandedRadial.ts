@@ -2,12 +2,9 @@ import { BASE_RADIUS, Y_STEP } from "../math/constants";
 import { factorRatio } from "../math/factors";
 import { getPrimeStepDir } from "../math/highPrimeGeometry";
 import { vec } from "../math/vectors";
-import type { PlacementControls, PlacementResult, Ratio } from "../types";
+import type { PlacementResult, Ratio } from "../types";
 
-export const placeExpandedRadial = (
-  ratio: Ratio,
-  _controls: PlacementControls = {},
-): PlacementResult => {
+export const placeExpandedRadial = (ratio: Ratio): PlacementResult => {
   const factors = factorRatio(ratio);
 
   if (factors.size === 0) {

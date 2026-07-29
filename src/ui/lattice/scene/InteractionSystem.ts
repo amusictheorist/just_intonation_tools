@@ -71,7 +71,7 @@ export class InteractionSystem {
   private handleClick = (event: MouseEvent): void => {
     const point = this.getIntersectedPoint(event);
 
-    if (!point.userData?.id) return;
+    if (!point || !point.userData?.id) return;
 
     if (this.sceneManager.toRemove.includes(point)) return;
 

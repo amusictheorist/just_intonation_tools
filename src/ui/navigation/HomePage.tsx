@@ -3,9 +3,9 @@ import PageLayout from "../layout/PageLayout";
 import PageHeader from "../layout/PageHeader";
 import ContentCard from "../layout/ContentCard";
 
-const HomePage = () => {
-  const year = new Date(Date.now()).getFullYear();
+const CURRENT_YEAR = new Date(Date.now()).getFullYear();
 
+const HomePage = () => {
   return (
     <PageLayout>
       <PageHeader
@@ -58,7 +58,7 @@ const HomePage = () => {
       </ContentCard>
 
       <footer className="mt-8 border-t border-gray-200 pt-6 text-center text-sm text-gray-600">
-        <p>&copy; {year} Just Intonation Tools. All right reserved.</p>
+        <p>&copy; {CURRENT_YEAR} Just Intonation Tools. All right reserved.</p>
 
         <p className="mt-2">
           by{" "}

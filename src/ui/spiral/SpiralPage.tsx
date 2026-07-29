@@ -8,8 +8,8 @@ import InfoPanel from "./components/InfoPanel";
 import InputControls from "./components/InputControls";
 import SpiralCameraControls from "./components/SpiralCameraControls";
 import SpiralCanvas from "./components/SpiralCanvas";
-import { useSpiral } from "./drawing/useSpiral";
-import { useSpiralCamera } from "./drawing/useSpiralCamera";
+import { useSpiral } from "./hooks/useSpiral";
+import { useSpiralCamera } from "./hooks/useSpiralCamera";
 
 const MINIMUM_ZOOM = 0.25;
 const MAXIMUM_ZOOM = 8;
@@ -78,7 +78,7 @@ function SpiralPage() {
           <ContentCard>
             <div className="grid gap-6 lg:grid-cols-3">
               <div className="flex flex-col items-center lg:col-span-2">
-                <div className="w-full max-w-[560px]">
+                <div className="w-full max-w-140">
                   <SpiralCameraControls
                     zoom={zoom}
                     onZoomIn={handleZoomIn}

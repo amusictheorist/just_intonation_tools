@@ -3,8 +3,8 @@ import {
   polarToXY,
   radiusAtTheta,
 } from "../../../lib/spiral/math";
-import { SVG_NAMESPACE } from "./createSpiralDrawing";
 
+export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
 const ANGLE_STEP = 1;
 const ANIMATION_DURATION = 2000;
 
@@ -22,10 +22,9 @@ const appendPointToPath = (
   radiusPerOctave: number,
 ): string => {
   const radius = radiusAtTheta(theta, radiusPerOctave);
-
   const { x, y } = polarToXY(radius, theta);
 
-  return path === "" ? `M${x}, ${y}` : `${path}L${x},${y}`;
+  return path === "" ? `M${x},${y}` : `${path}L${x},${y}`;
 };
 
 export const drawSpiral = ({
@@ -45,22 +44,24 @@ export const drawSpiral = ({
     }
 
     pathElement.setAttribute("d", path);
+
     return null;
   }
 
   const totalAngle = thetaEnd - thetaStart;
-
   const startsWithMove = existingPath === "";
 
   let startTime: number | null = null;
-  let animationFrameId: number | null = null;
 
-  const extend = (timestamp: number) => {
-    if (startTime === null) startTime = timestamp;
+  const extend = (timestamp: number): void => {
+    if (startTime === null) {
+      startTime = timestamp;
+    }
 
     const elapsed = timestamp - startTime;
 
     const linearProgress = Math.min(elapsed / ANIMATION_DURATION, 1);
+
     const easedProgress = 1 - (1 - linearProgress) ** 3;
 
     const currentTheta = thetaStart + totalAngle * easedProgress;
@@ -86,21 +87,22 @@ export const drawSpiral = ({
       const radius = radiusAtTheta(currentTheta, radiusPerOctave);
 
       const { x, y } = polarToXY(radius, currentTheta);
+
       path += `L${x},${y}`;
     }
 
     pathElement.setAttribute("d", path);
 
-    if (easedProgress < 1) animationFrameId = requestAnimationFrame(extend);
+    if (linearProgress < 1) {
+      requestAnimationFrame(extend);
+    }
   };
 
-  animationFrameId = requestAnimationFrame(extend);
-
-  return animationFrameId;
+  return requestAnimationFrame(extend);
 };
 
 type DrawOctaveLinesOptions = {
-  groupElement: SVGElement;
+  groupElement: SVGGElement;
   maxTheta: number;
   radiusPerOctave?: number;
 };
@@ -116,7 +118,7 @@ export const drawOctaveLines = ({
 
   const octaveCount = Math.floor(maxTheta / 360);
 
-  for (let octave = 1; octave <= octaveCount; octave++) {
+  for (let octave = 1; octave <= octaveCount; octave += 1) {
     const theta = 360 * octave;
 
     const radius = radiusAtTheta(theta, radiusPerOctave);
