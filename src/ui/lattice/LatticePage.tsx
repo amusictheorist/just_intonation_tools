@@ -13,8 +13,8 @@ import Collapsible from "./components/Collapsible";
 import RotationSliders from "./components/RotationSliders";
 import RotationPanel from "./components/RotationPanel";
 import LatticeCanvas from "./components/LatticeCanvas";
-import HelpButton from "./components/HelpButton";
 import HelpPanel from "./components/HelpPanel";
+import HelpButton from "../components/HelpButton";
 
 function LatticePage() {
   const { ratios, addRatio, removeRatio, undo, reset, mode, setMode } =
