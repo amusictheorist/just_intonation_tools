@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import type { SpiralDrawing } from "../drawing/createSpiralDrawing";
-import type { useSpiralState } from "../hooks/useSpiralState";
+import type { useSpiralState } from "./useSpiralState";
 
 type SpiralState = ReturnType<typeof useSpiralState>;
 
@@ -13,7 +13,7 @@ export type SpiralController = {
 
 export const useSpiralController = (
   state: SpiralState,
-  drawing: SpiralDrawing,
+  drawing: SpiralDrawing | null,
 ): SpiralController => {
   const {
     values,
@@ -27,14 +27,6 @@ export const useSpiralController = (
     setSelected,
   } = state;
 
-  const {
-    drawPoint,
-    extendSpiral,
-    shrinkSpiralTo,
-    removeValueVisual,
-    clearExceptOne,
-  } = drawing;
-
   const getTheta = useCallback(
     (value: number): number => 360 * Math.log2(value),
     [],
@@ -42,6 +34,10 @@ export const useSpiralController = (
 
   const addPointBatch = useCallback(
     (inputValues: number[]): void => {
+      if (!drawing) {
+        return;
+      }
+
       const uniqueValues = Array.from(new Set(inputValues)).filter(
         (value) => Number.isFinite(value) && value > 0,
       );
@@ -61,13 +57,12 @@ export const useSpiralController = (
       );
 
       if (newMaximumTheta > maxTheta) {
-        extendSpiral(maxTheta, newMaximumTheta);
-
+        drawing.extendSpiral(maxTheta, newMaximumTheta);
         setMaxTheta(newMaximumTheta);
       }
 
       for (const [value, theta] of valuesWithTheta) {
-        drawPoint(value, theta, () => {
+        drawing.drawPoint(value, theta, () => {
           setSelected((currentSelection) => {
             const nextSelection = new Set(currentSelection);
 
@@ -84,29 +79,19 @@ export const useSpiralController = (
 
       addValues(newValues);
     },
-    [
-      addValues,
-      drawPoint,
-      extendSpiral,
-      getTheta,
-      maxTheta,
-      setMaxTheta,
-      setSelected,
-      values,
-    ],
+    [drawing, values, getTheta, maxTheta, setMaxTheta, setSelected, addValues],
   );
 
   const removeValue = useCallback(
     (value: number): void => {
-      if (value === 1) {
+      if (!drawing || value === 1) {
         return;
       }
 
-      removeValueVisual(value);
+      drawing.removeValueVisual(value);
       removeValueFromState(value);
 
       const remainingValues = new Set(values);
-
       remainingValues.delete(value);
 
       if (remainingValues.size === 0) {
@@ -118,30 +103,22 @@ export const useSpiralController = (
       const newTheta = newMaximumValue > 1 ? getTheta(newMaximumValue) : 0;
 
       if (newTheta < maxTheta) {
-        shrinkSpiralTo(newTheta);
+        drawing.shrinkSpiralTo(newTheta);
         setMaxTheta(newTheta);
       }
     },
-    [
-      getTheta,
-      maxTheta,
-      removeValueFromState,
-      removeValueVisual,
-      setMaxTheta,
-      shrinkSpiralTo,
-      values,
-    ],
+    [drawing, values, getTheta, maxTheta, removeValueFromState, setMaxTheta],
   );
 
   const undoLastBatch = useCallback((): void => {
-    if (batches.length <= 1) {
+    if (!drawing || batches.length <= 1) {
       return;
     }
 
     const lastBatch = batches[batches.length - 1];
 
     for (const value of lastBatch) {
-      removeValueVisual(value);
+      drawing.removeValueVisual(value);
     }
 
     const remainingValues = new Set(values);
@@ -161,24 +138,27 @@ export const useSpiralController = (
     const newTheta = newMaximumValue > 1 ? getTheta(newMaximumValue) : 0;
 
     if (newTheta < maxTheta) {
-      shrinkSpiralTo(newTheta);
+      drawing.shrinkSpiralTo(newTheta);
       setMaxTheta(newTheta);
     }
   }, [
+    drawing,
     batches,
+    values,
     getTheta,
     maxTheta,
-    removeValueVisual,
-    setMaxTheta,
-    shrinkSpiralTo,
     undoLastBatchInState,
-    values,
+    setMaxTheta,
   ]);
 
   const resetToOne = useCallback((): void => {
-    clearExceptOne();
+    if (!drawing) {
+      return;
+    }
+
+    drawing.clearExceptOne();
     resetState();
-  }, [clearExceptOne, resetState]);
+  }, [drawing, resetState]);
 
   return {
     addPointBatch,
