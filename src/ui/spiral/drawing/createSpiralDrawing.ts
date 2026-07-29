@@ -1,13 +1,17 @@
-import type { RefObject } from "react";
 import { polarToXY } from "../../../lib/spiral/math";
-import { drawOctaveLines, drawSpiral } from "./spiralDrawing";
+import {
+  drawOctaveLines,
+  drawSpiral,
+  SVG_NAMESPACE,
+} from "../drawing/spiralDrawing";
 
-export const SVG_NAMESPACE = "http://www.w3.org/2000/svg";
-
-type ToggleHandler = () => void;
+type ElementAccessors = {
+  getGroupElement: () => SVGGElement | null;
+  getPathElement: () => SVGPathElement | null;
+};
 
 export type SpiralDrawing = {
-  drawPoint: (value: number, theta: number, onToggle?: ToggleHandler) => void;
+  drawPoint: (value: number, theta: number, onToggle?: () => void) => void;
   extendSpiral: (oldTheta: number, newTheta: number) => void;
   shrinkSpiralTo: (newTheta: number) => void;
   removeValueVisual: (value: number) => void;
@@ -15,17 +19,13 @@ export type SpiralDrawing = {
 };
 
 export const createSpiralDrawing = (
-  svgGroupRef: RefObject<SVGGElement | null>,
-  pathRef: RefObject<SVGPathElement | null>,
+  accessors: ElementAccessors,
   radiusPerOctave: number,
 ): SpiralDrawing => {
-  const getElements = (): {
-    groupElement: SVGGElement;
-    pathElement: SVGPathElement;
-  } | null => {
-    const groupElement = svgGroupRef.current;
+  const getElements = () => {
+    const groupElement = accessors.getGroupElement();
 
-    const pathElement = pathRef.current;
+    const pathElement = accessors.getPathElement();
 
     if (!groupElement || !pathElement) {
       return null;
@@ -40,7 +40,7 @@ export const createSpiralDrawing = (
   const drawPoint = (
     value: number,
     theta: number,
-    onToggle?: ToggleHandler,
+    onToggle?: () => void,
   ): void => {
     const elements = getElements();
 
@@ -49,7 +49,6 @@ export const createSpiralDrawing = (
     }
 
     const { groupElement } = elements;
-
     const radius = radiusPerOctave * Math.log2(value);
 
     const { x, y } = polarToXY(radius, theta);
@@ -61,12 +60,10 @@ export const createSpiralDrawing = (
     dot.setAttribute("r", "4");
     dot.setAttribute("fill", "black");
     dot.setAttribute("data-value", value.toString());
-
     dot.setAttribute("tabindex", "0");
     dot.setAttribute("role", "button");
     dot.setAttribute("aria-label", `Partial ${value}`);
     dot.setAttribute("focusable", "true");
-
     dot.style.cursor = "pointer";
 
     const toggle = (): void => {
@@ -87,7 +84,6 @@ export const createSpiralDrawing = (
 
     dot.addEventListener("focus", () => {
       dot.setAttribute("stroke", "#2563eb");
-
       dot.setAttribute("stroke-width", "2");
     });
 
@@ -100,8 +96,8 @@ export const createSpiralDrawing = (
 
     const label = document.createElementNS(SVG_NAMESPACE, "text");
 
-    let labelX = x;
-    let labelY = y;
+    let labelX: number;
+    let labelY: number;
 
     if (value === 1) {
       labelX = x + 6;
@@ -118,13 +114,9 @@ export const createSpiralDrawing = (
     }
 
     label.setAttribute("x", labelX.toString());
-
     label.setAttribute("y", labelY.toString());
-
     label.setAttribute("font-size", "10");
-
     label.setAttribute("data-value", value.toString());
-
     label.textContent = value.toString();
 
     groupElement.appendChild(label);
@@ -137,10 +129,8 @@ export const createSpiralDrawing = (
       return;
     }
 
-    const { groupElement, pathElement } = elements;
-
     drawSpiral({
-      pathElement,
+      pathElement: elements.pathElement,
       thetaStart: oldTheta,
       thetaEnd: newTheta,
       animate: true,
@@ -148,7 +138,7 @@ export const createSpiralDrawing = (
     });
 
     drawOctaveLines({
-      groupElement,
+      groupElement: elements.groupElement,
       maxTheta: newTheta,
       radiusPerOctave,
     });
@@ -189,7 +179,7 @@ export const createSpiralDrawing = (
   };
 
   const removeValueVisual = (value: number): void => {
-    const groupElement = svgGroupRef.current;
+    const groupElement = accessors.getGroupElement();
 
     if (!groupElement) {
       return;
@@ -209,9 +199,7 @@ export const createSpiralDrawing = (
       return;
     }
 
-    const { groupElement, pathElement } = elements;
-
-    groupElement
+    elements.groupElement
       .querySelectorAll(
         [
           'circle[data-value]:not([data-value="1"])',
@@ -223,7 +211,7 @@ export const createSpiralDrawing = (
         element.remove();
       });
 
-    pathElement.setAttribute("d", "");
+    elements.pathElement.setAttribute("d", "");
   };
 
   return {
