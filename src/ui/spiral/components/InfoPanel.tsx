@@ -5,7 +5,7 @@ import {
   getParSC,
   getParset,
   getPCIntMatrix,
-  getPitchIntMatrix,
+  getPartialIntervalMatrix,
   getSubsets,
   sumArray,
 } from "../../../lib/spiral/sets";
@@ -22,7 +22,7 @@ type InfoPanelProps = {
 function InfoPanel({ selected, onClear }: InfoPanelProps) {
   const [showMatrices, setShowMatrices] = useState(false);
 
-  const [showPitchSubsets, setShowPitchSubsets] = useState(false);
+  const [showPartialSubsets, setShowPartialSubsets] = useState(false);
 
   const [showPartialClassSubsets, setShowPartialClassSubsets] = useState(false);
 
@@ -51,7 +51,7 @@ function InfoPanel({ selected, onClear }: InfoPanelProps) {
       parcSC,
       spectralExtP: sumArray(parSC),
       spectralExtPC: sumArray(parcSC),
-      pitchMatrix: getPitchIntMatrix(selectedValues),
+      partialMatrix: getPartialIntervalMatrix(selectedValues),
       partialClassMatrix: getPCIntMatrix(selectedValues),
       subsets: getSubsets(selectedValues),
     };
@@ -76,7 +76,7 @@ function InfoPanel({ selected, onClear }: InfoPanelProps) {
     parcSC,
     spectralExtP,
     spectralExtPC,
-    pitchMatrix,
+    partialMatrix,
     partialClassMatrix,
     subsets,
   } = analysis;
@@ -115,11 +115,11 @@ function InfoPanel({ selected, onClear }: InfoPanelProps) {
           >
             <div className="space-y-4">
               <div>
-                <p className="mb-2 font-semibold">Pitch intervals</p>
+                <p className="mb-2 font-semibold">Partial intervals</p>
 
                 <MatrixTable
-                  elements={pitchMatrix.elements}
-                  matrix={pitchMatrix.matrix}
+                  elements={partialMatrix.elements}
+                  matrix={partialMatrix.matrix}
                 />
               </div>
 
@@ -141,9 +141,9 @@ function InfoPanel({ selected, onClear }: InfoPanelProps) {
       {parset.length > 3 && (
         <div className="border-t border-gray-200 pt-3">
           <CollapsibleSection
-            title="pitch subsets"
-            show={showPitchSubsets}
-            onToggle={() => setShowPitchSubsets((current) => !current)}
+            title="partial subsets"
+            show={showPartialSubsets}
+            onToggle={() => setShowPartialSubsets((current) => !current)}
           >
             <SubsetSection subsets={subsets} getSC={getParSC} />
           </CollapsibleSection>

@@ -44,7 +44,7 @@ const simplifyFraction = (
   return [numerator / divisor, denominator / divisor];
 };
 
-export const getPitchIntMatrix = (
+export const getPartialIntervalMatrix = (
   values: readonly number[],
 ): IntervalMatrix => {
   const elements = getParset(values);

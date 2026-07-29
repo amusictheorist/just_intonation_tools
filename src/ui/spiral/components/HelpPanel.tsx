@@ -98,7 +98,7 @@ function HelpPanel({ isOpen, onClose }: HelpPanelProps) {
           >
             <div className={paragraphClasses}>
               <p>
-                Selected partials generate pitch-set and partial-class
+                Selected partials generate partial-set and partial-class
                 information in the side panel, including interval matrices and
                 subsets when enough elements are selected.
               </p>

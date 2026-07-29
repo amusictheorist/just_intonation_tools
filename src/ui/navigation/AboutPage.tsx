@@ -33,8 +33,8 @@ function AboutPage() {
               </Link>{" "}
               enables one to enter a set of integers, which are then interpreted
               as a set of partials, partial-classes, and the set classes to
-              which they belong. These interpretations are both as pitches and
-              as pitch-classes. The calculator then allows one to transpose
+              which they belong. These interpretations are both as partials and
+              as partial-classes. The calculator then allows one to transpose
               their set by some specified integer.
             </p>
 
@@ -49,8 +49,8 @@ function AboutPage() {
               spiral as necessary, as well as selecting individual partials. The
               selected partials are then interpreted as sets of partials,
               partial-classes, and the sets to which they belong. Also included
-              are interval matrices for pitch and pitch-class intervals between
-              the selected partials.
+              are interval matrices for partial and partial-class intervals
+              between the selected partials.
             </p>
 
             <p>
@@ -203,7 +203,7 @@ function AboutPage() {
           </div>
         </ContentCard>
 
-        <ContentCard className="bg-gradient-to-r from-blue-50 to-indigo-50">
+        <ContentCard className="bg-linear-to-r from-blue-50 to-indigo-50">
           <h2 className="text-2xl font-bold text-gray-900">Abstract</h2>
 
           <div className="mt-4 space-y-4 text-base leading-7 text-gray-700 sm:text-lg">
