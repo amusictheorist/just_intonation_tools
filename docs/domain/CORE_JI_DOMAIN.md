@@ -47,9 +47,9 @@ Partials and parcs are distinguished typographically throughout this document:
 
 - partials are written as ordinary integers, such as $3$
 - parcs are underlined, such as $\underline{3}$
-- literal parsets are enclosed in curly braces, such as $\{1, 3, 5\}$
+- literal parsets are enclosed in curly braces, such as $\lbrace 1, 3, 5 \rbrace$
 - parset classes are enclosed in square brackets, such as $[1, 3, 5]_p$
-- literal parcsets contain underlined members and are enclosed in curly braces, such as $\{\underline{1}, \underline{3}, \underline{5}\}$
+- literal parcsets contain underlined members and are enclosed in curly braces, such as $\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace$
 - parcset classes contain underlined members and are enclosed in square brackets, such as $[\underline{1}, \underline{3}, \underline{5}]_{pc}$
 - ordered input collections or intermediate sequences are enclosed in angle brackets, such as $\langle 1, 3, 3, 5\rangle$
 
@@ -93,17 +93,17 @@ The partial class, or parc, of a partial is the odd positive integer obtained by
 For a partial $p$:
 
 $$
-\operatorname{parc}(p)=\frac{p}{2^{v_2(p)}}
+\mathrm{parc}(p)=\frac{p}{2^{v_2(p)}}
 $$
 
 Here, $v_2(p)$ is the exponent of $2$ in the prime factorization of $p$.
 
 Examples:
 
-- $\operatorname{parc}(1)=\underline{1}$
-- $\operatorname{parc}(6)=\underline{3}$
-- $\operatorname{parc}(12)=\underline{3}$
-- $\operatorname{parc}(20)=\underline{5}$
+- $\mathrm{parc}(1)=\underline{1}$
+- $\mathrm{parc}(6)=\underline{3}$
+- $\mathrm{parc}(12)=\underline{3}$
+- $\mathrm{parc}(20)=\underline{5}$
 
 ### Partial-class set (parcset)
 
@@ -114,11 +114,11 @@ The parcset associated with a parset is obtained by converting every partial to 
 For example:
 
 $$
-\{3, 4, 6, 12, 20\}
+\lbrace 3, 4, 6, 12, 20 \rbrace
 \longrightarrow
 \langle\underline{3}, \underline{1}, \underline{3}, \underline{3}, \underline{5}\rangle
 \longrightarrow
-\{\underline{1}, \underline{3}, \underline{5}\}
+\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace
 $$
 
 ### Partial space (Parspace)
@@ -151,9 +151,9 @@ Set classes are written using square brackets. The members shown inside the brac
 
 For example:
 
-- $\{2, 4, 6\}$ is a literal parset
-- $[1, 2, 3]_p$ is the parset class to which $\{2, 4, 6\}$ belongs
-- $\{\underline{9}, \underline{15}, \underline{21}\}$ is a literal parcset
+- $\lbrace 2, 4, 6 \rbrace$ is a literal parset
+- $[1, 2, 3]_p$ is the parset class to which $\lbrace 2, 4, 6 \rbrace$ belongs
+- $\lbrace \underline{9}, \underline{15}, \underline{21} \rbrace$ is a literal parcset
 - $[\underline{3}, \underline{5}, \underline{7}]_{pc}$ is its parcset class
 
 A representative is the canonical literal set used to identify a set class.
@@ -175,11 +175,11 @@ A valid ratio has:
 
 The ratio is reduced by dividing both terms by their greatest common divisor:
 
-$$
-\operatorname{reduce}\left(\frac{n}{d}\right)
+```math
+\mathrm{reduce}\left(\frac{n}{d}\right)
 =
 \frac{n/\gcd(n,d)}{d/\gcd(n,d)}
-$$
+```
 
 Examples:
 
@@ -239,7 +239,7 @@ For example:
 $$
 \langle5, 3, 5, 1\rangle
 \longrightarrow
-\{1, 3, 5\}
+\lbrace 1, 3, 5 \rbrace
 $$
 
 An empty collection is not a valid parset.
@@ -253,7 +253,7 @@ A parcset must:
 - contain only odd values
 - contain each member only once
 
-For example, $\{\underline{1}, \underline{3}, \underline{5}\}$ is a valid parcset, while $\{\underline{1}, \underline{2}, \underline{3}\}$ is invalid because $\underline{2}$ is not a valid parc.
+For example, $\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace$ is a valid parcset, while $\lbrace \underline{1}, \underline{2}, \underline{3} \rbrace$ is invalid because $\underline{2}$ is not a valid parc.
 
 A parcset derived from a valid parset is always valid.
 
@@ -265,11 +265,11 @@ A ratio is in canonical form when its numerator and denominator share no common 
 
 To reduce a ratio, divide both terms by their greatest common divisor:
 
-$$
-\operatorname{reduce}\left(\frac{n}{d}\right)
+```math
+\mathrm{reduce}\left(\frac{n}{d}\right)
 =
 \frac{n/\gcd(n,d)}{d/\gcd(n,d)}
-$$
+```
 
 Examples:
 
@@ -362,24 +362,24 @@ The representative set of a parset class is found by:
 
 For a parset $S$:
 
-$$
-\operatorname{rep}_p(S)
+```math
+\mathrm{rep}_p(S)
 =
 \left\{
 \frac{s}{\gcd(S)}
 \;\middle|\;
 s \in S
 \right\}
-$$
+```
 
 Examples:
 
-- $\{2, 4, 6\}\longrightarrow\{1, 2, 3\}$, so $\{2, 4, 6\}\in[1, 2, 3]_p$
-- $\{3, 6, 9\}\longrightarrow\{1, 2, 3\}$, so $\{3, 6, 9\}\in[1, 2, 3]_p$
-- $\{5, 10, 15\}\longrightarrow\{1, 2, 3\}$, so $\{5, 10, 15\}\in[1, 2, 3]_p$
-- $\{4, 6, 10\}\longrightarrow\{2, 3, 5\}$, so $\{4, 6, 10\}\in[2, 3, 5]_p$
+- $\lbrace 2, 4, 6 \rbrace\longrightarrow\lbrace 1, 2, 3 \rbrace$, so $\lbrace 2, 4, 6 \rbrace\in[1, 2, 3]_p$
+- $\lbrace 3, 6, 9 \rbrace\longrightarrow\lbrace1, 2, 3 \rbrace$, so $\lbrace 3, 6, 9 \rbrace\in[1, 2, 3]_p$
+- $\lbrace 5, 10, 15 \rbrace\longrightarrow\lbrace 1, 2, 3 \rbrace$, so $\lbrace 5, 10, 15 \rbrace\in[1, 2, 3]_p$
+- $\lbrace 4, 6, 10 \rbrace\longrightarrow\lbrace 2, 3, 5 \rbrace$, so $\lbrace 4, 6, 10 \rbrace\in[2, 3, 5]_p$
 
-Therefore, $\{2, 4, 6\}$, $\{3, 6, 9\}$, and $\{5, 10, 15\}$ belong to the parset class $[1, 2, 3]_p$.
+Therefore, $\lbrace 2, 4, 6 \rbrace$, $\lbrace 3, 6, 9 \rbrace$, and $\lbrace 5, 10, 15 \rbrace$ belong to the parset class $[1, 2, 3]_p$.
 
 The canonical representative of a parset class always has a greatest common divisor of $1$.
 
@@ -406,11 +406,11 @@ Because every parc is odd, the greatest common divisor is also odd, and the resu
 
 Examples:
 
-- $\{\underline{3}, \underline{9}, \underline{15}\}\longrightarrow\{\underline{1}, \underline{3}, \underline{5}\}$, so $\{\underline{3}, \underline{9}, \underline{15}\}\in[\underline{1}, \underline{3}, \underline{5}]_{pc}$
-- $\{\underline{5}, \underline{15}, \underline{25}\}\longrightarrow\{\underline{1}, \underline{3}, \underline{5}\}$, so $\{\underline{5}, \underline{15}, \underline{25}\}\in[\underline{1}, \underline{3}, \underline{5}]_{pc}$
-- $\{\underline{3}, \underline{5}, \underline{7}\}\longrightarrow\{\underline{3}, \underline{5}, \underline{7}\}$, so $\{\underline{3}, \underline{5}, \underline{7}\}\in[\underline{3}, \underline{5}, \underline{7}]_{pc}$
+- $\lbrace \underline{3}, \underline{9}, \underline{15} \rbrace\longrightarrow\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace$, so $\lbrace \underline{3}, \underline{9}, \underline{15} \rbrace\in[\underline{1}, \underline{3}, \underline{5}]_{pc}$
+- $\lbrace \underline{5}, \underline{15}, \underline{25} \rbrace\longrightarrow\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace$, so $\lbrace \underline{5}, \underline{15}, \underline{25} \rbrace\in[\underline{1}, \underline{3}, \underline{5}]_{pc}$
+- $\lbrace \underline{3}, \underline{5}, \underline{7} \rbrace\longrightarrow\lbrace \underline{3}, \underline{5}, \underline{7} \rbrace$, so $\lbrace \underline{3}, \underline{5}, \underline{7} \rbrace\in[\underline{3}, \underline{5}, \underline{7}]_{pc}$
 
-Therefore, $\{\underline{3}, \underline{9}, \underline{15}\}$ and $\{\underline{5}, \underline{15}, \underline{25}\}$ belong to the parcset class $[\underline{1}, \underline{3}, \underline{5}]_{pc}$.
+Therefore, $\lbrace \underline{3}, \underline{9}, \underline{15} \rbrace$ and $\lbrace \underline{5}, \underline{15}, \underline{25} \rbrace$ belong to the parcset class $[\underline{1}, \underline{3}, \underline{5}]_{pc}$.
 
 The canonical representative of a parcset class always has a greatest common divisor of $1$.
 
@@ -426,11 +426,11 @@ To derive a parcset-class representative from a parset:
 For example:
 
 $$
-\{18, 30, 42\}
+\lbrace 18, 30, 42 \rbrace
 \longrightarrow
-\{\underline{9}, \underline{15}, \underline{21}\}
+\lbrace \underline{9}, \underline{15}, \underline{21} \rbrace
 \longrightarrow
-\{\underline{3}, \underline{5}, \underline{7}\}
+\lbrace \underline{3}, \underline{5}, \underline{7} \rbrace
 \longrightarrow
 [\underline{3}, \underline{5}, \underline{7}]_{pc}
 $$
@@ -443,31 +443,31 @@ Parset-class reduction and parcset-class reduction are separate operations. A pa
 
 The product of two ratios is found by multiplying their numerators and denominators:
 
-$$
+```math
 \frac{a}{b}\times\frac{c}{d}
 =
 \frac{ac}{bd}
-$$
+```
 
 The result must then be reduced to canonical form.
 
 For example:
 
-$$
+```math
 \frac{3}{2}\times\frac{5}{4}
 =
 \frac{15}{8}
-$$
+```
 
 and:
 
-$$
+```math
 \frac{6}{5}\times\frac{10}{9}
 =
 \frac{60}{45}
 =
 \frac{4}{3}
-$$
+```
 
 Ratio multiplication does not automatically octave-reduce the result.
 
@@ -475,11 +475,11 @@ Ratio multiplication does not automatically octave-reduce the result.
 
 The directed interval from ratio $x$ to ratio $y$ is defined as:
 
-$$
-\operatorname{interval}(x,y)
+```math
+\mathrm{interval}(x,y)
 =
 \frac{y}{x}
-$$
+```
 
 If:
 
@@ -491,31 +491,31 @@ $$
 
 then:
 
-$$
-\operatorname{interval}(x,y)
+```math
+\mathrm{interval}(x,y)
 =
 \frac{c/d}{a/b}
 =
 \frac{bc}{ad}
-$$
+```
 
 The result must be reduced to canonical form.
 
 For example, the directed interval from $\frac{3}{2}$ to $\frac{5}{2}$ is:
 
-$$
+```math
 \frac{5/2}{3/2}
 =
 \frac{5}{3}
-$$
+```
 
 The directed interval from $\frac{5}{2}$ to $\frac{3}{2}$ is:
 
-$$
+```math
 \frac{3/2}{5/2}
 =
 \frac{3}{5}
-$$
+```
 
 Directed intervals may therefore be less than $1$.
 
@@ -527,11 +527,11 @@ The parc of a partial is obtained by removing every factor of $2$.
 
 For a partial $p$:
 
-$$
-\operatorname{parc}(p)
+```math
+\mathrm{parc}(p)
 =
 \frac{p}{2^{v_2(p)}}
-$$
+```
 
 To derive a parcset from a parset:
 
@@ -542,7 +542,7 @@ To derive a parcset from a parset:
 For example:
 
 $$
-\{3, 4, 6, 12, 20\}
+\lbrace 3, 4, 6, 12, 20 \rbrace
 \longrightarrow
 \langle
 \underline{3},
@@ -552,7 +552,7 @@ $$
 \underline{5}
 \rangle
 \longrightarrow
-\{\underline{1}, \underline{3}, \underline{5}\}
+\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace
 $$
 
 The intermediate collection may contain duplicate values, but the final parcset may not.
@@ -563,27 +563,27 @@ A parset may be transposed by a positive integer factor $n$.
 
 For a parset $S$:
 
-$$
+```math
 T_n(S)
 =
-\{ns \mid s\in S\}
-$$
+\lbrace ns \mid s\in S \rbrace
+```
 
 The transposition factor must be a positive integer.
 
 Examples:
 
-$$
-T_2(\{1, 3, 5\})
+```math
+T_2(\lbrace 1, 3, 5 \rbrace)
 =
-\{2, 6, 10\}
-$$
+\lbrace 2, 6, 10 \rbrace
+```
 
-$$
-T_5(\{2, 3, 4\})
+```math
+T_5(\lbrace 2, 3, 4 \rbrace)
 =
-\{10, 15, 20\}
-$$
+\lbrace 10, 15, 20 \rbrace
+```
 
 Transposition by $1$ is the identity operation:
 
@@ -601,25 +601,25 @@ The low inverse of a parset is obtained by dividing the least common multiple of
 
 For a non-empty parset $S$:
 
-$$
+```math
 I_{\mathrm{low}}(S)
 =
 \left\{
-\frac{\operatorname{lcm}(S)}{s}
+\frac{\mathrm{lcm}(S)}{s}
 \;\middle|\;
 s\in S
 \right\}
-$$
+```
 
 For example:
 
 $$
-\operatorname{lcm}(\{2, 3, 5\})=30
+\mathrm{lcm}(\lbrace 2, 3, 5 \rbrace)=30
 $$
 
 therefore:
 
-$$
+```math
 I_{\mathrm{low}}(\{2, 3, 5\})
 =
 \left\{
@@ -629,27 +629,27 @@ I_{\mathrm{low}}(\{2, 3, 5\})
 \right\}
 =
 \{6, 10, 15\}
-$$
+```
 
 The order of the resulting set has no semantic significance.
 
 For a singleton parset:
 
-$$
+```math
 I_{\mathrm{low}}(\{n\})
 =
 \{1\}
-$$
+```
 
 because:
 
-$$
-\frac{\operatorname{lcm}(\{n\})}{n}
+```math
+\frac{\mathrm{lcm}(\{n\})}{n}
 =
 \frac{n}{n}
 =
 1
-$$
+```
 
 Low inversion is defined for every valid non-empty parset.
 
@@ -665,23 +665,23 @@ The direction of the interval matters.
 
 For example:
 
-$$
-\operatorname{interval}(6,9)
+```math
+\mathrm{interval}(6,9)
 =
 \frac{9}{6}
 =
 \frac{3}{2}
-$$
+```
 
 while:
 
-$$
-\operatorname{interval}(9,6)
+```math
+\mathrm{interval}(9,6)
 =
 \frac{6}{9}
 =
 \frac{2}{3}
-$$
+```
 
 An interval matrix derived from a parset should therefore preserve direction rather than replacing every interval with its value above $1$.
 
@@ -720,53 +720,53 @@ An implementation may accept a literal parset or parcset as input, but it must f
 
 ### 6.2 Parspace _SpecExt_<sub>p</sub>
 
-Let $[S]_p$ be a parset class, and let $\operatorname{rep}_p([S]_p)$ be its canonical representative.
+Let $[S]_p$ be a parset class, and let $\mathrm{rep}_p([S]_p)$ be its canonical representative.
 
-Parspace <em>SpecExt</em><sub>p</sub> is the sum of the partials in that representative:
+Parspace _SpecExt_<sub>p</sub> is the sum of the partials in that representative:
 
-$$
-\operatorname{SpecExt}_p([S]_p)
+```math
+\mathrm{SpecExt}_p([S]_p)
 =
-\sum_{s\in\operatorname{rep}_p([S]_p)} s
-$$
+\sum_{s\in\mathrm{rep}_p([S]_p)} s
+```
 
 For example:
 
 $$
-\{4, 8, 12\}
+\lbrace 4, 8, 12 \rbrace
 \longrightarrow
-\{1, 2, 3\}
+\lbrace 1, 2, 3 \rbrace
 \longrightarrow
 [1, 2, 3]_p
 $$
 
 Therefore:
 
-$$
-\operatorname{SpecExt}_p([1, 2, 3]_p)
+```math
+\mathrm{SpecExt}_p([1, 2, 3]_p)
 =
 1+2+3
 =
 6
-$$
+```
 
-The literal parsets $\{2, 4, 6\}$, $\{3, 6, 9\}$, and $\{1, 2, 3\}$ all belong to the same parset class:
+The literal parsets $\lbrace 2, 4, 6 \rbrace$, $\lbrace 3, 6, 9 \rbrace$, and $\lbrace 1, 2, 3 \rbrace$ all belong to the same parset class:
 
 $$
-\{2, 4, 6\},
-\{3, 6, 9\},
-\{1, 2, 3\}
+\lbrace 2, 4, 6 \rbrace,
+\lbrace 3, 6, 9 \rbrace,
+\lbrace 1, 2, 3 \rbrace
 \in
 [1, 2, 3]_p
 $$
 
 Consequently:
 
-$$
-\operatorname{SpecExt}_p([1, 2, 3]_p)
+```math
+\mathrm{SpecExt}_p([1, 2, 3]_p)
 =
 6
-$$
+```
 
 All parsets in the same parset class have the same _SpecExt_<sub>p</sub>.
 
@@ -774,35 +774,35 @@ All parsets in the same parset class have the same _SpecExt_<sub>p</sub>.
 
 Let:
 
-$$
+```math
 k
 =
 \left|
-\operatorname{rep}_p([S]_p)
+\mathrm{rep}_p([S]_p)
 \right|
-$$
+```
 
 Cardinality-scaled Parspace _SpecExt_, written #_SpecExt_<sub>p</sub>, is:
 
-$$
-\#\operatorname{SpecExt}_p([S]_p)
+```math
+\#\mathrm{SpecExt}_p([S]_p)
 =
 \frac{
-\operatorname{SpecExt}_p([S]_p)
+\mathrm{SpecExt}_p([S]_p)
 }{
 \frac{k(k+1)}{2}
 }
-$$
+```
 
 The denominator is the sum of the first $k$ positive integers:
 
-$$
+```math
 1+2+\cdots+k
 =
 \frac{k(k+1)}{2}
-$$
+```
 
-This scaling assigns a value of $1$ to the simplest cardinality-$k$ parset class:
+This scaling assigns a value of $1$ to the simplest cardinality $k$ parset class:
 
 $$
 [1, 2, \ldots, k]_p
@@ -810,83 +810,83 @@ $$
 
 For example:
 
-$$
-\operatorname{SpecExt}_p([1, 2, 3]_p)
+```math
+\mathrm{SpecExt}_p([1, 2, 3]_p)
 =
 1+2+3
 =
 6
-$$
+```
 
 and:
 
-$$
+```math
 \frac{3(3+1)}{2}
 =
 6
-$$
+```
 
 Therefore:
 
-$$
-\#\operatorname{SpecExt}_p([1, 2, 3]_p)
+```math
+\#\mathrm{SpecExt}_p([1, 2, 3]_p)
 =
 \frac{6}{6}
 =
 1
-$$
+```
 
 For the parset class $[1, 3, 5]_p$:
 
-$$
-\operatorname{SpecExt}_p([1, 3, 5]_p)
+```math
+\mathrm{SpecExt}_p([1, 3, 5]_p)
 =
 1+3+5
 =
 9
-$$
+```
 
 Therefore:
 
-$$
-\#\operatorname{SpecExt}_p([1, 3, 5]_p)
+```math
+\#\mathrm{SpecExt}_p([1, 3, 5]_p)
 =
 \frac{9}{6}
 =
 \frac{3}{2}
-$$
+```
 
 ### 6.4 Parcspace _SpecExt_<sub>pc</sub>
 
-Let $[P]_{pc}$ be a parcset class, and let $\operatorname{rep}_{pc}([P]_{pc})$ be its canonical representative.
+Let $`[P]_{pc}`$ be a parcset class, and let $`\mathrm{rep}_{pc}([P]_{pc})`$ be its canonical representative.
 
 Parcspace _SpecExt_<sub>pc</sub> is the sum of the parcs in that representative:
 
-$$
-\operatorname{SpecExt}_{pc}([P]_{pc})
+```math
+\mathrm{SpecExt}_{pc}([P]_{pc})
 =
 \sum_{
 \underline{p}
 \in
-\operatorname{rep}_{pc}([P]_{pc})
+\mathrm{rep}_{pc}([P]_{pc})
 }
 \underline{p}
-$$
+```
 
 For example:
 
 $$
-\{\underline{9}, \underline{15}, \underline{21}\}
+\lbrace \underline{9}, \underline{15}, \underline{21} \rbrace
 \longrightarrow
-\{\underline{3}, \underline{5}, \underline{7}\}
+\lbrace \underline{3}, \underline{5}, \underline{7} \rbrace
 \longrightarrow
 [\underline{3}, \underline{5}, \underline{7}]_{pc}
 $$
 
 Therefore:
 
-$$
-\operatorname{SpecExt}_{pc}
+```math
+\mathrm{SpecExt}_{pc}
 \left(
 [\underline{3}, \underline{5}, \underline{7}]_{pc}
 \right)
@@ -894,7 +894,7 @@ $$
 3+5+7
 =
 15
-$$
+```
 
 All parcsets in the same parcset class have the same _SpecExt_<sub>pc</sub>.
 
@@ -902,35 +902,35 @@ All parcsets in the same parcset class have the same _SpecExt_<sub>pc</sub>.
 
 Let:
 
-$$
+```math
 k
 =
 \left|
-\operatorname{rep}_{pc}([P]_{pc})
+\mathrm{rep}_{pc}([P]_{pc})
 \right|
-$$
+```
 
-Cardinality-scaled Parcspace <em>SpecExt</em>, written #<em>SpecExt</em><sub>pc</sub>, is:
+Cardinality-scaled Parcspace _SpecExt_, written #_SpecExt_<sub>pc</sub>, is:
 
-$$
-\#\operatorname{SpecExt}_{pc}([P]_{pc})
+```math
+\#\mathrm{SpecExt}_{pc}([P]_{pc})
 =
 \frac{
-\operatorname{SpecExt}_{pc}([P]_{pc})
+\mathrm{SpecExt}_{pc}([P]_{pc})
 }{
 k^2
 }
-$$
+```
 
 The denominator is the sum of the first $k$ positive odd integers:
 
-$$
+```math
 1+3+5+\cdots+(2k-1)
 =
 k^2
-$$
+```
 
-This scaling assigns a value of $1$ to the simplest cardinality-$k$ parcset class:
+This scaling assigns a value of $1$ to the simplest cardinality $k$ parcset class:
 
 $$
 [
@@ -944,8 +944,8 @@ $$
 
 For example:
 
-$$
-\operatorname{SpecExt}_{pc}
+```math
+\mathrm{SpecExt}_{pc}
 \left(
 [\underline{1}, \underline{3}, \underline{5}]_{pc}
 \right)
@@ -953,20 +953,20 @@ $$
 1+3+5
 =
 9
-$$
+```
 
 and:
 
-$$
+```math
 3^2
 =
 9
-$$
+```
 
 Therefore:
 
-$$
-\#\operatorname{SpecExt}_{pc}
+```math
+\#\mathrm{SpecExt}_{pc}
 \left(
 [\underline{1}, \underline{3}, \underline{5}]_{pc}
 \right)
@@ -974,13 +974,13 @@ $$
 \frac{9}{9}
 =
 1
-$$
+```
 
 For the parcset class
 $[\underline{3}, \underline{5}, \underline{7}]_{pc}$:
 
-$$
-\operatorname{SpecExt}_{pc}
+```math
+\mathrm{SpecExt}_{pc}
 \left(
 [\underline{3}, \underline{5}, \underline{7}]_{pc}
 \right)
@@ -988,12 +988,12 @@ $$
 3+5+7
 =
 15
-$$
+```
 
 Therefore:
 
-$$
-\#\operatorname{SpecExt}_{pc}
+```math
+\#\mathrm{SpecExt}_{pc}
 \left(
 [\underline{3}, \underline{5}, \underline{7}]_{pc}
 \right)
@@ -1001,7 +1001,7 @@ $$
 \frac{15}{9}
 =
 \frac{5}{3}
-$$
+```
 
 ### 6.6 Precision and formatting
 
@@ -1152,7 +1152,7 @@ $$
 may be normalized to the parset:
 
 $$
-\{1, 3, 5\}
+\lbrace 1, 3, 5 \rbrace
 $$
 
 However, the input:
@@ -1161,7 +1161,7 @@ $$
 \langle 1, 2.5, 3\rangle
 $$
 
-must be rejected rather than silently converted to $\{1, 3\}$.
+must be rejected rather than silently converted to $\lbrace 1, 3 \rbrace$.
 
 A user-interface parser may choose to ignore malformed tokens, but it must make that behaviour explicit and must not represent the result as though the entire input had been valid.
 
@@ -1207,13 +1207,13 @@ A ratio, parset, parcset, or set class must not expose mutable internal state th
 For example, a caller must not be able to construct the parset:
 
 $$
-\{1, 3, 5\}
+\lbrace 1, 3, 5 \rbrace
 $$
 
 and later mutate it into:
 
 $$
-\{0, 1, 3, 5\}
+\lbrace 0, 1, 3, 5 \rbrace
 $$
 
 without passing through domain validation.
@@ -1237,19 +1237,19 @@ Their members have no semantically meaningful order, and equality must not depen
 
 For example:
 
-$$
+```math
 \{1, 3, 5\}
 =
 \{5, 1, 3\}
-$$
+```
 
 Likewise:
 
-$$
+```math
 \{\underline{1}, \underline{3}, \underline{5}\}
 =
 \{\underline{5}, \underline{1}, \underline{3}\}
-$$
+```
 
 Although order is not mathematically significant, implementations should expose members in ascending order when deterministic output is required.
 
@@ -1276,17 +1276,17 @@ For example:
 $$
 \langle5, 3, 5, 1\rangle
 \longrightarrow
-\{1, 3, 5\}
+\lbrace 1, 3, 5 \rbrace
 $$
 
 For parc conversion:
 
 $$
-\{3, 6, 12, 20\}
+\lbrace 3, 6, 12, 20 \rbrace
 \longrightarrow
 \langle\underline{3}, \underline{3}, \underline{3}, \underline{5}\rangle
 \longrightarrow
-\{\underline{3}, \underline{5}\}
+\lbrace \underline{3}, \underline{5} \rbrace
 $$
 
 The intermediate collection may contain repeated converted values, but the resulting parcset may not.
@@ -1320,7 +1320,7 @@ Every valid parset must satisfy all of the following:
 For a parset class $[S]_p$, its canonical representative must additionally satisfy:
 
 $$
-\gcd\left(\operatorname{rep}_p([S]_p)\right)=1
+\gcd\left(\mathrm{rep}_p([S]_p)\right)=1
 $$
 
 ### 8.6 Parcset invariants
@@ -1337,7 +1337,7 @@ Every valid parcset must satisfy all of the following:
 For a parcset class $[P]_{pc}$, its canonical representative must additionally satisfy:
 
 $$
-\gcd\left(\operatorname{rep}_{pc}([P]_{pc})\right)=1
+\gcd\left(\mathrm{rep}_{pc}([P]_{pc})\right)=1
 $$
 
 Because all members of a parcset are odd, its greatest common divisor is also odd.
@@ -1350,47 +1350,47 @@ Applying the same canonicalization operation more than once must produce the sam
 
 For ratio reduction:
 
-$$
-\operatorname{reduce}
+```math
+\mathrm{reduce}
 \left(
-\operatorname{reduce}\left(\frac{n}{d}\right)
+\mathrm{reduce}\left(\frac{n}{d}\right)
 \right)
 =
-\operatorname{reduce}\left(\frac{n}{d}\right)
-$$
+\mathrm{reduce}\left(\frac{n}{d}\right)
+```
 
 For octave reduction:
 
-$$
-\operatorname{oct}
+```math
+\mathrm{oct}
 \left(
-\operatorname{oct}(r)
+\mathrm{oct}(r)
 \right)
 =
-\operatorname{oct}(r)
-$$
+\mathrm{oct}(r)
+```
 
 For parset-class reduction:
 
-$$
-\operatorname{rep}_p
+```math
+\mathrm{rep}_p
 \left(
-[\operatorname{rep}_p([S]_p)]_p
+[\mathrm{rep}_p([S]_p)]_p
 \right)
 =
-\operatorname{rep}_p([S]_p)
-$$
+\mathrm{rep}_p([S]_p)
+```
 
 For parcset-class reduction:
 
-$$
-\operatorname{rep}_{pc}
+```math
+\mathrm{rep}_{pc}
 \left(
-[\operatorname{rep}_{pc}([P]_{pc})]_{pc}
+[\mathrm{rep}_{pc}([P]_{pc})]_{pc}
 \right)
 =
-\operatorname{rep}_{pc}([P]_{pc})
-$$
+\mathrm{rep}_{pc}([P]_{pc})
+```
 
 ### 8.8 Equivalence invariants
 
@@ -1459,11 +1459,11 @@ $$
 
 Its numerator and denominator are relatively prime, so it is already in reduced canonical form:
 
-$$
-\operatorname{reduce}\left(\frac{12}{5}\right)
+```math
+\mathrm{reduce}\left(\frac{12}{5}\right)
 =
 \frac{12}{5}
-$$
+```
 
 Because:
 
@@ -1475,11 +1475,11 @@ it lies outside the canonical octave interval.
 
 Octave reduction gives:
 
-$$
-\operatorname{oct}\left(\frac{12}{5}\right)
+```math
+\mathrm{oct}\left(\frac{12}{5}\right)
 =
 \frac{6}{5}
-$$
+```
 
 The ratios $\frac{12}{5}$ and $\frac{6}{5}$ are octave-equivalent, but they are not equal as ratios.
 
@@ -1488,7 +1488,7 @@ The ratios $\frac{12}{5}$ and $\frac{6}{5}$ are octave-equivalent, but they are 
 Consider the literal parset:
 
 $$
-\{6, 12, 18\}
+\lbrace 6, 12, 18 \rbrace
 $$
 
 Its greatest common divisor is:
@@ -1500,16 +1500,16 @@ $$
 Dividing each member by $6$ gives the canonical representative:
 
 $$
-\{6,12,18\}
+\lbrace 6,12,18 \rbrace
 \longrightarrow
-\{1,2,3\}
+\lbrace 1,2,3 \rbrace
 $$
 
 Therefore:
 
-$$
+```math
 \{6,12,18\}\in[1,2,3]_p
-$$
+```
 
 The literal parsets $\{1,2,3\}$, $\{2,4,6\}$, and $\{6,12,18\}$ all belong to the parset class $[1,2,3]_p$.
 
@@ -1518,7 +1518,7 @@ The literal parsets $\{1,2,3\}$, $\{2,4,6\}$, and $\{6,12,18\}$ all belong to th
 Consider the literal parset:
 
 $$
-\{3,4,6,12,20\}
+\lbrace 3,4,6,12,20 \rbrace
 $$
 
 Converting each partial to its parc gives:
@@ -1536,17 +1536,17 @@ $$
 Removing duplicates and arranging the result in ascending order gives the parcset:
 
 $$
-\{
+\lbrace
 \underline{1},
 \underline{3},
 \underline{5}
-\}
+\rbrace
 $$
 
 Therefore:
 
-$$
-\operatorname{parcset}
+```math
+\mathrm{parcset}
 \left(
 \{3,4,6,12,20\}
 \right)
@@ -1556,18 +1556,18 @@ $$
 \underline{3},
 \underline{5}
 \}
-$$
+```
 
 ### 9.4 Parcset and parcset class
 
 Consider the literal parcset:
 
 $$
-\{
+\lbrace
 \underline{9},
 \underline{15},
 \underline{21}
-\}
+\rbrace
 $$
 
 Its greatest common divisor is:
@@ -1579,27 +1579,27 @@ $$
 Dividing each member by $3$ gives the canonical representative:
 
 $$
-\{
+\lbrace
 \underline{9},
 \underline{15},
 \underline{21}
-\}
+\rbrace
 \longrightarrow
-\{
+\lbrace
 \underline{3},
 \underline{5},
 \underline{7}
-\}
+\rbrace
 $$
 
 Therefore:
 
 $$
-\{
+\lbrace
 \underline{9},
 \underline{15},
 \underline{21}
-\}
+\rbrace
 \in
 [
 \underline{3},
@@ -1613,27 +1613,27 @@ $$
 Consider the parset:
 
 $$
-S=\{1,3,5\}
+S=\lbrace 1,3,5 \rbrace
 $$
 
 Transposition by $4$ gives:
 
-$$
+```math
 T_4(S)
 =
-\{4,12,20\}
-$$
+\lbrace 4,12,20 \rbrace
+```
 
 The original and transposed parsets belong to the same parset class:
 
 $$
-\{1,3,5\}\in[1,3,5]_p
+\lbrace 1,3,5 \rbrace\in[1,3,5]_p
 $$
 
 and:
 
 $$
-\{4,12,20\}\in[1,3,5]_p
+\lbrace 4,12,20 \rbrace\in[1,3,5]_p
 $$
 
 Transposition therefore preserves parset-class membership.
@@ -1643,18 +1643,18 @@ Transposition therefore preserves parset-class membership.
 Consider the parset:
 
 $$
-S=\{2,3,5\}
+S=\lbrace 2,3,5 \rbrace
 $$
 
 Its least common multiple is:
 
 $$
-\operatorname{lcm}(2,3,5)=30
+\mathrm{lcm}(2,3,5)=30
 $$
 
 Its low inverse is:
 
-$$
+```math
 I_{\mathrm{low}}(S)
 =
 \left\langle
@@ -1664,13 +1664,13 @@ I_{\mathrm{low}}(S)
 \right\rangle
 =
 \{6,10,15\}
-$$
+```
 
 The result is a valid parset.
 
 For the singleton parset $\{5\}$:
 
-$$
+```math
 I_{\mathrm{low}}(\{5\})
 =
 \left\{
@@ -1678,7 +1678,7 @@ I_{\mathrm{low}}(\{5\})
 \right\}
 =
 \{1\}
-$$
+```
 
 ### 9.7 Directed interval
 
@@ -1692,27 +1692,27 @@ $$
 
 The directed interval from $x$ to $y$ is:
 
-$$
-\operatorname{interval}(x,y)
+```math
+\mathrm{interval}(x,y)
 =
 \frac{y}{x}
 =
 \frac{5/2}{3/2}
 =
 \frac{5}{3}
-$$
+```
 
 The directed interval from $y$ to $x$ is:
 
-$$
-\operatorname{interval}(y,x)
+```math
+\mathrm{interval}(y,x)
 =
 \frac{x}{y}
 =
 \frac{3/2}{5/2}
 =
 \frac{3}{5}
-$$
+```
 
 The two directions produce reciprocal ratios.
 
@@ -1727,30 +1727,30 @@ $$
 Its canonical representative is:
 
 $$
-\{1,3,5\}
+\lbrace 1,3,5 \rbrace
 $$
 
 Therefore:
 
-$$
-\operatorname{SpecExt}_p([1,3,5]_p)
+```math
+\mathrm{SpecExt}_p([1,3,5]_p)
 =
 1+3+5
 =
 9
-$$
+```
 
 The cardinality of the representative is $3$, so:
 
-$$
-\#\operatorname{SpecExt}_p([1,3,5]_p)
+```math
+\#\mathrm{SpecExt}_p([1,3,5]_p)
 =
 \frac{9}{\frac{3(3+1)}{2}}
 =
 \frac{9}{6}
 =
 \frac{3}{2}
-$$
+```
 
 ### 9.9 _SpecExt_<sub>pc</sub>
 
@@ -1767,17 +1767,17 @@ $$
 Its canonical representative is:
 
 $$
-\{
+\lbrace
 \underline{3},
 \underline{5},
 \underline{7}
-\}
+\rbrace
 $$
 
 Therefore:
 
-$$
-\operatorname{SpecExt}_{pc}
+```math
+\mathrm{SpecExt}_{pc}
 \left(
 [
 \underline{3},
@@ -1789,12 +1789,12 @@ $$
 3+5+7
 =
 15
-$$
+```
 
 The cardinality of the representative is $3$, so:
 
-$$
-\#\operatorname{SpecExt}_{pc}
+```math
+\#\mathrm{SpecExt}_{pc}
 \left(
 [
 \underline{3},
@@ -1808,7 +1808,7 @@ $$
 \frac{15}{9}
 =
 \frac{5}{3}
-$$
+```
 
 ## 10. Tool-specific behaviour excluded from the domain
 
