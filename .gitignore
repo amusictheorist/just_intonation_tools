@@ -12,6 +12,10 @@ coverage/
 .env.*
 !.env.example
 
+# Testing files
+playwright-report/
+test-results/
+
 # Logs
 *.log
 npm-debug.log*

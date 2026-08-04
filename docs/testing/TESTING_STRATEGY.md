@@ -26,7 +26,7 @@ The normative source of truth for shared Just Intonation behaviour is:
 
 `docs/domain/CORE_JI_DOMAIN.md`
 
-Core-domain test must derive their expected behaviour from that specification.
+Core-domain tests must derive their expected behaviour from that specification.
 
 Existing Python, Django, JavaScript, and TypeScript implementations may be consulted for:
 
@@ -204,7 +204,7 @@ Candidate properties include:
 - canonical ratios are always reduced
 - canonical ratio denominators are positive
 - octave reduction returns an octave-equivalent ratio
-- octave-reduced positive ratios lit within the specified octave range
+- octave-reduced positive ratios lie within the specified octave range
 - parcs are always positive odd integers
 - canonical set representatives are invariant under valid equivalence transformations
 - multiplying by the identity ratio changes nothing
@@ -219,7 +219,7 @@ Property tests should generate only values that are valid for the layer under te
 
 ### 5.4 Placement tests
 
-Placements tests verify geometric calculations without constructing rendered scenes.
+Placement tests verify geometric calculations without constructing rendered scenes.
 
 They should cover:
 
@@ -613,7 +613,7 @@ Tests should verify:
 - clearing preserves only the intended origin value
 - missing SVG elements result in a safe no-op
 
-These tests should use s DOM test environment rather than a real browser unless browser behaviour itself is under test.
+These tests should use a DOM test environment rather than a real browser unless browser behaviour itself is under test.
 
 ## 12. Three.js and scene-management testing
 
@@ -664,7 +664,7 @@ A small visual-regression suite may be introduced for high-value cases that cann
 
 Potential examples include:
 
-- a canonical spial view
+- a canonical spiral view
 - one cubic lattice view
 - one expanded high-prime lattice view
 - label-placement or collision behaviour
@@ -856,18 +856,18 @@ npm run check
 npm run test:e2e
 ```
 
-Not every local edit requires running every browser test immediately, but the complete required suite should pass before merging or marking a task complete
+Not every local edit requires running every browser test immediately, but the complete required suite should pass before merging or marking a task complete.
 
 ## 19. Coverage policy
 
-Coverage is a diagnostic tools rather than the definition of test quality.
+Coverage is a diagnostic tool rather than the definition of test quality.
 
 Coverage targets should not encourage tests that merely execute lines without asserting meaningful behaviour.
 
 Higher coverage is expected for:
 
 - the core JI domain
-- exact mathematical operation
+- exact mathematical operations
 - placement algorithms
 - parsers
 - state transformations
@@ -930,7 +930,7 @@ Vitest will be the unit-test runner for:
 - DOM tests
 - React component and hook tests
 
-Vitest test function will be imported explicitly rathen than enabled as globals:
+Vitest test function will be imported explicitly rather than enabled as globals:
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -940,9 +940,9 @@ The default Vitest environment will be Node.
 
 ### 22.2 jsdom
 
-Test that require DOM, SVG, React, or browser APIs will use jsdom.
+Tests that require DOM, SVG, React, or browser APIs will use jsdom.
 
-DOM-dependent test files may select the environment explicity:
+DOM-dependent test files may select the environment explicitly:
 
 ```ts
 // @vitest-environment jsdom
@@ -967,20 +967,39 @@ The project will use `fast-check` for property-based testing.
 
 Property tests should supplement reviewed examples and should generate values appropriate to the layer under test.
 
-###225. Playwright
+### 22.5 Playwright
 
 The project will use Playwright Test for:
 
 - real-browser end-to-end workflows
 - route and refresh behaviour
 - browser-level keyboard interaction
-- selcted visual-regression screenshots
+- selected visual-regression screenshots
 
 Playwright will not replace unit, placement, DOM, or component tests.
 
 ### 22.6 Coverage
 
 Vitest's V8 coverage provider will be used through `@vitest/coverage-v8`.
+
+Coverage reports will initially be collected without enforcing numeric thresholds.
+
+### 22.7 Current Infrastructure configuration
+
+The initial testing infrastructure is configured as follows:
+
+- Vitest uses Node as its default environment
+- DOM-dependent Vitest files opt into jsdom with:
+
+```ts
+// @vitest-environment jsdom
+```
+
+- `test/setup/dom.ts` loads the `@testing-library/jest-dom` matchers
+- Vitest excludes the root-level `e2e/` directory so Playwright specifications are not collected by both runners
+- V8 coverage produces text and HTML reports
+- Playwright runs the end-to-end suite in Chromium against the Vite production preview server
+- Generated coverage and Playwright report directories are ignored by Git and ESLint where applicable
 
 Coverage reports will initially be collected without enforcing numeric thresholds.
 
@@ -999,52 +1018,30 @@ The following decisions remain to be made:
 
 These open decisions do not change the testing principles or selected stack established in this document.
 
-## 24. Initial implementation sequence
+## 24. Testing infrastructure status
 
-Once thie strategy is approved, testing infrastructure should be introduced in small checkpoints.
+The initial testing infrastructure is installed and operational.
 
-### Checkpoint A: Vitest foundation
+Completed infrastructure includes:
 
-- install and configure Vitest
-- add the selected test scripts
-- confirm TypeScript and Vite integration
-- add one trivial smoke test
-- configure V8 coverage without enforcing a threshold
+- Vitest with TypeScript and Vite integration
+- Node as the default Vitest environment
+- per-file jsdom opt-in
+- Testing Library and `jest-dom`
+- fast-check
+- Playwright Test with Chromium
+- separate Vitest and Playwright test discovery
+- smoke tests for Node, property, DOM and browser execution
+- combined lint, unit-test, and production-build quality checks
 
-### Checkpoint B: pure mathematical testing
+The next implementation sequence is:
 
-- add shared geometry assertions
-- test vector operations
-- test spiral coordinate operations
-- test existing placement helpers
-- record unresolved placement behaviour as characterization test only where necessary
-
-### Checkpoint C: core-domain test foundation
-
-- establish the shared JI domain test structure
-- translate the ratio section of `docs/domain/CORE_JI_DOMAIN.md` into tests
-- implement domain code using TDD in a later implementation task
-- continue section by section through the specification
-
-### Checkpoint D: DOM and drawing tests
-
-- configure jsdom and Testing Library
-- test SVG path construction
-- test spiral points and octave lines
-- test accessibility and keyboard interaction
-
-### Checkpoint E: React integration tests
-
-- test tool input and outputs
-- test mode changes
-- test state coordination
-- test error feedback
-
-### Checkpoint F: browser workflows
-
-- configure Playwright Test
-- add a small set of critical workflows
-- add visual regression only for selected high-value views
+1. establish the shared JI domain test structure
+2. translate the ratio requirements from `docs/domain/CORE_JI_DOMAIN.md` into tests
+3. implement the ratio domain using TDD
+4. continue through the remaining shared-domain behaviours
+5. add shared geometry assertions and test existing pure visualization mathematics
+6. add DOM, React, and browser workflow coverage as corresponding code is reviewed or rewritten
 
 ## 25. Initial test matrix
 
