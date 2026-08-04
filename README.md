@@ -1,75 +1,103 @@
-# React + TypeScript + Vite
+# Just Intonation Tools
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Just Intonation Tools is a collection of browser-based tools for exploring mathematical and visual relationships in just intonation.
 
-Currently, two official plugins are available:
+The project currently includes:
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+- a set calculator for partial sets, partial-class sets, equivalence classes, transposition, inversion, and harmonic-complexity calculations
+- a harmonic spiral for visualizing and selecting partials
+- a ratio lattice for exploring harmonic relationships in three-dimensional space
 
-## React Compiler
+The mathematical foundations of the project grow out of Alexis Millares Thomson's research in just-intonation set theory, including Parspace, Parcspace, and Spectral Extension.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Project status
 
-## Expanding the ESLint configuration
+The application is being refactored into a TypeScript-and-Vite codebase.
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Python and Django have been removed. Shared mathematical behaviour is being rebuilt as a validated TypeScript domain, with documentation quality and test-driven development treated as project requirements.
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+The current mathematical source of truth is the [core JI domain specification](docs/domain/CORE_JI_DOMAIN.md).
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+## Technology
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+The project uses:
 
+- TypeScript
+- React
+- Vite
+- Tailwind CSS
+- Three.js
+
+The planned testing stack is documented in the [testing strategy](docs/testing/TESTING_STRATEGY.md).
+
+## Source structure
+
+The source tree follows three top-level responsibilities:
+
+```text
+src/
+├── data/
+├── lib/
+└── ui/
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- `src/data/` contains static configuration, presets, and mode definitions.
+- `src/lib/` contains deterministic mathematical, domain, parsing, geometry, and placement logic.
+- `src/ui/` contains React components, hooks, SVG drawing, Three.js scene management, and browser interaction.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Shared JI behaviour belongs in `src/lib/` and must remain independent of React, SVG, canvas, Three.js scenes, persistence, and tool-specific input formatting.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Getting started
 
+### Prerequisites
+
+Use a current Node.js release compatible with the versions declared in `package.json`.
+
+### Install dependencies
+
+```bash
+npm install
 ```
+
+### Start the development server
+
+```bash
+npm run dev
+```
+
+### Build the application
+
+```bash
+npm run build
+```
+
+### Lint the project
+
+```bash
+npm run lint
+```
+
+Testing commands will be added when the testing infrastructure defined in `docs/testing/TESTING_STRATEGY.md` is installed.
+
+## Documentation
+
+The [documentation index](docs/README.md) links to the project's mathematical specifications, engineering policies, architecture records, and future subsystem documents.
+
+Important documents include:
+
+- [Core JI domain](docs/domain/CORE_JI_DOMAIN.md)
+- [Testing strategy](docs/testing/TESTING_STRATEGY.md)
+- [Documentation conventions](docs/DOCUMENTATION_CONVENTIONS.md)
+- [Architecture decisions](docs/architecture/decisions/)
+
+## Documentation and implementation policy
+
+Normative mathematical documentation defines the behaviour that implementation and tests must follow.
+
+When existing code conflicts with the core JI domain specification, the implementation should be revised unless the specification is deliberately amended.
+
+Documentation should be updated in the same task as the code, behaviour, or architectural decision it describes.
+
+## Author
+
+Just Intonation Tools is developed by Alexis Millares Thomson.
