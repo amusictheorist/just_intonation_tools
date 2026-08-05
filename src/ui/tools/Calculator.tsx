@@ -47,8 +47,8 @@ function Calculator() {
         </form>
 
         <p className="mt-4 text-sm text-gray-600">
-          Calculator operations will be restored when the JI domain logic has
-          been rebuilt in TypeScript.
+          The Calculator is undergoing some redesign work and is currently
+          unavailable. Full functionality will be restored soon.
         </p>
       </ContentCard>
 
