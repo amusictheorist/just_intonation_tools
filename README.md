@@ -1,56 +1,103 @@
 # Just Intonation Tools
 
-An interactive web tool for exploring pitch relationships, ratios, and tuning systems based in Just Intonation (JI).
+Just Intonation Tools is a collection of browser-based tools for exploring mathematical and visual relationships in just intonation.
 
-🔗 **Live site**: [amusictheorist-just-intonation-tools.netlify.app](https://amusictheorist-just-intonation-tools.netlify.app/)
+The project currently includes:
 
----
+- a set calculator for partial sets, partial-class sets, equivalence classes, transposition, inversion, and harmonic-complexity calculations
+- a harmonic spiral for visualizing and selecting partials
+- a ratio lattice for exploring harmonic relationships in three-dimensional space
 
-## 🎯 What It Does
+The mathematical foundations of the project grow out of Alexis Millares Thomson's research in just-intonation set theory, including Parspace, Parcspace, and Spectral Extension.
 
-This app provides a suite of interactive tools for analyzing and experimenting with Just Intonation, including:
+## Project status
 
-- Ratio input and simplification
-- Prime factorization of pitch ratios
-- Ratio lattice generator
-- Visualization of tuning structures and their relationships
+The application is being refactored into a TypeScript-and-Vite codebase.
 
-Whether you're studying microtonality, building custom tuning systems, or just curious about the inner workings of JI, this tool offers a hands-on way to explore.
+Python and Django have been removed. Shared mathematical behaviour is being rebuilt as a validated TypeScript domain, with documentation quality and test-driven development treated as project requirements.
 
----
+The current mathematical source of truth is the [core JI domain specification](docs/domain/CORE_JI_DOMAIN.md).
 
-## 🧭 How to Use
+## Technology
 
-- Enter pitch ratios or prime limits to see their structure and interpretation
-- Navigate through harmonic/subharmonic series using simple UI controls
-- Use the lattice generator to visualize multidimensional tuning relationships
-- Most tools are responsive, keyboard-friendly, and update in real time
+The project uses:
 
-Designed for composers, theorists, and students interested in tuning systems beyond 12-TET.
+- TypeScript
+- React
+- Vite
+- Tailwind CSS
+- Three.js
 
----
+The planned testing stack is documented in the [testing strategy](docs/testing/TESTING_STRATEGY.md).
 
-## 🔍 Technologies Used
+## Source structure
 
-- **React + JavaScript** frontend and **Python + Django** backend
-- **CSS** for custom UI
-- Hosted on **Netlify** and **Render**
+The source tree follows three top-level responsibilities:
 
----
+```text
+src/
+├── data/
+├── lib/
+└── ui/
+```
 
-## 💡 Inspiration
+- `src/data/` contains static configuration, presets, and mode definitions.
+- `src/lib/` contains deterministic mathematical, domain, parsing, geometry, and placement logic.
+- `src/ui/` contains React components, hooks, SVG drawing, Three.js scene management, and browser interaction.
 
-Built as a practical companion to music theory research in microtonality and Just Intonation. Inspired by historical systems and modern computational approaches to tuning.
+Shared JI behaviour belongs in `src/lib/` and must remain independent of React, SVG, canvas, Three.js scenes, persistence, and tool-specific input formatting.
 
----
+## Getting started
 
-## 🙋‍♂️ Maintainer
+### Prerequisites
 
-Created by [@amusictheorist](https://github.com/amusictheorist).  
-This is a personal, exploratory project — feedback or suggestions are always welcome via GitHub issues.
+Use a current Node.js release compatible with the versions declared in `package.json`.
 
----
+### Install dependencies
 
-## 📝 License
+```bash
+npm install
+```
 
-[MIT License](./LICENSE)
+### Start the development server
+
+```bash
+npm run dev
+```
+
+### Build the application
+
+```bash
+npm run build
+```
+
+### Lint the project
+
+```bash
+npm run lint
+```
+
+Testing commands will be added when the testing infrastructure defined in `docs/testing/TESTING_STRATEGY.md` is installed.
+
+## Documentation
+
+The [documentation index](docs/README.md) links to the project's mathematical specifications, engineering policies, architecture records, and future subsystem documents.
+
+Important documents include:
+
+- [Core JI domain](docs/domain/CORE_JI_DOMAIN.md)
+- [Testing strategy](docs/testing/TESTING_STRATEGY.md)
+- [Documentation conventions](docs/DOCUMENTATION_CONVENTIONS.md)
+- [Architecture decisions](docs/architecture/decisions/)
+
+## Documentation and implementation policy
+
+Normative mathematical documentation defines the behaviour that implementation and tests must follow.
+
+When existing code conflicts with the core JI domain specification, the implementation should be revised unless the specification is deliberately amended.
+
+Documentation should be updated in the same task as the code, behaviour, or architectural decision it describes.
+
+## Author
+
+Just Intonation Tools is developed by Alexis Millares Thomson.
