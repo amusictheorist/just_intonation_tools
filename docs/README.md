@@ -12,6 +12,8 @@ The normative mathematical source of truth for the shared Just Intonation domain
 
 Implementation and tests must conform to this document.
 
+The current shared TypeScript domain primitives and ratio operations are implemented under `src/lib/ji/`. Their public contracts are documented with JSDoc alongside the source.
+
 ### Testing
 
 [`testing/TESTING_STRATEGY.md`](testing/TESTING_STRATEGY.md)
@@ -49,6 +51,7 @@ Current foundation decisions:
 - [`0002-three-directory-source-structure.md`](architecture/decisions/0002-three-directory-source-structure.md)
 - [`0003-shared-core-ji-domain.md`](architecture/decisions/0003-shared-core-ji-domain.md)
 - [`0004-testing-stack.md`](architecture/decisions/0004-testing-stack.md)
+- [`0005-use-bigint-for-exact-ji-domain-values.md`](architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md)
 
 ### Subsystems
 
