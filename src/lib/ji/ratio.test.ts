@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createPositiveInteger } from "./positiveInteger";
+import { createPositiveInteger, type PositiveInteger } from "./positiveInteger";
 import { createRatio } from "./ratio";
 
 describe("createRatio", () => {
@@ -45,5 +45,17 @@ describe("createRatio", () => {
     );
 
     expect(Object.isFrozen(ratio)).toBe(true);
+  });
+
+  it("rejects a zero denominator at runtime", () => {
+    expect(() => {
+      createRatio(createPositiveInteger(3n), 0n as unknown as PositiveInteger);
+    }).toThrow();
+  });
+
+  it("rejects non-bigint numerator values at runtime", () => {
+    expect(() => {
+      createRatio(3 as unknown as PositiveInteger, createPositiveInteger(2n));
+    }).toThrow("Expected a positive bigint");
   });
 });

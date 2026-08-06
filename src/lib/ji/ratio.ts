@@ -10,10 +10,16 @@ export function createRatio(
   numerator: PositiveInteger,
   denominator: PositiveInteger,
 ): Ratio {
-  const divisor = greatestCommonDivisor(numerator, denominator);
+  const validatedNumerator = createPositiveInteger(numerator);
+  const validatedDenominator = createPositiveInteger(denominator);
+
+  const divisor = greatestCommonDivisor(
+    validatedNumerator,
+    validatedDenominator,
+  );
 
   return Object.freeze({
-    numerator: createPositiveInteger(numerator / divisor),
-    denominator: createPositiveInteger(denominator / divisor),
+    numerator: createPositiveInteger(validatedNumerator / divisor),
+    denominator: createPositiveInteger(validatedDenominator / divisor),
   });
 }
