@@ -24,9 +24,11 @@ This document defines testing responsibilities and principles. It does not yet p
 
 The normative source of truth for shared Just Intonation behaviour is:
 
-`docs/domain/CORE_JI_DOMAIN.md`
+```text
+docs/domain/CORE_JI_DOMAIN.md
+```
 
-Core-domain tests must derive their expected behaviour from that specification.
+Core-domain tests must derive their expected behaviour from [that specification](../domain/CORE_JI_DOMAIN.md).
 
 Existing Python, Django, JavaScript, and TypeScript implementations may be consulted for:
 
@@ -147,7 +149,7 @@ No single layer is expected to probe the correctness of the entire application.
 
 ### 5.1 Core-domain specification tests
 
-Core-domain tests verify the behaviour defined in `docs/domain/CORE_JI_DOMAIN.md`.
+Core-domain tests verify the behaviour defined in [the domain specification](../domain/CORE_JI_DOMAIN.md).
 
 They should cover:
 
@@ -1037,7 +1039,7 @@ Completed infrastructure includes:
 The next implementation sequence is:
 
 1. establish the shared JI domain test structure
-2. translate the ratio requirements from `docs/domain/CORE_JI_DOMAIN.md` into tests
+2. translate the ratio requirements from [the core JI domain](../domain/CORE_JI_DOMAIN.md) into tests
 3. implement the ratio domain using TDD
 4. continue through the remaining shared-domain behaviours
 5. add shared geometry assertions and test existing pure visualization mathematics

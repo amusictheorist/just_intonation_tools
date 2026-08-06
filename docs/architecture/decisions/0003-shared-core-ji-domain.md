@@ -18,7 +18,7 @@ docs/domain/CORE_JI_DOMAIN.md
 
 ## Decision
 
-`docs/domain/CORE_JI_DOMAIN.md` is the normative mathematical source of truth for the shared Just Intonation domain.
+The [core JI domain specification](../../domain/CORE_JI_DOMAIN.md) is the normative mathematical source of truth for the shared Just Intonation domain.
 
 The shared TypeScript domain will conform to that specification.
 

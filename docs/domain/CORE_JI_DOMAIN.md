@@ -1922,18 +1922,17 @@ These concerns belong to the calculator, future harmonic-complexity tools, or ot
 
 The core mathematical behaviour defined in this document is considered sufficiently specified to guide the initial TypeScript implementation and its tests.
 
-The following implementation questions remain open. They do not alter the mathematical definitions in this document.
+Some implementation questions have now been resolved through accepted architectural decisions. The remaining questions do not alter the mathematical definitions in this document.
 
 ### 11.1 Numeric representation
 
-The implementation must decide whether positive integers and exact ratios will use:
+Resolved by [ADR 0005](../architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md).
 
-- JavaScript `number`
-- `bigint`
-- a combination of the two
-- another exact rational-number representation
+Shared JI-domain integers use JavaScript `bigint`.
 
-If `number` is used, values outside JavaScript's safe-integer range must be rejected.
+Validated positive integers are represented as branded `bigint` values created through a runtime-validated construction boundary. Shared ratios will use exact positive-integer numerator and denominator terms and will be reduced to canonical form during construction.
+
+JavaScript `number` remains appropriate only at explicit boundaries where floating-point values are required, such as geometry, rendering, or approximate display.
 
 ### 11.2 Exact scaled results
 
@@ -1949,16 +1948,13 @@ Exact representation is preferred where practical.
 
 ### 11.3 Domain-object representation
 
-The implementation must choose how validated domain values will be represented in TypeScript.
+Partially resolved by [ADR 0005](../architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md).
 
-Possible approaches include:
+Positive integers use a branded primitive type with a public factory function that enforces the runtime invariant.
 
-- immutable classes
-- readonly object types with factory functions
-- branded primitive types
-- opaque types exposed through public constructors
+Ratios will use immutable readonly value objects containing validated positive-integer terms.
 
-Whichever approach is chosen must preserve validation, immutability, and clear domain boundaries.
+The precise representation of larger domain values, including parsets, parcsets, equivalence classes, and harmonic-complexity results, remains open. Their implementations must preserve validation, immutability, exactness where required, and clear domain boundaries.
 
 ### 11.4 Error representation
 
