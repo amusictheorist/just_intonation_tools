@@ -6,7 +6,7 @@ This directory contains the long-form documentation for Just Intonation Tools.
 
 ### Domain
 
-[`domain/CORE_JI_DOMAIN.md`](domain/CORE_JI_DOMAIN.md)
+[`domain/CORE_JI_DOMAIN.md`](./domain/CORE_JI_DOMAIN.md)
 
 The normative mathematical source of truth for the shared Just Intonation domain. It defines valid values, invariants, canonical forms, equivalence relations, operations, and Spectral Extension.
 
@@ -16,13 +16,13 @@ The current shared TypeScript domain primitives and ratio operations are impleme
 
 ### Testing
 
-[`testing/TESTING_STRATEGY.md`](testing/TESTING_STRATEGY.md)
+[`testing/TESTING_STRATEGY.md`](./testing/TESTING_STRATEGY.md)
 
 The accepted project-wide testing strategy. It defines test layers, tooling, TDD workflow, assertion policy, file organization, quality gates, and the initial test matrix.
 
 ### Documentation conventions
 
-[`DOCUMENTATION_CONVENTIONS.md`](DOCUMENTATION_CONVENTIONS.md)
+[`DOCUMENTATION_CONVENTIONS.md`](./DOCUMENTATION_CONVENTIONS.md)
 
 The accepted conventions for repository documentation, code comments, JSDoc, TODO comments, architectural decision records, naming, authority, and documentation maintenance.
 
@@ -41,17 +41,21 @@ The planned `architecture/OVERVIEW.md` will describe:
 
 ### Architecture decisions
 
-[`architecture/decisions/`](architecture/decisions/)
+[`architecture/decisions/`](./architecture/decisions/)
 
 Architectural decision records preserve durable cross-cutting decisions and their consequences.
 
 Current foundation decisions:
 
-- [`0001-typescript-vite-only.md`](architecture/decisions/0001-typescript-vite-only.md)
-- [`0002-three-directory-source-structure.md`](architecture/decisions/0002-three-directory-source-structure.md)
-- [`0003-shared-core-ji-domain.md`](architecture/decisions/0003-shared-core-ji-domain.md)
-- [`0004-testing-stack.md`](architecture/decisions/0004-testing-stack.md)
-- [`0005-use-bigint-for-exact-ji-domain-values.md`](architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md)
+- [`0001-typescript-vite-only.md`](./architecture/decisions/0001-typescript-vite-only.md)
+- [`0002-three-directory-source-structure.md`](./architecture/decisions/0002-three-directory-source-structure.md)
+- [`0003-shared-core-ji-domain.md`](./architecture/decisions/0003-shared-core-ji-domain.md)
+- [`0004-testing-stack.md`](./architecture/decisions/0004-testing-stack.md)
+- [`0005-use-bigint-for-exact-ji-domain-values.md`](./architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md)
+
+The accepted plan for separating legacy lattice and spiral ratio helpers from the shared exact JI domain:
+
+[`architecture/LEGACY_RATIO_MIGRATION.md`](./architecture/LEGACY_RATIO_MIGRATION.md)
 
 ### Subsystems
 
@@ -87,6 +91,6 @@ Conflicts should be investigated and resolved deliberately. README files should 
 
 ## Adding documentation
 
-Before adding a document, consult [`DOCUMENTATION_CONVENTIONS.md`](DOCUMENTATION_CONVENTIONS.md).
+Before adding a document, consult [`DOCUMENTATION_CONVENTIONS.md`](./DOCUMENTATION_CONVENTIONS.md).
 
 Place new documentation in the most specific appropriate category. Do not create empty directories merely to reproduce the planned structure.
