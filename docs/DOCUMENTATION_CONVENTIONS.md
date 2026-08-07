@@ -386,6 +386,22 @@ Example:
 
 Long mathematical definitions, proofs, and extensive examples belong in `docs/domain/`. Source comments should explain the local implementation consequence of those definitions.
 
+### Implementation terminology
+
+The normative domain specifications may use project-specific theoretical terminology such as _parc_, _parcset_, Parspace, and Parcspace.
+
+Source-code identifiers should prefer descriptive terminology that is readily understandable without prior knowledge of that vocabulary when an equivalent domain term is available.
+
+For example:
+
+- use `PartialClass` rather than `Parc` for the TypeScript domain type
+- use `partialToPartialClass` rather than `partialToParc` for the conversion operation
+- prefer `partialClass` to `parc` for local variables
+
+Documentaion, JSDoc, and mathematical comments may use the theoretical term when explaining the relationship to the normative domain. They should make the mapping explicit where it would otherwise be unclear.
+
+Thie naming convention does not change the mathematical terminology or definitions in the [core JI domain](./domain/CORE_JI_DOMAIN.md).
+
 ---
 
 ## 11. JSDoc

@@ -12,7 +12,9 @@ The normative mathematical source of truth for the shared Just Intonation domain
 
 Implementation and tests must conform to this document.
 
-The current shared TypeScript domain primitives and ratio operations are implemented under `src/lib/ji/`. Their public contracts are documented with JSDoc alongside the source.
+The current shared TypeScript domain primitives and operations are implemented
+under `src/lib/ji/`. Their public contracts are documented with JSDoc alongside
+the source.
 
 ### Testing
 
@@ -53,9 +55,11 @@ Current foundation decisions:
 - [`0004-testing-stack.md`](./architecture/decisions/0004-testing-stack.md)
 - [`0005-use-bigint-for-exact-ji-domain-values.md`](./architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md)
 
-The accepted plan for separating legacy lattice and spiral ratio helpers from the shared exact JI domain:
+Accepted migration plans for replacing legacy mathematical helpers with the
+shared JI domain:
 
-[`architecture/LEGACY_RATIO_MIGRATION.md`](./architecture/LEGACY_RATIO_MIGRATION.md)
+- [`architecture/LEGACY_RATIO_MIGRATION.md`](./architecture/LEGACY_RATIO_MIGRATION.md) — separates legacy lattice and spiral ratio helpers from the shared exact ratio domain
+- [`architecture/LEGACY_PARTIAL_MIGRATION.md`](./architecture/LEGACY_PARTIAL_MIGRATION.md) — inventories legacy partial and partial-class helpers and defines their migration to shared domain operations
 
 ### Subsystems
 
