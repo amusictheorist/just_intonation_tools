@@ -623,7 +623,7 @@ An even factor is not a valid parcset transposition factor because it would prod
 
 ### 5.5 Low inversion
 
-The low inverse of a parset is obtained by dividing the least common multiple of the set by each member.
+The low inverse of a parset or parcset is obtained by dividing the least common multiple of the set by each member.
 
 For a non-empty parset $S$:
 
@@ -657,6 +657,36 @@ I_{\mathrm{low}}(\{2, 3, 5\})
 \{6, 10, 15\}
 ```
 
+For a non-empty parcset $P$:
+
+```math
+I_{\mathrm{low}}(P)
+=
+\left\{
+\frac{\mathrm{lcm}(P)}{p}
+\;\middle|\;
+p\in P
+\right\}
+```
+
+Becuase every parc is an odd positive integer, the least common multiple of a parcset is also odd. Divinding that least common multiple by any member therefore produces another odd positive integer, so low inversion preserves membership in Parcspace.
+
+For example:
+
+$$
+\mathrm{lcm}(\lbrace \underline{3}, \underline{5}, \underline{7}\rbrace)=105
+$$
+
+therefore:
+
+$$
+I_{low}(\lbrace \underline{3}, \underline{5}, \underline{7}\rbrace)
+=
+\lbrace\frac{105}{\underline{3}}, \frac{105}{\underline{5}}, \frac{105}{\underline{7}}\rbrace
+=
+\lbrace\underline{15}, \underline{21}, \underline{21}\rbrace
+$$
+
 The order of the resulting set has no semantic significance.
 
 For a singleton parset:
@@ -666,6 +696,12 @@ I_{\mathrm{low}}(\{n\})
 =
 \{1\}
 ```
+
+and for a singleton parcset:
+
+$$
+I_{low}(\underline{n})=\underline{1}
+$$
 
 because:
 
@@ -677,13 +713,25 @@ because:
 1
 ```
 
-Low inversion is defined for every valid non-empty parset.
+Low inversion is defined for every valid non-empty parset and parcset.
 
-### 5.6 Parset interval ratios
+### 5.6 Set interval ratios and interval matrices
 
-The interval ratio between two partials $a$ and $b$ is the reduced ratio:
+The directed interval ratio between two members of the same domain is the reduced ratio from the source value to the target value.
+
+For partials $a$ and $b$:
+
+```math
+\mathrm{interval}(a,b)
+=
+\frac{b}{a}
+```
+
+For parcs $\underline{a}$ and $\underline{b}$:
 
 $$
+\mathrm{interval}(\underline{a},\underline{b})
+=
 \frac{b}{a}
 $$
 
@@ -709,7 +757,61 @@ while:
 \frac{2}{3}
 ```
 
-An interval matrix derived from a parset should therefore preserve direction rather than replacing every interval with its value above $1$.
+Likewise:
+
+$$
+\mathrm{interval}(\underline{3},\underline{5})
+=
+\frac{5}{3}
+$$
+
+while:
+
+$$
+\mathrm{interval}(\underline{5},\underline{3})
+=
+\frac{3}{5}
+$$
+
+An interval matrix for a parset or parcset containd the directed interval ratio from each source member to each target member.
+
+For a set whose deterministic member order is:
+
+$$\langle x_1, x_2,..., x_k\rangle$$
+
+the interval matrix is:
+
+```math
+M_{ij}
+=
+\mathrm{interval}(x_i,x_j)
+=
+\frac{x_j}{x_i}
+```
+
+The diagonal therefore contains only unisons:
+
+```math
+M_{ii}=\frac{1}{1}
+```
+
+and reversing source and target produces reciprocal entries:
+
+```math
+M_{ji}
+=
+\frac{1}{M_{ij}}
+```
+
+where the reciprocal is understood as the exact rational reciprocal.
+
+Interval matrices must preserve direction rather than replacing every interval with its value above $1$.
+
+Parset interval matrices are built from partial-to-partial directed intervals.
+
+Parcset interval matrices are built from parc-to-parc directed intervals.
+
+A matrix must not mix partials and parcs within the same interval relation.
 
 Octave reduction, where needed by a particular tool, must be applied as a separate operation.
 
@@ -1466,9 +1568,19 @@ $$
 
 Low inversion must:
 
-- produce a valid parset
-- return $\{1\}$ for a singleton
+- produce a valid set in the same domain as its input
+- return $\{1\}$ for a singleton parset
+- return $\lbrace \underline{1} \rbrace$ for a singleton parcset
 - be independent of input order
+
+Interval matrices must:
+
+- contain canonical directed ratios
+- contain $\frac{1}{1}$ on the diagonal
+- preserve source-to-target direction
+- contain reciprocal relationships across opposite matrix positions
+- operate entirely within either Parspace or Parcspace
+- not apply octave reduction implicitly
 
 Partial-to-parc conversion must:
 
