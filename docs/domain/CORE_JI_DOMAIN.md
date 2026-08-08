@@ -557,7 +557,7 @@ $$
 
 The intermediate collection may contain duplicate values, but the final parcset may not.
 
-### 5.4 Parset transposition
+### 5.4 Parset and parcset transposition
 
 A parset may be transposed by a positive integer factor $n$.
 
@@ -594,6 +594,32 @@ $$
 Parset transposition preserves cardinality and parset-class membership.
 
 A rational factor that is not an integer is not a valid parset transposition factor because it may produce non-integral values.
+
+A parcset may be transposed by an odd positive integer factor $n$.
+
+For a parcset $P$:
+
+$$
+T_n(P)=\lbrace\underline {np} \mid \underline p \in P \rbrace
+$$
+
+Because both the transposition factor and every parc are odd positive integers, every resulting member remains a valid parc.
+
+For example:
+
+$$
+T_3(\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace)=\lbrace \underline{3}, \underline{9}, \underline{15} \rbrace
+$$
+
+Transposition by $1$ is the identity operation:
+
+$$
+T_1(P)=P
+$$
+
+Parcset transition preserves cardinality and parcset-class membership.
+
+An even factor is not a valid parcset transposition factor because it would produce even values outside Parcspace.
 
 ### 5.5 Low inversion
 
@@ -1423,6 +1449,19 @@ For every valid parset $S$:
 
 $$
 T_1(S)=S
+$$
+
+Parcset transposition by an odd positive integer must:
+
+- produce a valid parcset
+- preserve cardinality
+- preserve parcset-class membership
+- satisfy identity under transposition by $1$
+
+For every valid parcset $P$:
+
+$$
+T_1(P)=P
 $$
 
 Low inversion must:
