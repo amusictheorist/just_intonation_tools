@@ -219,6 +219,12 @@ Candidate properties include:
 
 Property tests should generate only values that are valid for the layer under test unless invalid-value generation is the explicit subject of the test.
 
+Shared arbitraries should be used when they make the domain assumptions of a property clearer and remove repeated construction boilerplate.
+
+Constructor property tests should generally generate primitive input values and invoke the constructor explicitly, because construction and validation are the behaviour under test.
+
+Property tests for downstream operations may generate validated domain values directly through shared arbitraries. For example, a transposition property may begin with an arbitrary valid `PartialSet`, while a `createPartialSet` property should begin with primitive member values and construct the set explicitly.
+
 ### 5.4 Placement tests
 
 Placement tests verify geometric calculations without constructing rendered scenes.
@@ -693,11 +699,26 @@ src/lib/spiral/drawing/spiralDrawing.ts
 src/lib/spiral/drawing/spiralDrawing.test.ts
 ```
 
-Shared test support will live in a root-level test directory:
+Domain-specific test support should live near the domain code it supports.
+
+For the shared JI domain, reusable property-test arbitraries live under:
+
+```text
+src/lib/ji/test/
+├── partialArbitraries.ts
+├── partialClassArbitraries.ts
+├── partialSetArbitraries.ts
+├── partialClassSetArbitraries.ts
+├── positiveIntegerArbitraries.ts
+└── ratioArbitraries.ts
+```
+
+These modules are test-only support and must not be imported by production modules.
+
+Cross-cutting test support that is shared across multiple application areas may live in the root-level test directory:
 
 ```text
 test/
-├── arbitraries/
 ├── assertions/
 │   └── geometry.ts
 ├── fixtures/
@@ -705,24 +726,14 @@ test/
     └── dom.ts
 ```
 
-Playwright test will live in a separate root-level `e2e/` directory:
+Shared test support may include:
 
-```text
-e2e/
-├── navigation.spec.ts
-├── calculator.spec.ts
-├── spiral.spec.ts
-└── lattice.spec.ts
-```
-
-Shared helpers may include:
-
-- validated fixture builders
+- validated domain arbitraries
+- fixture builders
 - ratio fixtures
 - vector assertions
 - geometry tolerances
 - DOM setup
-- generated-value arbitraries
 - scene test utilities
 
 Production modules must not depend on test-support modules.
@@ -780,7 +791,26 @@ Fixture builders should normally use the same validated public construction boun
 
 Special unsafe fixture construction should be limited to tests explicitly concerned with defensive behaviour or migration code.
 
-### 16.3 Regression fixtures
+### 16.3 Property-test arbitraries
+
+Reusable `fast-check` arbitraries should model meaningful validated domain values rather than merely abbreviating arbitrary expressions.
+
+For example:
+
+- `positiveIntegerArbitrary` generates validated positive integers
+- `partialArbitrary` generates validated partials
+- `partialClassArbitrary` generates validated positive odd partial classes
+- `partialSetArbitrary` generates non-empty validated partial sets
+- `partialClassSetArbitrary` generates non-empty validated partial-class sets
+- `ratioArbitrary` generates validated canonical ratios
+
+Arbitraries should compose existing public domain constructors rather than reproduce their validation logic independently.
+
+Tests of constructors should normally generate primitive inputs directly rather than consume an arbitrary that has already invoked the constructor under test.
+
+Tests of downstream operations should prefer the highest-level arbitrary matching the function's input contract. This keeps property bodies focused on the behaviour being tested rather than repeated domain-object construction.
+
+### 16.4 Regression fixtures
 
 When a real defect is found:
 
@@ -967,7 +997,7 @@ Testing Library tests should emphasize user-observable behaviour rather than com
 
 The project will use `fast-check` for property-based testing.
 
-Property tests should supplement reviewed examples and should generate values appropriate to the layer under test.
+Reusable domain arbitraries should be composed from the same validated public constructors used by production code and should live with the domain they support.
 
 ### 22.5 Playwright
 
@@ -1015,8 +1045,6 @@ The following decisions remain to be made:
 4. intended use of `rotationAngle` in prime-frame construction
 5. normative behaviour of expanded radial placement
 6. normative high-prime placement examples
-7. numeric representation for exact domain values
-8. TypeScript representation of validated domain objects
 
 These open decisions do not change the testing principles or selected stack established in this document.
 
@@ -1038,12 +1066,8 @@ Completed infrastructure includes:
 
 The next implementation sequence is:
 
-1. establish the shared JI domain test structure
-2. translate the ratio requirements from [the core JI domain](../domain/CORE_JI_DOMAIN.md) into tests
-3. implement the ratio domain using TDD
-4. continue through the remaining shared-domain behaviours
-5. add shared geometry assertions and test existing pure visualization mathematics
-6. add DOM, React, and browser workflow coverage as corresponding code is reviewed or rewritten
+1. add shared geometry assertions and test existing pure visualization mathematics
+2. add DOM, React, and browser workflow coverage as corresponding code is reviewed or rewritten
 
 ## 25. Initial test matrix
 
