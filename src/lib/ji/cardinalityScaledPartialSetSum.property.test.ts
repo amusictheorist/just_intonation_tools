@@ -3,8 +3,9 @@ import { describe, expect, it } from "vitest";
 import { createPartialSet } from "./partialSet";
 import { createPartial } from "./partial";
 import { cardinalityScaledPartialSetSum } from "./cardinalityScaledPartialSetSum";
-import { createRatio } from "./ratio";
-import { createPositiveInteger } from "./positiveInteger";
+import { partialSetArbitrary } from "./test/partialSetArbitraries";
+import { positiveIntegerArbitrary } from "./test/positiveIntegerArbitraries";
+import { createUnisonRatio } from "./createUnisonRatio";
 
 describe("cardinalityScaledPartialSetSum properties", () => {
   it("returns 1 for the simplest partial-set class of every cardinality", () => {
@@ -17,7 +18,7 @@ describe("cardinalityScaledPartialSetSum properties", () => {
         );
 
         expect(cardinalityScaledPartialSetSum(partialSet)).toEqual(
-          createRatio(createPositiveInteger(1n), createPositiveInteger(1n)),
+          createUnisonRatio(),
         );
       }),
     );
@@ -26,12 +27,9 @@ describe("cardinalityScaledPartialSetSum properties", () => {
   it("is invariant under common positive scaling", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        fc.bigInt({ min: 1n }),
-        (values, scaleValue) => {
-          const partialSet = createPartialSet(values.map(createPartial));
-          const scale = createPositiveInteger(scaleValue);
-
+        partialSetArbitrary,
+        positiveIntegerArbitrary,
+        (partialSet, scale) => {
           const scaledPartialSet = createPartialSet(
             partialSet.members.map((member) => createPartial(member * scale)),
           );

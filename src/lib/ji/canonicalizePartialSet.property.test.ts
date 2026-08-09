@@ -5,33 +5,28 @@ import { createPartial } from "./partial";
 import { canonicalizePartialSet } from "./canonicalizePartialSet";
 import type { PositiveInteger } from "./positiveInteger";
 import { greatestCommonDivisor } from "./greatestCommonDivisor";
+import { partialSetArbitrary } from "./test/partialSetArbitraries";
+import { positiveIntegerArbitrary } from "./test/positiveIntegerArbitraries";
 
 describe("canonicalizePartialSet properties", () => {
   it("is idempotent", () => {
     fc.assert(
-      fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        (values) => {
-          const partialSet = createPartialSet(values.map(createPartial));
+      fc.property(partialSetArbitrary, (partialSet) => {
+        const canonical = canonicalizePartialSet(partialSet);
 
-          const canonical = canonicalizePartialSet(partialSet);
-
-          expect(canonicalizePartialSet(canonical)).toEqual(canonical);
-        },
-      ),
+        expect(canonicalizePartialSet(canonical)).toEqual(canonical);
+      }),
     );
   });
 
   it("is invariant under common positive scaling", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        fc.bigInt({ min: 1n }),
-        (values, scale) => {
-          const partialSet = createPartialSet(values.map(createPartial));
-
+        partialSetArbitrary,
+        positiveIntegerArbitrary,
+        (partialSet, scale) => {
           const scaledPartialSet = createPartialSet(
-            values.map((value) => createPartial(value * scale)),
+            partialSet.members.map((member) => createPartial(member * scale)),
           );
 
           expect(canonicalizePartialSet(scaledPartialSet)).toEqual(
@@ -44,21 +39,17 @@ describe("canonicalizePartialSet properties", () => {
 
   it("produces a representative whose members have greatest common divisor 1n", () => {
     fc.assert(
-      fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        (values) => {
-          const partialSet = createPartialSet(values.map(createPartial));
-          const canonical = canonicalizePartialSet(partialSet);
+      fc.property(partialSetArbitrary, (partialSet) => {
+        const canonical = canonicalizePartialSet(partialSet);
 
-          let divisor: PositiveInteger = canonical.members[0];
+        let divisor: PositiveInteger = canonical.members[0];
 
-          for (const member of canonical.members.slice(1)) {
-            divisor = greatestCommonDivisor(divisor, member);
-          }
+        for (const member of canonical.members.slice(1)) {
+          divisor = greatestCommonDivisor(divisor, member);
+        }
 
-          expect(divisor).toBe(1n);
-        },
-      ),
+        expect(divisor).toBe(1n);
+      }),
     );
   });
 });

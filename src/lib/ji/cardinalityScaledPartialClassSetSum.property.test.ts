@@ -2,9 +2,10 @@ import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createPartialClassSet } from "./partialClassSet";
 import { cardinalityScaledPartialClassSetSum } from "./cardinalityScaledPartialClassSetSum";
-import { createRatio } from "./ratio";
-import { createPositiveInteger } from "./positiveInteger";
 import { createPartialClass } from "./partialClass";
+import { positiveOddBigIntArbitrary } from "./test/partialClassArbitraries";
+import { partialClassSetArbitrary } from "./test/partialClassSetArbitraries";
+import { createUnisonRatio } from "./createUnisonRatio";
 
 describe("cardinalityScaledPartialClassSetSum properties", () => {
   it("returns 1 for the simplest partial-class-set class of every cardinality", () => {
@@ -17,23 +18,18 @@ describe("cardinalityScaledPartialClassSetSum properties", () => {
         );
 
         expect(cardinalityScaledPartialClassSetSum(partialClassSet)).toEqual(
-          createRatio(createPositiveInteger(1n), createPositiveInteger(1n)),
+          createUnisonRatio(),
         );
       }),
     );
   });
 
-  it("is invariant under common positive scaling", () => {
+  it("is invariant under common positive odd scaling", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        fc.bigInt({ min: 1n }),
-        (values, scaleValue) => {
-          const partialClassSet = createPartialClassSet(
-            values.map((value) => createPartialClass(value * 2n - 1n)),
-          );
-          const scale = createPositiveInteger(scaleValue * 2n - 1n);
-
+        partialClassSetArbitrary,
+        positiveOddBigIntArbitrary,
+        (partialClassSet, scale) => {
           const scaledPartialClassSet = createPartialClassSet(
             partialClassSet.members.map((member) =>
               createPartialClass(member * scale),

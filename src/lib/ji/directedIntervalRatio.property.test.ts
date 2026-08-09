@@ -2,38 +2,41 @@ import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createPartial } from "./partial";
 import { directedIntervalRatio } from "./directedIntervalRatio";
-import { createRatio } from "./ratio";
-import { createPositiveInteger } from "./positiveInteger";
 import { createPartialClass } from "./partialClass";
+import {
+  partialClassArbitrary,
+  positiveOddBigIntArbitrary,
+} from "./test/partialClassArbitraries";
+import { partialArbitrary } from "./test/partialArbitraries";
+import { createUnisonRatio } from "./createUnisonRatio";
+import { positiveIntegerArbitrary } from "./test/positiveIntegerArbitraries";
 
 describe("directedIntervalRatio properties", () => {
   it("returns unison from a partial and partial-class to themselves", () => {
     fc.assert(
-      fc.property(fc.bigInt({ min: 1n }), (value) => {
-        const partial = createPartial(value);
-        const partialClass = createPartialClass(value * 2n - 1n);
-
-        expect(directedIntervalRatio(partial, partial)).toEqual(
-          createRatio(createPositiveInteger(1n), createPositiveInteger(1n)),
-        );
-        expect(directedIntervalRatio(partialClass, partialClass)).toEqual(
-          createRatio(createPositiveInteger(1n), createPositiveInteger(1n)),
-        );
-      }),
+      fc.property(
+        partialArbitrary,
+        partialClassArbitrary,
+        (partial, partialClass) => {
+          expect(directedIntervalRatio(partial, partial)).toEqual(
+            createUnisonRatio(),
+          );
+          expect(directedIntervalRatio(partialClass, partialClass)).toEqual(
+            createUnisonRatio(),
+          );
+        },
+      ),
     );
   });
 
   it("produces reciprocal ratios when direction is reversed", () => {
     fc.assert(
       fc.property(
-        fc.bigInt({ min: 1n }),
-        fc.bigInt({ min: 1n }),
-        (leftValue, rightValue) => {
-          const leftPartial = createPartial(leftValue);
-          const rightPartial = createPartial(rightValue);
-          const leftPartialClass = createPartialClass(leftValue * 2n - 1n);
-          const rightPartialClass = createPartialClass(rightValue * 2n - 1n);
-
+        partialArbitrary,
+        partialArbitrary,
+        partialClassArbitrary,
+        partialClassArbitrary,
+        (leftPartial, rightPartial, leftPartialClass, rightPartialClass) => {
           const forwardPartialInterval = directedIntervalRatio(
             leftPartial,
             rightPartial,
@@ -71,16 +74,12 @@ describe("directedIntervalRatio properties", () => {
   it("is invariant when both partials are scaled by the same positive factor", () => {
     fc.assert(
       fc.property(
-        fc.bigInt({ min: 1n }),
-        fc.bigInt({ min: 1n }),
-        fc.bigInt({ min: 1n }),
-        (sourceValue, targetValue, scale) => {
-          const source = createPartial(sourceValue);
-          const target = createPartial(targetValue);
-
-          const scaledSource = createPartial(sourceValue * scale);
-          const scaledTarget = createPartial(targetValue * scale);
-
+        partialArbitrary,
+        partialArbitrary,
+        positiveIntegerArbitrary,
+        (source, target, scale) => {
+          const scaledSource = createPartial(source * scale);
+          const scaledTarget = createPartial(target * scale);
           expect(directedIntervalRatio(scaledSource, scaledTarget)).toEqual(
             directedIntervalRatio(source, target),
           );
@@ -92,17 +91,12 @@ describe("directedIntervalRatio properties", () => {
   it("is invariant when both partial classes are scaled by the same odd positive factor", () => {
     fc.assert(
       fc.property(
-        fc.bigInt({ min: 1n }),
-        fc.bigInt({ min: 1n }),
-        fc.bigInt({ min: 1n }),
-        (sourceValue, targetValue, scaleSeed) => {
-          const source = createPartialClass(sourceValue * 2n - 1n);
-          const target = createPartialClass(targetValue * 2n - 1n);
-          const scale = scaleSeed * 2n - 1n;
-
+        partialClassArbitrary,
+        partialClassArbitrary,
+        positiveOddBigIntArbitrary,
+        (source, target, scale) => {
           const scaledSource = createPartialClass(source * scale);
           const scaledTarget = createPartialClass(target * scale);
-
           expect(directedIntervalRatio(scaledSource, scaledTarget)).toEqual(
             directedIntervalRatio(source, target),
           );

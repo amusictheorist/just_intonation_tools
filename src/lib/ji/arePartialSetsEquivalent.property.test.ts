@@ -3,50 +3,37 @@ import { describe, expect, it } from "vitest";
 import { createPartialSet } from "./partialSet";
 import { createPartial } from "./partial";
 import { arePartialSetsEquivalent } from "./arePartialSetsEquivalent";
+import { partialSetArbitrary } from "./test/partialSetArbitraries";
+import { positiveIntegerArbitrary } from "./test/positiveIntegerArbitraries";
 
 describe("arePartialSetsEquivalent properties", () => {
   it("is reflexive", () => {
     fc.assert(
-      fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        (values) => {
-          const partialSet = createPartialSet(values.map(createPartial));
-
-          expect(arePartialSetsEquivalent(partialSet, partialSet)).toBe(true);
-        },
-      ),
+      fc.property(partialSetArbitrary, (partialSet) => {
+        expect(arePartialSetsEquivalent(partialSet, partialSet)).toBe(true);
+      }),
     );
   });
 
   it("is symmetric", () => {
     fc.assert(
-      fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        (leftValues, rightValues) => {
-          const left = createPartialSet(leftValues.map(createPartial));
-          const right = createPartialSet(rightValues.map(createPartial));
-
-          expect(arePartialSetsEquivalent(left, right)).toBe(
-            arePartialSetsEquivalent(right, left),
-          );
-        },
-      ),
+      fc.property(partialSetArbitrary, partialSetArbitrary, (left, right) => {
+        expect(arePartialSetsEquivalent(left, right)).toBe(
+          arePartialSetsEquivalent(right, left),
+        );
+      }),
     );
   });
 
   it("preserves equivalence under common positive scaling", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        fc.bigInt({ min: 1n }),
-        (values, scale) => {
-          const partialSet = createPartialSet(values.map(createPartial));
-
+        partialSetArbitrary,
+        positiveIntegerArbitrary,
+        (partialSet, scale) => {
           const scaledPartialSet = createPartialSet(
-            values.map((value) => createPartial(value * scale)),
+            partialSet.members.map((member) => createPartial(member * scale)),
           );
-
           expect(arePartialSetsEquivalent(partialSet, scaledPartialSet)).toBe(
             true,
           );
@@ -58,22 +45,16 @@ describe("arePartialSetsEquivalent properties", () => {
   it("is transitive", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        fc.bigInt({ min: 1n }),
-        fc.bigInt({ min: 1n }),
-        (values, firstScale, secondScale) => {
-          const base = createPartialSet(values.map(createPartial));
-
+        partialSetArbitrary,
+        positiveIntegerArbitrary,
+        positiveIntegerArbitrary,
+        (base, firstScale, secondScale) => {
           const middle = createPartialSet(
-            values.map((value) => createPartial(value * firstScale)),
+            base.members.map((member) => createPartial(member * firstScale)),
           );
-
           const right = createPartialSet(
-            values.map((value) =>
-              createPartial(value * firstScale * secondScale),
-            ),
+            middle.members.map((member) => createPartial(member * secondScale)),
           );
-
           expect(arePartialSetsEquivalent(base, middle)).toBe(true);
           expect(arePartialSetsEquivalent(middle, right)).toBe(true);
           expect(arePartialSetsEquivalent(base, right)).toBe(true);

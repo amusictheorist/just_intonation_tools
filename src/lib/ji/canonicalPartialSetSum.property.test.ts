@@ -2,19 +2,17 @@ import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createPartialSet } from "./partialSet";
 import { createPartial } from "./partial";
-import { createPositiveInteger } from "./positiveInteger";
 import { canonicalPartialSetSum } from "./canonicalPartialSetSum";
+import { partialSetArbitrary } from "./test/partialSetArbitraries";
+import { positiveIntegerArbitrary } from "./test/positiveIntegerArbitraries";
 
 describe("canonicalPartialSetSum properties", () => {
   it("is invariant under common positive scaling", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        fc.bigInt({ min: 1n }),
-        (values, scaleValue) => {
-          const partialSet = createPartialSet(values.map(createPartial));
-          const scale = createPositiveInteger(scaleValue);
-
+        partialSetArbitrary,
+        positiveIntegerArbitrary,
+        (partialSet, scale) => {
           const scaledPartialSet = createPartialSet(
             partialSet.members.map((member) => createPartial(member * scale)),
           );
@@ -29,14 +27,9 @@ describe("canonicalPartialSetSum properties", () => {
 
   it("always returns a positive bigint", () => {
     fc.assert(
-      fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
-        (values) => {
-          const partialSet = createPartialSet(values.map(createPartial));
-
-          expect(canonicalPartialSetSum(partialSet)).toBeGreaterThan(0n);
-        },
-      ),
+      fc.property(partialSetArbitrary, (partialSet) => {
+        expect(canonicalPartialSetSum(partialSet)).toBeGreaterThan(0n);
+      }),
     );
   });
 });

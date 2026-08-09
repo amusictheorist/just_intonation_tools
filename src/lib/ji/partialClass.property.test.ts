@@ -1,21 +1,20 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createPartialClass } from "./partialClass";
+import { positiveOddBigIntArbitrary } from "./test/partialClassArbitraries";
 
 describe("createPartialClass properties", () => {
   it("preserves every positive odd bigint", () => {
     fc.assert(
-      fc.property(fc.bigInt({ min: 1n }), (value) => {
-        const oddValue = value * 2n - 1n;
-
-        expect(createPartialClass(oddValue)).toBe(oddValue);
+      fc.property(positiveOddBigIntArbitrary, (value) => {
+        expect(createPartialClass(value)).toBe(value);
       }),
     );
   });
 
   it("rejects every positive even bigint", () => {
     fc.assert(
-      fc.property(fc.bigInt({ min: 1n }), (value) => {
+      fc.property(positiveOddBigIntArbitrary, (value) => {
         const evenValue = value * 2n;
 
         expect(() => createPartialClass(evenValue)).toThrow(

@@ -2,16 +2,16 @@ import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createPartialClassSet } from "./partialClassSet";
 import { createPartialClass } from "./partialClass";
+import { positiveOddBigIntArbitrary } from "./test/partialClassArbitraries";
 
 describe("createPartialClassSet properties", () => {
   it("removes duplicate members", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
+        fc.array(positiveOddBigIntArbitrary, { minLength: 1 }),
         (values) => {
-          const oddValues = values.map((value) => value * 2n - 1n);
           const partialClassSet = createPartialClassSet(
-            oddValues.map(createPartialClass),
+            values.map(createPartialClass),
           );
 
           expect(new Set(partialClassSet.members).size).toBe(
@@ -25,14 +25,13 @@ describe("createPartialClassSet properties", () => {
   it("normalizes equivalent inputs deterministically", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
+        fc.array(positiveOddBigIntArbitrary, { minLength: 1 }),
         (values) => {
-          const oddValues = values.map((value) => value * 2n - 1n);
           const original = createPartialClassSet(
-            oddValues.map(createPartialClass),
+            values.map(createPartialClass),
           );
           const reversed = createPartialClassSet(
-            [...oddValues].reverse().map(createPartialClass),
+            [...values].reverse().map(createPartialClass),
           );
 
           expect(reversed).toEqual(original);
@@ -44,11 +43,10 @@ describe("createPartialClassSet properties", () => {
   it("is idempotent", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
+        fc.array(positiveOddBigIntArbitrary, { minLength: 1 }),
         (values) => {
-          const oddValues = values.map((value) => value * 2n - 1n);
           const partialClassSet = createPartialClassSet(
-            oddValues.map(createPartialClass),
+            values.map(createPartialClass),
           );
 
           expect(createPartialClassSet(partialClassSet.members)).toEqual(
@@ -62,11 +60,10 @@ describe("createPartialClassSet properties", () => {
   it("stores only positive odd partial-class values", () => {
     fc.assert(
       fc.property(
-        fc.array(fc.bigInt({ min: 1n }), { minLength: 1 }),
+        fc.array(positiveOddBigIntArbitrary, { minLength: 1 }),
         (values) => {
-          const oddValues = values.map((value) => value * 2n - 1n);
           const partialClassSet = createPartialClassSet(
-            oddValues.map(createPartialClass),
+            values.map(createPartialClass),
           );
 
           expect(
