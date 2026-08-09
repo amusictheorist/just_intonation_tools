@@ -388,19 +388,21 @@ Long mathematical definitions, proofs, and extensive examples belong in `docs/do
 
 ### Implementation terminology
 
-The normative domain specifications may use project-specific theoretical terminology such as _parc_, _parcset_, Parspace, and Parcspace.
+The normative domain specifications may use project-specific theoretical terminology such as _parc_, _parcset_, Parspace, Parcspace, and _Spectral Extension_.
 
-Source-code identifiers should prefer descriptive terminology that is readily understandable without prior knowledge of that vocabulary when an equivalent domain term is available.
+Source-code identifiers should prefer descriptive terminology that is readily understandable without prior knowledge of that vocabulary when an equivalent implementation description is available.
 
 For example:
 
 - use `PartialClass` rather than `Parc` for the TypeScript domain type
 - use `partialToPartialClass` rather than `partialToParc` for the conversion operation
 - prefer `partialClass` to `parc` for local variables
+- use `canonicalPartialSetSum` for the operation that calculates Parspace _Spectral Extension_, because the identifier describes the computation directly
+- use similarly descriptive names for cardinality-scaled forms, while documenting their relationship to _Spectral Extension_ in JSDoc
 
-Documentaion, JSDoc, and mathematical comments may use the theoretical term when explaining the relationship to the normative domain. They should make the mapping explicit where it would otherwise be unclear.
+Documentation, JSDoc, and mathematical comments may use the theoretical term when explaining the relationship to the normative domain. They should make the mapping explicit where it would otherwise be unclear.
 
-Thie naming convention does not change the mathematical terminology or definitions in the [core JI domain](./domain/CORE_JI_DOMAIN.md).
+This naming convention does not change the mathematical terminology or definitions in the [core JI domain](./domain/CORE_JI_DOMAIN.md).
 
 ---
 
