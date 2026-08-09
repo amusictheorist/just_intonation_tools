@@ -557,7 +557,7 @@ $$
 
 The intermediate collection may contain duplicate values, but the final parcset may not.
 
-### 5.4 Parset transposition
+### 5.4 Parset and parcset transposition
 
 A parset may be transposed by a positive integer factor $n$.
 
@@ -595,9 +595,35 @@ Parset transposition preserves cardinality and parset-class membership.
 
 A rational factor that is not an integer is not a valid parset transposition factor because it may produce non-integral values.
 
+A parcset may be transposed by an odd positive integer factor $n$.
+
+For a parcset $P$:
+
+$$
+T_n(P)=\lbrace\underline {np} \mid \underline p \in P \rbrace
+$$
+
+Because both the transposition factor and every parc are odd positive integers, every resulting member remains a valid parc.
+
+For example:
+
+$$
+T_3(\lbrace \underline{1}, \underline{3}, \underline{5} \rbrace)=\lbrace \underline{3}, \underline{9}, \underline{15} \rbrace
+$$
+
+Transposition by $1$ is the identity operation:
+
+$$
+T_1(P)=P
+$$
+
+Parcset transition preserves cardinality and parcset-class membership.
+
+An even factor is not a valid parcset transposition factor because it would produce even values outside Parcspace.
+
 ### 5.5 Low inversion
 
-The low inverse of a parset is obtained by dividing the least common multiple of the set by each member.
+The low inverse of a parset or parcset is obtained by dividing the least common multiple of the set by each member.
 
 For a non-empty parset $S$:
 
@@ -631,6 +657,36 @@ I_{\mathrm{low}}(\{2, 3, 5\})
 \{6, 10, 15\}
 ```
 
+For a non-empty parcset $P$:
+
+```math
+I_{\mathrm{low}}(P)
+=
+\left\{
+\frac{\mathrm{lcm}(P)}{p}
+\;\middle|\;
+p\in P
+\right\}
+```
+
+Becuase every parc is an odd positive integer, the least common multiple of a parcset is also odd. Divinding that least common multiple by any member therefore produces another odd positive integer, so low inversion preserves membership in Parcspace.
+
+For example:
+
+$$
+\mathrm{lcm}(\lbrace \underline{3}, \underline{5}, \underline{7}\rbrace)=105
+$$
+
+therefore:
+
+$$
+I_{low}(\lbrace \underline{3}, \underline{5}, \underline{7}\rbrace)
+=
+\lbrace\frac{105}{\underline{3}}, \frac{105}{\underline{5}}, \frac{105}{\underline{7}}\rbrace
+=
+\lbrace\underline{15}, \underline{21}, \underline{21}\rbrace
+$$
+
 The order of the resulting set has no semantic significance.
 
 For a singleton parset:
@@ -640,6 +696,12 @@ I_{\mathrm{low}}(\{n\})
 =
 \{1\}
 ```
+
+and for a singleton parcset:
+
+$$
+I_{low}(\underline{n})=\underline{1}
+$$
 
 because:
 
@@ -651,13 +713,25 @@ because:
 1
 ```
 
-Low inversion is defined for every valid non-empty parset.
+Low inversion is defined for every valid non-empty parset and parcset.
 
-### 5.6 Parset interval ratios
+### 5.6 Set interval ratios and interval matrices
 
-The interval ratio between two partials $a$ and $b$ is the reduced ratio:
+The directed interval ratio between two members of the same domain is the reduced ratio from the source value to the target value.
+
+For partials $a$ and $b$:
+
+```math
+\mathrm{interval}(a,b)
+=
+\frac{b}{a}
+```
+
+For parcs $\underline{a}$ and $\underline{b}$:
 
 $$
+\mathrm{interval}(\underline{a},\underline{b})
+=
 \frac{b}{a}
 $$
 
@@ -683,7 +757,61 @@ while:
 \frac{2}{3}
 ```
 
-An interval matrix derived from a parset should therefore preserve direction rather than replacing every interval with its value above $1$.
+Likewise:
+
+$$
+\mathrm{interval}(\underline{3},\underline{5})
+=
+\frac{5}{3}
+$$
+
+while:
+
+$$
+\mathrm{interval}(\underline{5},\underline{3})
+=
+\frac{3}{5}
+$$
+
+An interval matrix for a parset or parcset containd the directed interval ratio from each source member to each target member.
+
+For a set whose deterministic member order is:
+
+$$\langle x_1, x_2,..., x_k\rangle$$
+
+the interval matrix is:
+
+```math
+M_{ij}
+=
+\mathrm{interval}(x_i,x_j)
+=
+\frac{x_j}{x_i}
+```
+
+The diagonal therefore contains only unisons:
+
+```math
+M_{ii}=\frac{1}{1}
+```
+
+and reversing source and target produces reciprocal entries:
+
+```math
+M_{ji}
+=
+\frac{1}{M_{ij}}
+```
+
+where the reciprocal is understood as the exact rational reciprocal.
+
+Interval matrices must preserve direction rather than replacing every interval with its value above $1$.
+
+Parset interval matrices are built from partial-to-partial directed intervals.
+
+Parcset interval matrices are built from parc-to-parc directed intervals.
+
+A matrix must not mix partials and parcs within the same interval relation.
 
 Octave reduction, where needed by a particular tool, must be applied as a separate operation.
 
@@ -1425,11 +1553,34 @@ $$
 T_1(S)=S
 $$
 
+Parcset transposition by an odd positive integer must:
+
+- produce a valid parcset
+- preserve cardinality
+- preserve parcset-class membership
+- satisfy identity under transposition by $1$
+
+For every valid parcset $P$:
+
+$$
+T_1(P)=P
+$$
+
 Low inversion must:
 
-- produce a valid parset
-- return $\{1\}$ for a singleton
+- produce a valid set in the same domain as its input
+- return $\{1\}$ for a singleton parset
+- return $\lbrace \underline{1} \rbrace$ for a singleton parcset
 - be independent of input order
+
+Interval matrices must:
+
+- contain canonical directed ratios
+- contain $\frac{1}{1}$ on the diagonal
+- preserve source-to-target direction
+- contain reciprocal relationships across opposite matrix positions
+- operate entirely within either Parspace or Parcspace
+- not apply octave reduction implicitly
 
 Partial-to-parc conversion must:
 
@@ -1922,18 +2073,17 @@ These concerns belong to the calculator, future harmonic-complexity tools, or ot
 
 The core mathematical behaviour defined in this document is considered sufficiently specified to guide the initial TypeScript implementation and its tests.
 
-The following implementation questions remain open. They do not alter the mathematical definitions in this document.
+Some implementation questions have now been resolved through accepted architectural decisions. The remaining questions do not alter the mathematical definitions in this document.
 
 ### 11.1 Numeric representation
 
-The implementation must decide whether positive integers and exact ratios will use:
+Resolved by [ADR 0005](../architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md).
 
-- JavaScript `number`
-- `bigint`
-- a combination of the two
-- another exact rational-number representation
+Shared JI-domain integers use JavaScript `bigint`.
 
-If `number` is used, values outside JavaScript's safe-integer range must be rejected.
+Validated positive integers are represented as branded `bigint` values created through a runtime-validated construction boundary. Shared ratios will use exact positive-integer numerator and denominator terms and will be reduced to canonical form during construction.
+
+JavaScript `number` remains appropriate only at explicit boundaries where floating-point values are required, such as geometry, rendering, or approximate display.
 
 ### 11.2 Exact scaled results
 
@@ -1949,16 +2099,13 @@ Exact representation is preferred where practical.
 
 ### 11.3 Domain-object representation
 
-The implementation must choose how validated domain values will be represented in TypeScript.
+Partially resolved by [ADR 0005](../architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md).
 
-Possible approaches include:
+Positive integers use a branded primitive type with a public factory function that enforces the runtime invariant.
 
-- immutable classes
-- readonly object types with factory functions
-- branded primitive types
-- opaque types exposed through public constructors
+Ratios will use immutable readonly value objects containing validated positive-integer terms.
 
-Whichever approach is chosen must preserve validation, immutability, and clear domain boundaries.
+The precise representation of larger domain values, including parsets, parcsets, equivalence classes, and harmonic-complexity results, remains open. Their implementations must preserve validation, immutability, exactness where required, and clear domain boundaries.
 
 ### 11.4 Error representation
 
