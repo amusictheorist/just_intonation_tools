@@ -12,7 +12,7 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "check": "npm run lint && npm run test:run && npm run test:coverage && npm run build && git status",
+    "check": "npm run lint && npm run test:coverage && npm run build && npm run test:e2e && git status",
     "preview": "vite preview"
   },
   "dependencies": {
