@@ -2,7 +2,7 @@ import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createRatio } from "../../ji/ratio";
 import { createPositiveInteger } from "../../ji/positiveInteger";
-import { factorOddPrimes } from "./factorOddPrimes";
+import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
 
 describe("factorOddPrimes properties", () => {
   it("never includes 2 as a factor", () => {
@@ -16,7 +16,7 @@ describe("factorOddPrimes properties", () => {
             createPositiveInteger(denominator),
           );
 
-          expect(factorOddPrimes(ratio).has(2n)).toBe(false);
+          expect(factorPrimesIgnoringTwo(ratio).has(2n)).toBe(false);
         },
       ),
     );
@@ -33,7 +33,7 @@ describe("factorOddPrimes properties", () => {
             createPositiveInteger(denominator),
           );
 
-          for (const exponent of factorOddPrimes(ratio).values()) {
+          for (const exponent of factorPrimesIgnoringTwo(ratio).values()) {
             expect(exponent).not.toBe(0);
           }
         },
@@ -60,8 +60,8 @@ describe("factorOddPrimes properties", () => {
             createPositiveInteger(denominator),
           );
 
-          expect(factorOddPrimes(octaveEquivalent)).toEqual(
-            factorOddPrimes(original),
+          expect(factorPrimesIgnoringTwo(octaveEquivalent)).toEqual(
+            factorPrimesIgnoringTwo(original),
           );
         },
       ),

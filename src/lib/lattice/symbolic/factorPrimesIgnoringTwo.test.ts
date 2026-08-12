@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { createPositiveInteger } from "../../ji/positiveInteger";
 import { createRatio } from "../../ji/ratio";
-import { factorOddPrimes } from "./factorOddPrimes";
 import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
 
 const ratio = (numerator: bigint, denominator: bigint) =>
   createRatio(
@@ -12,15 +12,15 @@ const ratio = (numerator: bigint, denominator: bigint) =>
 
 describe("factorOddPrimes", () => {
   it("returns no factor for unison", () => {
-    expect(factorOddPrimes(createUnisonRatio())).toEqual(new Map());
+    expect(factorPrimesIgnoringTwo(createUnisonRatio())).toEqual(new Map());
   });
 
   it("omits powers of 2", () => {
-    expect(factorOddPrimes(ratio(3n, 2n))).toEqual(new Map([[3n, 1]]));
+    expect(factorPrimesIgnoringTwo(ratio(3n, 2n))).toEqual(new Map([[3n, 1]]));
   });
 
   it("uses negative exponents for denominator factors", () => {
-    expect(factorOddPrimes(ratio(5n, 3n))).toEqual(
+    expect(factorPrimesIgnoringTwo(ratio(5n, 3n))).toEqual(
       new Map([
         [3n, -1],
         [5n, 1],
@@ -29,7 +29,7 @@ describe("factorOddPrimes", () => {
   });
 
   it("combines numerator and denominator odd-prime factors", () => {
-    expect(factorOddPrimes(ratio(45n, 77n))).toEqual(
+    expect(factorPrimesIgnoringTwo(ratio(45n, 77n))).toEqual(
       new Map([
         [3n, 2],
         [5n, 1],
@@ -40,6 +40,8 @@ describe("factorOddPrimes", () => {
   });
 
   it("represents a higher prime in the denominator", () => {
-    expect(factorOddPrimes(ratio(8n, 11n))).toEqual(new Map([[11n, -1]]));
+    expect(factorPrimesIgnoringTwo(ratio(8n, 11n))).toEqual(
+      new Map([[11n, -1]]),
+    );
   });
 });
