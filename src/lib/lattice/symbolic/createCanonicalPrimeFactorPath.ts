@@ -21,6 +21,8 @@ export type PrimeFactorStep = Readonly<{
  *
  * @param factors A validated map of prime exponents.
  * @returns The canonical prime factor path as pairs of primes and directions.
+ *
+ * @see `docs/subsystems/lattice/PLACEMENT.md`
  */
 
 export function createCanonicalPrimeFactorPath(

@@ -56,6 +56,8 @@ function mergePrimeExponents(
  *
  * @param ratio A validated ratio from the shared JI domain.
  * @returns A map of prime exponents.
+ *
+ * @see `docs/subsystems/lattice/PLACEMENT.md`
  */
 
 export function factorPrimesIgnoringTwo(ratio: Ratio): PrimeExponents {

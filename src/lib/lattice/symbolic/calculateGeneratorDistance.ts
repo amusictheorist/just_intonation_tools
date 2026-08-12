@@ -7,6 +7,8 @@ import type { PrimeFactorStep } from "./createCanonicalPrimeFactorPath";
  *
  * @param path A validated canonical prime factor path.
  * @returns Its length.
+ *
+ * @see `docs/subsystems/lattice/PLACEMENT.md`
  */
 
 export function calculateGeneratorDistance(
