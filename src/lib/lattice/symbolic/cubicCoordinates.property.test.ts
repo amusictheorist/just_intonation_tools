@@ -1,6 +1,6 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { createCubicCoordinates } from "./createCubicCoordinates";
+import { createStandardCubicCoordinates } from "./cubicCoordinates";
 
 describe("createCubicCoordinates properties", () => {
   it("maps 3, 5, and 7 exponents directly to cubic coordinates", () => {
@@ -16,7 +16,7 @@ describe("createCubicCoordinates properties", () => {
           if (y !== 0) factors.set(5n, y);
           if (z !== 0) factors.set(7n, z);
 
-          expect(createCubicCoordinates(factors)).toEqual({ x, y, z });
+          expect(createStandardCubicCoordinates(factors)).toEqual({ x, y, z });
         },
       ),
     );
@@ -33,7 +33,7 @@ describe("createCubicCoordinates properties", () => {
             [prime, exponent],
           ]);
 
-          expect(createCubicCoordinates(factors)).toBeNull();
+          expect(createStandardCubicCoordinates(factors)).toBeNull();
         },
       ),
     );
