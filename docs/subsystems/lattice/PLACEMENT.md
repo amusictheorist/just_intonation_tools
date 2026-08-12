@@ -381,11 +381,19 @@ Powers of 2 do not contribute radial generator steps.
 
 ### 6.3 Prime directions
 
-Each odd prime used by the visualization is assigned a deterministic direction in the horizontal plane.
+For a positive prime generator with octave-normalized ratio $r\in[1,2)$, its angular position is:
 
-A ratio's horizontal position is obtained by combining its signed generator steps along those prime directions.
+$$
+\theta(r)=\log_2(r)\cdot360^\circ.
+$$
 
-The exact algorithm used to distribute prime directions around the circle belongs to geometric placement and must preserve deterministic placement for each prime.
+Equivalently:
+
+$$
+\theta(r)=\frac{\ln(r)}{\ln(2)}\cdot360^\circ.
+$$
+
+This gives each prime generator a deterministic direction according to its position within the octave.
 
 ### 6.4 Generator distance
 
@@ -445,7 +453,7 @@ Each prime anchor acts as the origin of a local 3-5-7 lattice.
 
 ### 7.2 Prime-anchor sphere
 
-Every supported prime greater than $7$ has a unique deterministic placement on an imaginary sphere surrounding the global `1/1` origin.
+Every prime greater than $7$ has a unique deterministic placement on an imaginary sphere surrounding the global `1/1` origin.
 
 For a prime $p>7$, let:
 
@@ -455,13 +463,20 @@ $$
 
 denote the vector from the global origin to that prime's anchor.
 
-The precise spherical distribution algorithm is a geometric concern and remains to be specified separately.
+Prime-anchor placement must be computable on demand for any prime. It must not depend on a fixed list of supported primes, the order in which primes are encountered, or the number of prime anchors currently rendered.
+
+Adding or encountering a new prime must not change the anchor position of any other prime.
+
+The precise spherical distribution algorithm is a geometric concern and remains to be specified separately. It must define an infinite deterministic sequence of distinct anchor positions that remains approximately uniform over the sphere as additional primes are encountered.
 
 The placement must nevertheless satisfy these invariants:
 
-- each prime has a deterministic anchor position
-- distinct primes have distinct anchor identities
-- the same prime always produces the same global anchor under the same geometric configuration
+- every prime greater than $7$ has a deterministic anchor position
+- distinct primes have distinct anchor positions
+- a prime's anchor position is permanent
+- anchor placement is independent of encounter order
+- anchor placement is independent of the number of anchors currently rendered
+- adding a new prime does not reposition any existing prime
 - local lattice orientation must be deterministic
 
 ### 7.3 Canonical high-prime precedence
@@ -502,11 +517,54 @@ $$
 
 represents a secondary 13-anchor lattice situated relative to the 11-anchor lattice.
 
-The global placement vector associated with `13/1` is therefore interpreted within the local frame established by the 11 anchor rather than merely being treated as an unrelated global point.
+The canonical anchor vector associated with `13/1` is interpreted within the local orthonormal frame established by the 11 anchor rather than directly in global coordinates.
 
-This produces a hierarchy of local lattices.
+Each nested anchor is therefore positioned relative to its parent anchor.
+
+If a parent frame has origin $\mathbf P$ and local basis vectors $\mathbf X$, $\mathbf Y$, and $\mathbf Z$, then a child anchor vector:
+
+$$
+\mathbf v=(v_x,v_y,v_z)
+$$
+
+is interpreted in that frame as:
+
+$$
+T(\mathbf v)
+=
+v_x\mathbf X
++
+v_y\mathbf Y
++
+v_z\mathbf Z.
+$$
+
+The child anchor position is then:
+
+$$
+\mathbf P_{\text{child}}
+=
+\mathbf P_{\text{parent}}
++
+T(\mathbf v).
+$$
+
+The child anchor establishes a new local frame relative to its parent, and this process recurses through the canonical anchor path.
+
+For example:
+
+$$
+\frac11
+\rightarrow11
+\rightarrow11\cdot13
+\rightarrow11\cdot13\cdot17
+$$
+
+is interpreted as a sequence of parent-relative anchor transformations.
 
 Negative anchor steps use the inverse orientation for the corresponding prime while preserving the same canonical ascending-prime precedence.
+
+The exact rule used to determine rotation around each anchor's radial axis remains a geometric concern and should be evaluated through the lattice geometry prototype before being made normative.
 
 ### 7.5 Generalization
 
@@ -524,7 +582,7 @@ $$
 
 Each successive anchor is interpreted within the local frame reached by the preceding anchors.
 
-This allows the model to generalize recursively to any finite combination of supported higher-prime factors.
+This allows the model to generalize recursively to any finite combination of higher-prime factors.
 
 ### 7.6 Repeated prime factors
 
@@ -727,24 +785,13 @@ Lower-octave representatives occupy a corresponding region below it.
 
 Generator distance determines the magnitude of the vertical displacement, with the sign determined by whether the selected representative is in the upper or lower octave.
 
-### 8.4 Reciprocal and octave-related geometry
+### 8.4 Lower-octave symmetry
 
-Expanded radial placement distinguishes between two related but different relationships:
+Expanded radial placement supports two geometric symmetry options.
 
-- **octave equivalence**, such as $8/11$ and $16/11$
-- **reciprocity**, such as $8/11$ and $11/8$
+#### Aligned reflection
 
-These relationships must not be treated as interchangeable.
-
-The final geometric symmetry rule should state explicitly which relationship it is intended to emphasize.
-
-Two candidate symmetry rules remain under consideration.
-
-#### Option A: vertical reflection
-
-A lower-octave placement retains the same horizontal position and reverses only its vertical displacement.
-
-Conceptually:
+A lower-octave placement retains the same horizontal position and reverses only its vertical displacement:
 
 $$
 (x,y,z)\mapsto(x,-y,z).
@@ -752,11 +799,9 @@ $$
 
 This prioritizes vertical alignment between corresponding upper- and lower-octave placements.
 
-#### Option B: vertical reflection with 180-degree rotation
+#### Continuous reflection
 
-A lower-octave placement is reflected across the central plane and rotated by 180 degrees in the horizontal layout.
-
-Conceptually, depending on the final coordinate convention:
+A lower-octave placement is reflected across the central plane and rotated by 180 degrees in the horizontal layout:
 
 $$
 (x,y,z)\mapsto(-x,-y,-z).
@@ -764,16 +809,9 @@ $$
 
 This prioritizes geometric continuity of generator chains through the central plane.
 
-### 8.5 Open decision
+Continuous reflection is the default expanded-radial symmetry.
 
-The expanded radial specification is incomplete until one of these symmetry models is selected.
-
-The choice should be made according to which relationship the visualization should prioritize:
-
-- direct vertical alignment of corresponding upper- and lower-octave placements
-- geometric continuity of generator chains through `1/1`
-
-Implementation must not treat existing legacy behaviour as authoritative until this decision is resolved.
+Users may select aligned reflection when direct vertical comparison of upper- and lower-octave placements is preferred.
 
 ---
 
@@ -907,7 +945,7 @@ Known examples requiring deliberate treatment include:
 
 - the legacy expanded-cubic implementation prefers the highest prime anchor, whereas the intended rule follows the canonical shortest generator path and therefore gives precedence to the lowest higher prime
 - repeated occurrences of an anchor prime do not currently receive full recursive geometric treatment
-- expanded radial symmetry has not yet been normatively selected
+- the legacy expanded-radial symmetry behaviour should be replaced by the configurable symmetry rules defined in this specification
 - some existing helpers combine exact ratio classification with geometry preparation
 
 Legacy characterization tests may be useful for behaviour that has already been confirmed as intentional.
@@ -920,14 +958,15 @@ They must not freeze unspecified or superseded behaviour.
 
 The following decisions remain unresolved:
 
-1. the exact geometric distribution of higher-prime anchors on the sphere
-2. the orientation and transformation of nested local prime frames
-3. expanded radial reciprocal or octave-related symmetry
-4. whether cubic and radial should become the only base modes with expansion options
-5. whether radial vertical displacement should be exposed as a user-facing toggle
-6. whether cubic prime-to-axis assignment should eventually be configurable
+1. the infinite deterministic spherical sequence used to assign permanent, approximately uniform anchor positions to primes greater than 7
+2. the exact rotation or twist used to orient each local frame around its radial axis
+3. whether cubic and radial should become the only base modes with expansion options
+4. whether radial vertical displacement should be exposed as a user-facing toggle
+5. whether cubic prime-to-axis assignment should eventually be configurable
 
-These questions should be resolved before implementation of the affected behaviour.
+The spherical distribution and local-frame twist should be evaluated through an interactive lattice geometry prototype before being made normative.
+
+The remaining visualization-mode and control questions are user-interface and application-state decisions and do not block implementation of the symbolic placement foundation.
 
 ---
 
