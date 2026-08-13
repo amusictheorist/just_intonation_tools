@@ -1,10 +1,12 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { crossProduct, dotProduct, normalizeVector } from "./vector";
-
-const coordinateArbitrary = fc
-  .double({ min: -1000, max: 1000, noNaN: true, noDefaultInfinity: true })
-  .filter((value) => Math.abs(value) >= 1e-6 || value === 0);
+import {
+  crossProduct,
+  dotProduct,
+  normalizeVector,
+  vectorLength,
+} from "./vector";
+import { coordinateArbitrary } from "./coordinateArbitrary";
 
 describe("vector properties", () => {
   it("nomalizes nonzero vectors to unit length", () => {
@@ -17,9 +19,7 @@ describe("vector properties", () => {
           fc.pre(x !== 0 || y !== 0 || z !== 0);
 
           const normalized = normalizeVector({ x, y, z });
-          const length = Math.sqrt(
-            normalized.x ** 2 + normalized.y ** 2 + normalized.z ** 2,
-          );
+          const length = vectorLength(normalized);
 
           expect(length).toBeCloseTo(1);
         },

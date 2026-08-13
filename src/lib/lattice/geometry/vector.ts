@@ -28,8 +28,12 @@ export function crossProduct(first: Vector3, second: Vector3): Vector3 {
   };
 }
 
+export function vectorLength(vector: Vector3): number {
+  return Math.sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 2);
+}
+
 export function normalizeVector(vector: Vector3): Vector3 {
-  const length = Math.sqrt(vector.x ** 2 + vector.y ** 2 + vector.z ** 2);
+  const length = vectorLength(vector);
 
   if (length === 0) {
     throw new Error("Cannot normalize the zero vector");

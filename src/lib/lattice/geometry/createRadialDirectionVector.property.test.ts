@@ -1,6 +1,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createRadialDirectionVector } from "./createRadialDirectionVector";
+import { vectorLength } from "./vector";
 
 describe("createRadialDirectionVector properties", () => {
   it("always returns a unit vector", () => {
@@ -14,10 +15,7 @@ describe("createRadialDirectionVector properties", () => {
         }),
         (angleDegrees) => {
           const vector = createRadialDirectionVector(angleDegrees);
-
-          const length = Math.sqrt(
-            vector.x ** 2 + vector.y ** 2 + vector.z ** 2,
-          );
+          const length = vectorLength(vector);
 
           expect(length).toBeCloseTo(1);
         },

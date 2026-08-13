@@ -5,6 +5,7 @@ import {
   dotProduct,
   normalizeVector,
   scaleVector,
+  vectorLength,
 } from "./vector";
 
 describe("addVectors", () => {
@@ -40,6 +41,12 @@ describe("crossProduct", () => {
       y: 0,
       z: 1,
     });
+  });
+});
+
+describe("vectorLength", () => {
+  it("calculates the length of a three-dimensional vector", () => {
+    expect(vectorLength({ x: 3, y: 4, z: 0 })).toBe(5);
   });
 });
 
