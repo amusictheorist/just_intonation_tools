@@ -15,20 +15,31 @@ export type LocalFrame = Readonly<{
 }>;
 
 /**
- * Creates a deterministic orthonormal frame at an anchor position.
+ * Creates a deterministic orthonormal frame at a world-space position.
  *
- * The normalized anchor direction becomes the local z-axis. The local x-axis is constructed perpendicular to that direction using global up as a reference. When the anchor direction is parallel to global up, the global x-axis is used as a fallback reference to avoid a zero cross product. The local y-axis is then derived from the resulting x- and z-axes.
+ * The supplied direction becomes the local z-axis after normalization.
+ * The local x-axis is constructed perpendicular to that direction using
+ * global up as a reference. When the direction is parallel to global up,
+ * the global x-axis is used as a fallback reference to avoid a zero cross
+ * product. The local y-axis is then derived from the resulting x- and
+ * z-axes.
  *
- * This frame provides the orientation used to interpret child anchor vectors relative to a parent anchor in expanded cubic placement.
+ * Separating the frame origin from its orientation allows nested anchor
+ * frames to be positioned in world space while remaining aligned with the
+ * parent-to-child displacement.
  *
- * @param anchor The world-space position of the frame origin.
- * @returns An orhonormal local frame rooted at the anchor.
+ * @param origin The world-space position of the frame origin.
+ * @param direction The world-space direction of the local z-axis.
+ * @returns An orthonormal local frame rooted at the supplied origin.
  *
  * @see `docs/subsystems/lattice/PLACEMENT.md`
  */
 
-export function createLocalFrame(anchor: Vector3): LocalFrame {
-  const zAxis = normalizeVector(anchor);
+export function createLocalFrame(
+  origin: Vector3,
+  direction: Vector3,
+): LocalFrame {
+  const zAxis = normalizeVector(direction);
 
   const globalUp: Vector3 = { x: 0, y: 1, z: 0 };
   const fallbackReference: Vector3 = { x: 1, y: 0, z: 0 };
@@ -40,7 +51,7 @@ export function createLocalFrame(anchor: Vector3): LocalFrame {
   const yAxis = normalizeVector(crossProduct(zAxis, xAxis));
 
   return {
-    origin: anchor,
+    origin,
     xAxis,
     yAxis,
     zAxis,

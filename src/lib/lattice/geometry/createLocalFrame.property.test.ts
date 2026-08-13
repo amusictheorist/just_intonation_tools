@@ -11,15 +11,23 @@ describe("createLocalFrame properties", () => {
         coordinateArbitrary,
         coordinateArbitrary,
         coordinateArbitrary,
-        (x, y, z) => {
+        coordinateArbitrary,
+        coordinateArbitrary,
+        coordinateArbitrary,
+        (originX, originY, originZ, x, y, z) => {
           fc.pre(x !== 0 || y !== 0 || z !== 0);
 
-          const frame = createLocalFrame({ x, y, z });
+          const frame = createLocalFrame(
+            {
+              x: originX,
+              y: originY,
+              z: originZ,
+            },
+            { x, y, z },
+          );
 
           for (const axis of [frame.xAxis, frame.yAxis, frame.zAxis]) {
-            const length = vectorLength(axis);
-
-            expect(length).toBeCloseTo(1);
+            expect(vectorLength(axis)).toBeCloseTo(1);
           }
         },
       ),
@@ -32,33 +40,57 @@ describe("createLocalFrame properties", () => {
         coordinateArbitrary,
         coordinateArbitrary,
         coordinateArbitrary,
-        (x, y, z) => {
+        coordinateArbitrary,
+        coordinateArbitrary,
+        coordinateArbitrary,
+        (originX, originY, originZ, x, y, z) => {
           fc.pre(x !== 0 || y !== 0 || z !== 0);
 
-          const frame = createLocalFrame({ x, y, z });
+          const frame = createLocalFrame(
+            {
+              x: originX,
+              y: originY,
+              z: originZ,
+            },
+            { x, y, z },
+          );
 
           expect(dotProduct(frame.xAxis, frame.yAxis)).toBeCloseTo(0);
+
           expect(dotProduct(frame.xAxis, frame.zAxis)).toBeCloseTo(0);
+
           expect(dotProduct(frame.yAxis, frame.zAxis)).toBeCloseTo(0);
         },
       ),
     );
   });
 
-  it("aligns the local z-axis with the anchor direction", () => {
+  it("aligns the local z-axis with the supplied direction", () => {
     fc.assert(
       fc.property(
         coordinateArbitrary,
         coordinateArbitrary,
         coordinateArbitrary,
-        (x, y, z) => {
+        coordinateArbitrary,
+        coordinateArbitrary,
+        coordinateArbitrary,
+        (originX, originY, originZ, x, y, z) => {
           fc.pre(x !== 0 || y !== 0 || z !== 0);
 
-          const anchor = { x, y, z };
-          const frame = createLocalFrame(anchor);
-          const anchorLength = vectorLength(anchor);
+          const direction = { x, y, z };
 
-          expect(dotProduct(frame.zAxis, anchor)).toBeCloseTo(anchorLength);
+          const frame = createLocalFrame(
+            {
+              x: originX,
+              y: originY,
+              z: originZ,
+            },
+            direction,
+          );
+
+          expect(dotProduct(frame.zAxis, direction)).toBeCloseTo(
+            vectorLength(direction),
+          );
         },
       ),
     );
