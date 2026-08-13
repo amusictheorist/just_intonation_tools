@@ -15,6 +15,7 @@ import RotationPanel from "./components/RotationPanel";
 import LatticeCanvas from "./components/LatticeCanvas";
 import HelpPanel from "./components/HelpPanel";
 import HelpButton from "../components/HelpButton";
+import PrimeAnchorPrototypeCanvas from "./components/PrimeAnchorPrototypeCanvas";
 
 function LatticePage() {
   const { ratios, addRatio, removeRatio, undo, reset, mode, setMode } =
@@ -111,6 +112,10 @@ function LatticePage() {
             />
           </ContentCard>
         </div>
+
+        <ContentCard>
+          <PrimeAnchorPrototypeCanvas />
+        </ContentCard>
       </PageLayout>
 
       <div
