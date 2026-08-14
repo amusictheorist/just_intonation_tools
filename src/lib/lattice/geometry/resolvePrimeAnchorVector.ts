@@ -4,12 +4,12 @@ import type { Vector3 } from "./createRadialDirectionVector";
 import { scaleVector } from "./vector";
 
 /**
- * Resolves a signed higher-prime generator step to its local anchor vector.
+ * Resolves a signed higher-prime generator step to its global anchor vector.
  *
- * Positive steps use the prime's canonical anchor vector. Negative steps use the inverse orientation by reflecting the vector through the local origin.
+ * Positive steps use the prime's canonical anchor vector. Negative steps use the opposite direction along the same global prime axis.
  *
  * @param step The signed higher-prime generator step to resolve.
- * @returns The local anchor vector for that step.
+ * @returns The signed global anchor vector for that step.
  */
 
 export function resolvePrimeAnchorVector(step: PrimeFactorStep): Vector3 {

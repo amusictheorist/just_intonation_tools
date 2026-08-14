@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
+import { testPrimeAnchorVectorResolver } from "./test/primeAnchorVectorResolver";
 
 const coordinateArbitrary = fc.integer({ min: -100, max: 100 });
 
@@ -20,14 +21,6 @@ const anchorPath = [
   { prime: 11n, direction: 1 as const },
   { prime: 13n, direction: 1 as const },
 ];
-
-function resolveAnchorVector(step: { prime: bigint; direction: 1 | -1 }) {
-  if (step.prime === 11n) {
-    return { x: 3, y: -2, z: 5 };
-  }
-
-  return { x: -4, y: 6, z: 1 };
-}
 
 describe("createExpandedCubicPosition properties", () => {
   it("preserves translations of the initial position", () => {
@@ -83,13 +76,13 @@ describe("createExpandedCubicPosition properties", () => {
           const firstPosition = createExpandedCubicPosition(
             firstAddress,
             anchorPosition,
-            resolveAnchorVector,
+            testPrimeAnchorVectorResolver,
           );
 
           const secondPosition = createExpandedCubicPosition(
             secondAddress,
             anchorPosition,
-            resolveAnchorVector,
+            testPrimeAnchorVectorResolver,
           );
 
           expect({

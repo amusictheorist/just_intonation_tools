@@ -2,11 +2,11 @@ import { describe, expect, it } from "vitest";
 import { createAnchorPositionsFromPrimePath } from "./createAnchorPositionsFromPrimePath";
 import { resolvePrimeAnchorVector } from "./resolvePrimeAnchorVector";
 
-function resolveAnchorVector() {
+const initialPosition = { x: 0, y: 0, z: 0 };
+
+function resolveUnitZAnchorVector() {
   return { x: 0, y: 0, z: 1 };
 }
-
-const initialPosition = { x: 0, y: 0, z: 0 };
 
 describe("createAnchorPositionsFromPrimePath", () => {
   it("returns one position for each prime step", () => {
@@ -17,7 +17,7 @@ describe("createAnchorPositionsFromPrimePath", () => {
         { prime: 17n, direction: 1 },
       ],
       initialPosition,
-      resolveAnchorVector,
+      resolveUnitZAnchorVector,
     );
 
     expect(positions).toHaveLength(3);
@@ -32,7 +32,7 @@ describe("createAnchorPositionsFromPrimePath", () => {
       createAnchorPositionsFromPrimePath(
         [],
         initialPosition,
-        resolveAnchorVector,
+        resolveUnitZAnchorVector,
       ),
     ).toEqual([]);
   });

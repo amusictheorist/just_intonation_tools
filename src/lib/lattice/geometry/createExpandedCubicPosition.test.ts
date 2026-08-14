@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
+import { testPrimeAnchorVectorResolver } from "./test/primeAnchorVectorResolver";
 
 const initialPosition = { x: 0, y: 0, z: 0 };
 
@@ -24,20 +25,16 @@ describe("createExpandedCubicPosition", () => {
       coordinates357: { x: 1, y: -2, z: 3 },
     };
 
-    function resolveAnchorVector() {
-      return { x: 10, y: 20, z: 30 };
-    }
-
     expect(
       createExpandedCubicPosition(
         address,
         initialPosition,
-        resolveAnchorVector,
+        testPrimeAnchorVectorResolver,
       ),
     ).toEqual({
-      x: 11,
-      y: 18,
-      z: 33,
+      x: 3,
+      y: -2,
+      z: 3,
     });
   });
 
@@ -50,21 +47,16 @@ describe("createExpandedCubicPosition", () => {
       coordinates357: { x: 1, y: -2, z: 3 },
     };
 
-    function resolveAnchorVector(step: { prime: bigint; direction: 1 | -1 }) {
-      if (step.prime === 11n) return { x: 3, y: 4, z: 5 };
-      return { x: -1, y: 2, z: 1 };
-    }
-
     expect(
       createExpandedCubicPosition(
         address,
         initialPosition,
-        resolveAnchorVector,
+        testPrimeAnchorVectorResolver,
       ),
     ).toEqual({
       x: 3,
-      y: 4,
-      z: 9,
+      y: 1,
+      z: 3,
     });
   });
 });
