@@ -477,7 +477,7 @@ The placement must nevertheless satisfy these invariants:
 - anchor placement is independent of encounter order
 - anchor placement is independent of the number of anchors currently rendered
 - adding a new prime does not reposition any existing prime
-- local lattice orientation must be deterministic
+- prime-anchor vectors retain a deterministic shared global orientation
 
 ### 7.3 Canonical high-prime precedence
 
@@ -505,84 +505,117 @@ $$
 
 begins with an inverse `11` step before the `13` step.
 
-### 7.4 Nested prime anchors
+### 7.4 Higher-prime anchor translation
 
-Additional high-prime factors create nested prime-anchor relationships.
+Additional higher-prime factors translate a ratio from one higher-prime lattice position to another while preserving the global orientation of the prime-anchor vectors.
 
 Conceptually:
 
 $$
-\frac11\rightarrow11\rightarrow11\cdot13
+\frac11 \rightarrow 11 \rightarrow 11\cdot13
 $$
 
-represents a secondary 13-anchor lattice situated relative to the 11-anchor lattice.
+places the `13` step relative to the `11` anchor, but the direction of the `13` step remains the same as the canonical `13` direction from the global origin.
 
-The canonical anchor vector associated with `13/1` is interpreted within the local orthonormal frame established by the 11 anchor rather than directly in global coordinates.
-
-Each nested anchor is therefore positioned relative to its parent anchor.
-
-If a parent frame has origin $\mathbf P$ and local basis vectors $\mathbf X$, $\mathbf Y$, and $\mathbf Z$, then a child anchor vector:
+For each prime $p>7$, let:
 
 $$
-\mathbf v=(v_x,v_y,v_z)
+\mathbf v_p
 $$
 
-is interpreted in that frame as:
+denote its canonical prime-anchor vector.
+
+If a parent anchor has position:
 
 $$
-T(\mathbf v)
-=
-v_x\mathbf X
-+
-v_y\mathbf Y
-+
-v_z\mathbf Z.
+\mathbf P_{\text{parent}},
 $$
 
-The child anchor position is then:
+then a positive child step for prime $p$ is placed at:
 
 $$
 \mathbf P_{\text{child}}
 =
 \mathbf P_{\text{parent}}
 +
-T(\mathbf v).
+\mathbf v_p.
 $$
 
-The child anchor establishes a new local frame relative to its parent, and this process recurses through the canonical anchor path.
-
-For example:
+A negative step uses the inverse vector:
 
 $$
-\frac11
-\rightarrow11
-\rightarrow11\cdot13
-\rightarrow11\cdot13\cdot17
+\mathbf P_{\text{child}}
+=
+\mathbf P_{\text{parent}}
+-
+\mathbf v_p.
 $$
 
-is interpreted as a sequence of parent-relative anchor transformations.
+Prime-anchor vectors therefore retain the same global orientation at every higher-prime lattice position.
 
-Negative anchor steps use the inverse orientation for the corresponding prime while preserving the same canonical ascending-prime precedence.
+For example, the displacement:
 
-The exact rule used to determine rotation around each anchor's radial axis remains a geometric concern and should be evaluated through the lattice geometry prototype before being made normative.
+$$
+11 \rightarrow 11\cdot13
+$$
+
+is equal and parallel to:
+
+$$
+1 \rightarrow 13.
+$$
+
+Consequently, the points:
+
+$$
+1,\quad 11,\quad 13,\quad 11\cdot13
+$$
+
+form a parallelogram.
+
+Likewise, the displacement from `11` to `11·17` is equal and parallel to the displacement from `1/1` to `17`.
+
+This translation rule applies recursively through the canonical anchor path without rotating subsequent prime-anchor directions.
 
 ### 7.5 Generalization
 
-For the higher-prime portion of a canonical shortest generator path:
+For a ratio whose higher-prime factorization is:
 
 $$
-s_1,s_2,\ldots,s_n,
+\prod_{p>7} p^{e_p},
 $$
 
-where each $s_i$ is a signed prime step and the underlying prime values are in ascending order, expanded cubic placement follows the anchor path:
+the geometric higher-prime anchor position is:
 
 $$
-[s_1,s_2,\ldots,s_n].
+\mathbf P
+=
+\sum_{p>7} e_p\mathbf v_p,
 $$
 
-Each successive anchor is interpreted within the local frame reached by the preceding anchors.
+where $\mathbf v_p$ is the canonical global anchor vector for prime $p$.
 
-This allows the model to generalize recursively to any finite combination of higher-prime factors.
+Positive exponents contribute positive multiples of the corresponding anchor vector. Negative exponents contribute negative multiples.
+
+The canonical shortest generator path remains the authoritative symbolic representation of the ratio's higher-prime structure. Its ascending-prime ordering determines anchor precedence and lattice identity, but geometric placement preserves the shared global orientation of all prime-anchor vectors.
+
+Thus:
+
+$$
+11^2\cdot13^{-1}
+$$
+
+has symbolic anchor path:
+
+$$
+[11,11,13^{-1}],
+$$
+
+and geometric anchor position:
+
+$$
+2\mathbf v_{11}-\mathbf v_{13}.
+$$
 
 ### 7.6 Repeated prime factors
 
@@ -624,7 +657,11 @@ $$
 [11^{-1},11^{-1},13].
 $$
 
-Repeated higher-prime factors must therefore have geometric meaning and must not collapse automatically onto a single prime anchor.
+Repeated occurrences of the same higher prime extend the same prime axis.
+
+Thus `11`, `11²`, and `11³` lie on a straight line beginning at the global origin and passing through the canonical `11` anchor, with each generator step contributing one additional copy of the `11` anchor vector.
+
+Likewise, negative repeated powers extend the same axis in the inverse direction.
 
 ### 7.7 Local 3-5-7 coordinates
 
@@ -919,11 +956,13 @@ Exact tests should cover:
 Focused placement tests should cover:
 
 - deterministic prime-anchor positions
-- correct local-frame transformation
+- higher-prime translation preserving canonical global directions
+- repeated-prime collinearity
+- parallelogram relationships among combined higher-prime anchors
+- inverse higher-prime orientation
 - expected relative movement along cubic axes
 - expected radial prime directions
 - vertical generator-distance spacing
-- nested higher-prime geometry
 - inverse higher-prime orientation
 - reciprocal or octave-related symmetry once expanded radial behaviour is settled
 
@@ -959,10 +998,9 @@ They must not freeze unspecified or superseded behaviour.
 The following decisions remain unresolved:
 
 1. the infinite deterministic spherical sequence used to assign permanent, approximately uniform anchor positions to primes greater than 7
-2. the exact rotation or twist used to orient each local frame around its radial axis
-3. whether cubic and radial should become the only base modes with expansion options
-4. whether radial vertical displacement should be exposed as a user-facing toggle
-5. whether cubic prime-to-axis assignment should eventually be configurable
+2. whether cubic and radial should become the only base modes with expansion options
+3. whether radial vertical displacement should be exposed as a user-facing toggle
+4. whether cubic prime-to-axis assignment should eventually be configurable
 
 The spherical distribution and local-frame twist should be evaluated through an interactive lattice geometry prototype before being made normative.
 
