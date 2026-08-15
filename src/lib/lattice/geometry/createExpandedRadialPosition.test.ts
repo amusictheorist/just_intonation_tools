@@ -79,4 +79,48 @@ describe("createExpandedRadialPosition", () => {
     expect(alignedPosition.y).toBeCloseTo(ordinaryPosition.y);
     expect(alignedPosition.z).toBeCloseTo(ordinaryPosition.z);
   });
+
+  it("uses ordinary radial prime placement for higher primes", () => {
+    const address = {
+      normalizedRatio: createTestRatio(11n, 8n),
+      side: "upper" as const,
+      path: [{ prime: 11n, direction: 1 as const }],
+      distance: 1,
+    };
+
+    const ordinaryPosition = createRadialPosition(address, true);
+    const expandedPosition = createExpandedRadialPosition(
+      address,
+      true,
+      "continuous",
+    );
+
+    expect(expandedPosition.x).toBeCloseTo(ordinaryPosition.x);
+    expect(expandedPosition.y).toBeCloseTo(ordinaryPosition.y);
+    expect(expandedPosition.z).toBeCloseTo(ordinaryPosition.z);
+  });
+
+  it("keeps lower-side placement flattened when generator height is disabled", () => {
+    const address = {
+      normalizedRatio: createTestRatio(2n, 3n),
+      side: "lower" as const,
+      path: [{ prime: 3n, direction: -1 as const }],
+      distance: 1,
+    };
+
+    const continuousPosition = createExpandedRadialPosition(
+      address,
+      false,
+      "continuous",
+    );
+
+    const alignedPosition = createExpandedRadialPosition(
+      address,
+      false,
+      "aligned",
+    );
+
+    expect(continuousPosition.y).toBeCloseTo(0);
+    expect(alignedPosition.y).toBeCloseTo(0);
+  });
 });

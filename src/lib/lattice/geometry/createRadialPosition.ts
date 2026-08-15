@@ -11,7 +11,7 @@ import {
  * Each prime-factor step contributes one unit direction vector in the x-y-z plane. Those vectors are summed to determine horizontal placement.
  * When generator height is enabled, the y-coordinate equals the address's generator distance; otherwise the position is flattened to y = 0.
  *
- * @param address The sy7mbolic radial address to place.
+ * @param address The symbolic radial address to place.
  * @param includesGeneratorHeight Whether to use generator distance as the vertical coordinate.
  * @returns The Cartesian radial position.
  *
