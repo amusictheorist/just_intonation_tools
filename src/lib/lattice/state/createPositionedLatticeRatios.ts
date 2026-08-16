@@ -4,9 +4,11 @@ import { createCubicVisualizationPlacement } from "../symbolic/createCubicVisual
 import type { LatticeRatio } from "./latticeRatio";
 import { createRadialVisualizationPlacement } from "../symbolic/createRadialVisualizationPlacement";
 import type { LatticePositioningConfiguration } from "./latticePositioningConfiguration";
+import type { LatticeVisualizationPlacement } from "../symbolic/createLatticeVisualizationPlacement";
 
 export type PositionedLatticeRatio = Readonly<{
   latticeRatio: LatticeRatio;
+  placement: LatticeVisualizationPlacement;
   position: Vector3;
 }>;
 
@@ -30,8 +32,14 @@ export function createPositionedLatticeRatios(
         continue;
       }
 
+      const visualizationPlacement: LatticeVisualizationPlacement = {
+        type: "cubic",
+        placement,
+      };
+
       positionedRatios.push({
         latticeRatio,
+        placement: visualizationPlacement,
         position: createLatticeVisualizationPosition({
           placement: {
             type: "cubic",
@@ -55,8 +63,14 @@ export function createPositionedLatticeRatios(
         configuration.visualization.includeLowerOctave,
       );
 
+      const visualizationPlacement: LatticeVisualizationPlacement = {
+        type: "radial",
+        placement,
+      };
+
       positionedRatios.push({
         latticeRatio,
+        placement: visualizationPlacement,
         position: createLatticeVisualizationPosition({
           placement: { type: "radial", placement },
           geometry: configuration.geometry,

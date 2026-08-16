@@ -24,6 +24,13 @@ describe("createPositionedLatticeRatio", () => {
     ).toEqual([
       {
         latticeRatio,
+        placement: {
+          type: "cubic",
+          placement: {
+            type: "standard",
+            coordinates: { x: 1, y: 1, z: 0 },
+          },
+        },
         position: {
           x: 1,
           y: 1,
@@ -38,6 +45,13 @@ describe("createPositionedLatticeRatio", () => {
       id: "ratio-1",
       rawInput: "3/4",
       ratio: createTestRatio(3n, 4n),
+    };
+
+    const address = {
+      normalizedRatio: createTestRatio(3n, 4n),
+      side: "lower" as const,
+      path: [{ prime: 3n, direction: 1 as const }],
+      distance: 1,
     };
 
     expect(
@@ -55,6 +69,13 @@ describe("createPositionedLatticeRatio", () => {
     ).toEqual([
       {
         latticeRatio,
+        placement: {
+          type: "radial",
+          placement: {
+            type: "expanded",
+            address,
+          },
+        },
         position: createExpandedRadialPosition(
           {
             normalizedRatio: createTestRatio(3n, 4n),
@@ -94,6 +115,13 @@ describe("createPositionedLatticeRatio", () => {
     ).toEqual([
       {
         latticeRatio: visibleRatio,
+        placement: {
+          type: "cubic",
+          placement: {
+            type: "standard",
+            coordinates: { x: 1, y: 0, z: 0 },
+          },
+        },
         position: {
           x: 1,
           y: 0,
@@ -128,6 +156,13 @@ describe("createPositionedLatticeRatio", () => {
     ).toEqual([
       {
         latticeRatio: firstRatio,
+        placement: {
+          type: "cubic",
+          placement: {
+            type: "standard",
+            coordinates: { x: 1, y: 0, z: 0 },
+          },
+        },
         position: {
           x: 1,
           y: 0,
@@ -136,6 +171,13 @@ describe("createPositionedLatticeRatio", () => {
       },
       {
         latticeRatio: secondRatio,
+        placement: {
+          type: "cubic",
+          placement: {
+            type: "standard",
+            coordinates: { x: 0, y: 1, z: 0 },
+          },
+        },
         position: {
           x: 0,
           y: 1,
