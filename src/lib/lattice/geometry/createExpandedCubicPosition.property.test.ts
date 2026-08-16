@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
-import { testPrimeAnchorVectorResolver } from "./test/primeAnchorVectorResolver";
+import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 
 const coordinateArbitrary = fc.integer({ min: -100, max: 100 });
 
@@ -76,13 +76,13 @@ describe("createExpandedCubicPosition properties", () => {
           const firstPosition = createExpandedCubicPosition(
             firstAddress,
             anchorPosition,
-            testPrimeAnchorVectorResolver,
+            resolveTestPrimeAnchorVector,
           );
 
           const secondPosition = createExpandedCubicPosition(
             secondAddress,
             anchorPosition,
-            testPrimeAnchorVectorResolver,
+            resolveTestPrimeAnchorVector,
           );
 
           expect({

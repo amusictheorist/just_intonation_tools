@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
-import { testPrimeAnchorVectorResolver } from "./test/primeAnchorVectorResolver";
+import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 
 const initialPosition = { x: 0, y: 0, z: 0 };
 
@@ -29,7 +29,7 @@ describe("createExpandedCubicPosition", () => {
       createExpandedCubicPosition(
         address,
         initialPosition,
-        testPrimeAnchorVectorResolver,
+        resolveTestPrimeAnchorVector,
       ),
     ).toEqual({
       x: 3,
@@ -51,7 +51,7 @@ describe("createExpandedCubicPosition", () => {
       createExpandedCubicPosition(
         address,
         initialPosition,
-        testPrimeAnchorVectorResolver,
+        resolveTestPrimeAnchorVector,
       ),
     ).toEqual({
       x: 3,

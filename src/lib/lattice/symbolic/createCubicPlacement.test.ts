@@ -1,0 +1,17 @@
+import { describe, expect, it } from "vitest";
+import { createCubicPlacement } from "./createCubicPlacement";
+import { createTestRatio } from "../../ji/test/ratioTestHelpers";
+
+describe("createCubicPlacement", () => {
+  it("creates cubic placement for a 7-limit ratio", () => {
+    expect(createCubicPlacement(createTestRatio(15n, 8n))).toEqual({
+      x: 1,
+      y: 1,
+      z: 0,
+    });
+  });
+
+  it("returns null for a ratio containing a higher prime", () => {
+    expect(createCubicPlacement(createTestRatio(11n, 8n))).toBeNull();
+  });
+});

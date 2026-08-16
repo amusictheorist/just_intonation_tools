@@ -7,7 +7,7 @@ const anchorVectors = new Map<bigint, Vector3>([
   [17n, { x: 0, y: 0, z: 4 }],
 ]);
 
-export function testPrimeAnchorVectorResolver(step: PrimeFactorStep): Vector3 {
+export function resolveTestPrimeAnchorVector(step: PrimeFactorStep): Vector3 {
   const vector = anchorVectors.get(step.prime);
 
   if (!vector) {

@@ -1,14 +1,7 @@
+import type { LowerRadialSymmetry } from "../state/latticeGeometry";
 import type { ExpandedRadialAddress } from "../symbolic/createExpandedRadialAddress";
 import type { Vector3 } from "./createRadialDirectionVector";
 import { createRadialPosition } from "./createRadialPosition";
-
-/**
- * Selects how lower-side expanded radial positions are reflected.
- *
- * `continuous` reflects through the origin, preserving continuity around the radial path. `aligned` reflects only the vertical axis, keeping lower-side positions horizontally aligned with their upper-side counterparts.
- */
-
-export type LowerRadialSymmetry = "continuous" | "aligned";
 
 /**
  * Converts an expanded radial address into a Cartesian position.

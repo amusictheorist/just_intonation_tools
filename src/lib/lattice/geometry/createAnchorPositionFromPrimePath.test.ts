@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createAnchorPositionFromPrimePath } from "./createAnchorPositionFromPrimePath";
 import { resolvePrimeAnchorVector } from "./resolvePrimeAnchorVector";
-import { testPrimeAnchorVectorResolver } from "./test/primeAnchorVectorResolver";
+import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 
 const initialPosition = { x: 0, y: 0, z: 0 };
 
@@ -13,7 +13,7 @@ describe("createAnchorPositionFromPrimePath", () => {
         { prime: 13n, direction: 1 },
       ],
       initialPosition,
-      testPrimeAnchorVectorResolver,
+      resolveTestPrimeAnchorVector,
     );
 
     expect(position).toEqual({
@@ -27,7 +27,7 @@ describe("createAnchorPositionFromPrimePath", () => {
     const position = createAnchorPositionFromPrimePath(
       [{ prime: 11n, direction: -1 }],
       initialPosition,
-      testPrimeAnchorVectorResolver,
+      resolveTestPrimeAnchorVector,
     );
 
     expect(position).toEqual({
@@ -55,7 +55,7 @@ describe("createAnchorPositionFromPrimePath", () => {
       createAnchorPositionFromPrimePath(
         [],
         initialPosition,
-        testPrimeAnchorVectorResolver,
+        resolveTestPrimeAnchorVector,
       ),
     ).toEqual(initialPosition);
   });
