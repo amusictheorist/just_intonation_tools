@@ -59,4 +59,25 @@ describe("isExpandedCubicHigherPrimeConnectionVisible", () => {
       ),
     ).toBe(true);
   });
+
+  it("ignores potential blockers with different local 3-5-7 coordinates", () => {
+    expect(
+      isExpandedCubicHigherPrimeConnectionVisible(
+        {
+          anchorPath: [{ prime: 11n, direction: -1 }],
+          coordinates357: { x: 0, y: 0, z: 0 },
+        },
+        {
+          anchorPath: [{ prime: 11n, direction: 1 }],
+          coordinates357: { x: 0, y: 0, z: 0 },
+        },
+        [
+          {
+            anchorPath: [],
+            coordinates357: { x: 1, y: 0, z: 0 },
+          },
+        ],
+      ),
+    ).toBe(true);
+  });
 });

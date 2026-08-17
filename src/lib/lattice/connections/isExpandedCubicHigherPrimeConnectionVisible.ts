@@ -1,8 +1,6 @@
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
-import {
-  areExpandedCubicPointsHigherPrimeAxisAligned,
-  createHigherPrimeExponents,
-} from "./areExpandedCubicPointsHigherPrimeAxisAligned";
+import { areExpandedCubicPointsHigherPrimeAxisAligned } from "./areExpandedCubicPointsHigherPrimeAxisAligned";
+import { createHigherPrimeExponents } from "./createHigherPrimeExponents";
 
 function findDifferingPrime(
   first: ReadonlyMap<bigint, number>,

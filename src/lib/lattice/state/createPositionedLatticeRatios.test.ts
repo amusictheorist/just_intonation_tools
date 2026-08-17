@@ -3,7 +3,7 @@ import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 import { createPositionedLatticeRatios } from "./createPositionedLatticeRatios";
 import { createExpandedRadialPosition } from "../geometry/createExpandedRadialPosition";
 
-describe("createPositionedLatticeRatio", () => {
+describe("createPositionedLatticeRatios", () => {
   it("creates positions for stored ratios visible in a cubic visualization", () => {
     const latticeRatio = {
       id: "ratio-1",

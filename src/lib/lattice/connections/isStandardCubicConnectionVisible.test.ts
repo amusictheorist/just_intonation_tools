@@ -31,4 +31,34 @@ describe("isStandardCubicConnectionVisible", () => {
       ),
     ).toBe(false);
   });
+
+  it("detects an intervening point on the y axis", () => {
+    expect(
+      isStandardCubicConnectionVisible(
+        { x: 0, y: 0, z: 0 },
+        { x: 0, y: 2, z: 0 },
+        [{ x: 0, y: 1, z: 0 }],
+      ),
+    ).toBe(false);
+  });
+
+  it("detects an intervening point on the z axis", () => {
+    expect(
+      isStandardCubicConnectionVisible(
+        { x: 0, y: 0, z: 0 },
+        { x: 0, y: 0, z: 2 },
+        [{ x: 0, y: 0, z: 1 }],
+      ),
+    ).toBe(false);
+  });
+
+  it("ignores points that do not lie between the algined points", () => {
+    expect(
+      isStandardCubicConnectionVisible(
+        { x: 0, y: 0, z: 0 },
+        { x: 2, y: 0, z: 0 },
+        [{ x: 1, y: 1, z: 0 }],
+      ),
+    ).toBe(true);
+  });
 });

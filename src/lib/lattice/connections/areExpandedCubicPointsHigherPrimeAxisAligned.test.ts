@@ -64,4 +64,34 @@ describe("areExpandedCubicPointsHigherPrimeAxisAligned", () => {
       ),
     ).toBe(false);
   });
+
+  it("rejects points with different local y coordinates", () => {
+    expect(
+      areExpandedCubicPointsHigherPrimeAxisAligned(
+        {
+          anchorPath: [],
+          coordinates357: { x: 0, y: 0, z: 0 },
+        },
+        {
+          anchorPath: [{ prime: 11n, direction: 1 }],
+          coordinates357: { x: 0, y: 1, z: 0 },
+        },
+      ),
+    ).toBe(false);
+  });
+
+  it("rejects points with different local z coordinates", () => {
+    expect(
+      areExpandedCubicPointsHigherPrimeAxisAligned(
+        {
+          anchorPath: [],
+          coordinates357: { x: 0, y: 0, z: 0 },
+        },
+        {
+          anchorPath: [{ prime: 11n, direction: 1 }],
+          coordinates357: { x: 0, y: 0, z: 1 },
+        },
+      ),
+    ).toBe(false);
+  });
 });
