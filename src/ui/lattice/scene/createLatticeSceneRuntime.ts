@@ -3,6 +3,8 @@ import { CameraSystem } from "./CameraSystem";
 import { LatticeSceneViewport } from "./LatticeSceneViewport";
 import type { LatticeSceneRenderer } from "./LatticeSceneRenderer";
 
+type LatticeSceneSource = Pick<LatticeSceneRenderer, "scene">;
+
 type LatticeSceneRuntimeDependencies = {
   createWebGLRenderer: () => THREE.WebGLRenderer;
   createCameraSystem: (domElement: HTMLElement) => CameraSystem;
@@ -30,7 +32,7 @@ const defaultDependencies: LatticeSceneRuntimeDependencies = {
 
 export function createLatticeSceneRuntime(
   container: HTMLElement,
-  sceneRenderer: LatticeSceneRenderer,
+  sceneRenderer: LatticeSceneSource,
   dependencies: LatticeSceneRuntimeDependencies = defaultDependencies,
 ): LatticeSceneViewport {
   const renderer = dependencies.createWebGLRenderer();
