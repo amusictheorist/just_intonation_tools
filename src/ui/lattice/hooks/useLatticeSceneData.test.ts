@@ -31,14 +31,19 @@ describe("useLatticeSceneData", () => {
     expect(result.current.scenePoints).toEqual([
       {
         id: "ratio-1",
+        rawInput: "3/2",
+        ratio: createTestRatio(3n, 2n),
+        labelRatio: createTestRatio(3n, 2n),
         position: { x: 1, y: 0, z: 0 },
+        hasHigherPrimeFactors: false,
+        radialSide: null,
       },
     ]);
 
     expect(result.current.sceneConnections).toEqual([]);
   });
 
-  it("rejects radial scene connection derivation", () => {
+  it("does not create connections for radial scene data", () => {
     const radialRatios: readonly PositionedLatticeRatio[] = [
       {
         latticeRatio: {
@@ -60,8 +65,8 @@ describe("useLatticeSceneData", () => {
       },
     ];
 
-    expect(() => renderHook(() => useLatticeSceneData(radialRatios))).toThrow(
-      "Radial lattice connections are not implemented",
-    );
+    const { result } = renderHook(() => useLatticeSceneData(radialRatios));
+
+    expect(result.current.sceneConnections).toEqual([]);
   });
 });

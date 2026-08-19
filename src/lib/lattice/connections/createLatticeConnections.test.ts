@@ -41,8 +41,8 @@ describe("createLatticeConnections", () => {
     ).toEqual([{ fromId: "a", toId: "b" }]);
   });
 
-  it("rejects radial positioned ratios until radial connections are defined", () => {
-    expect(() =>
+  it("returns no connections for radial positioned ratios", () => {
+    expect(
       createLatticeConnections([
         {
           latticeRatio: {
@@ -63,6 +63,48 @@ describe("createLatticeConnections", () => {
           position: { x: 0, y: 0, z: 0 },
         },
       ]),
-    ).toThrow("Radial lattice connections are not implemented");
+    ).toEqual([]);
+  });
+
+  it("rejects mixed cubic and radial positioned ratios", () => {
+    expect(() =>
+      createLatticeConnections([
+        {
+          latticeRatio: {
+            id: "a",
+            rawInput: "1",
+            ratio: createUnisonRatio(),
+          },
+          placement: {
+            type: "cubic",
+            placement: {
+              type: "standard",
+              coordinates: { x: 0, y: 0, z: 0 },
+            },
+          },
+          position: { x: 0, y: 0, z: 0 },
+        },
+        {
+          latticeRatio: {
+            id: "b",
+            rawInput: "3/2",
+            ratio: createTestRatio(3n, 2n),
+          },
+          placement: {
+            type: "radial",
+            placement: {
+              type: "standard",
+              address: {
+                path: [{ prime: 3n, direction: 1 }],
+                distance: 1,
+              },
+            },
+          },
+          position: { x: 1, y: 0, z: 0 },
+        },
+      ]),
+    ).toThrow(
+      "Cannot create connections for mixed lattice visualization types",
+    );
   });
 });

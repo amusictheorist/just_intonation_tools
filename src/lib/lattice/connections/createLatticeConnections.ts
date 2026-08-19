@@ -25,5 +25,9 @@ export function createLatticeConnections(
     return createCubicVisualizationConnections(cubicPoints);
   }
 
-  throw new Error("Radial lattice connections are not implemented");
+  if (cubicPoints.length === 0) return [];
+
+  throw new Error(
+    "Cannot create connections for mixed lattice visualization types",
+  );
 }
