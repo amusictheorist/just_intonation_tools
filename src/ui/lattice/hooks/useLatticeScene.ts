@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { useEffect, useRef, type RefObject } from "react";
 import type { LatticeSceneConnection } from "../../../lib/lattice/presentation/latticeSceneConnection";
 import type { LatticeScenePoint } from "../../../lib/lattice/presentation/latticeScenePoint";
@@ -8,11 +9,12 @@ import type { LatticeSceneViewport } from "../scene/LatticeSceneViewport";
 type UseLatticeSceneOptions = {
   scenePoints: readonly LatticeScenePoint[];
   sceneConnections: readonly LatticeSceneConnection[];
+  higherPrimeColor: THREE.ColorRepresentation;
 };
 
 type LatticeSceneRendererHandle = Pick<
   LatticeSceneRenderer,
-  "scene" | "setScene" | "dispose"
+  "scene" | "setScene" | "setHigherPrimeColor" | "dispose"
 >;
 
 type LatticeSceneRuntimeHandle = Pick<
@@ -43,7 +45,7 @@ const defaultDependencies: UseLatticeSceneDependencies = {
 
 export function useLatticeScene(
   containerRef: RefObject<HTMLDivElement | null>,
-  { scenePoints, sceneConnections }: UseLatticeSceneOptions,
+  { scenePoints, sceneConnections, higherPrimeColor }: UseLatticeSceneOptions,
   dependencies: UseLatticeSceneDependencies = defaultDependencies,
 ): void {
   const { createSceneRenderer, createSceneRuntime } = dependencies;
@@ -87,4 +89,12 @@ export function useLatticeScene(
 
     sceneRenderer.setScene(scenePoints, sceneConnections);
   }, [scenePoints, sceneConnections]);
+
+  useEffect(() => {
+    const sceneRenderer = sceneRendererRef.current;
+
+    if (!sceneRenderer) return;
+
+    sceneRenderer.setHigherPrimeColor(higherPrimeColor);
+  }, [higherPrimeColor]);
 }
