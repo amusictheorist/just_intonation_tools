@@ -12,14 +12,4 @@ describe("createLatticeRatio", () => {
       ratio,
     });
   });
-
-  it("creates lattice state from application identity, raw input, and an exact ratio", () => {
-    const ratio = createTestRatio(3n, 2n);
-
-    expect(createLatticeRatio("ratio-1", "3/2", ratio)).toEqual({
-      id: "ratio-1",
-      rawInput: "3/2",
-      ratio,
-    });
-  });
 });
