@@ -41,11 +41,21 @@ describe("createLatticeScenePoints", () => {
     expect(createLatticeScenePoints(positionedRatios)).toEqual([
       {
         id: "ratio-1",
+        rawInput: "3/2",
+        ratio: createTestRatio(3n, 2n),
+        labelRatio: createTestRatio(3n, 2n),
         position: { x: 12, y: -7, z: 31 },
+        hasHigherPrimeFactors: false,
+        radialSide: null,
       },
       {
         id: "ratio-2",
+        rawInput: "5/4",
+        ratio: createTestRatio(5n, 4n),
+        labelRatio: createTestRatio(5n, 4n),
         position: { x: -4, y: 9, z: 2 },
+        hasHigherPrimeFactors: false,
+        radialSide: null,
       },
     ]);
   });
