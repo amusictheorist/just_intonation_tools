@@ -1,11 +1,29 @@
 import * as THREE from "three";
 import type { LatticeScenePoint } from "../../../lib/lattice/presentation/latticeScenePoint";
+import { createLatticePointLabelSprite } from "./createLatticePointLabelSprite";
+import {
+  DEFAULT_HIGHER_PRIME_POINT_COLOR,
+  DEFAULT_LATTICE_POINT_COLOR,
+} from "../../../lib/lattice/presentation/latticePointStyle";
+
+type CreateLatticePointMeshOptions = Readonly<{
+  higherPrimeColor?: THREE.ColorRepresentation;
+}>;
 
 export function createLatticePointMesh(
   scenePoint: LatticeScenePoint,
+  options: CreateLatticePointMeshOptions = {},
 ): THREE.Mesh {
   const geometry = new THREE.SphereGeometry(0.2, 32, 32);
-  const material = new THREE.MeshStandardMaterial();
+
+  const higherPrimeColor =
+    options.higherPrimeColor ?? DEFAULT_HIGHER_PRIME_POINT_COLOR;
+
+  const color = scenePoint.hasHigherPrimeFactors
+    ? higherPrimeColor
+    : DEFAULT_LATTICE_POINT_COLOR;
+
+  const material = new THREE.MeshStandardMaterial({ color });
 
   const mesh = new THREE.Mesh(geometry, material);
 
@@ -16,6 +34,14 @@ export function createLatticePointMesh(
   );
 
   mesh.userData.latticeScenePointId = scenePoint.id;
+  mesh.userData.hasHigherPrimeFactors = scenePoint.hasHigherPrimeFactors;
+
+  const labelText = `${scenePoint.labelRatio.numerator}/${scenePoint.labelRatio.denominator}`;
+  const label = createLatticePointLabelSprite(labelText);
+
+  label.position.set(0, 0.4, 0);
+
+  mesh.add(label);
 
   return mesh;
 }

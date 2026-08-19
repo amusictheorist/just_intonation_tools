@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import type { LatticePointMesh } from "./types";
-import { createLabel } from "./labelFactory";
+import { createLatticePointLabelSprite } from "./createLatticePointLabelSprite";
 
 export const createCenterPoint = (
   scene: THREE.Scene,
@@ -32,7 +32,7 @@ export const createCenterPoint = (
   scene.add(mesh);
   points.push(mesh);
 
-  const sprite = createLabel("1/1");
+  const sprite = createLatticePointLabelSprite("1/1");
   sprite.material.opacity = 1;
   sprite.position.set(0, 0.4, 0);
 

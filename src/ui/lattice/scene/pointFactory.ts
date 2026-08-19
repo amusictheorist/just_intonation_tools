@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { SPACING } from "../../../lib/lattice/math/constants";
-import { createLabel } from "./labelFactory";
 import type { LatticePointData, LatticePointMesh } from "./types";
+import { createLatticePointLabelSprite } from "./createLatticePointLabelSprite";
 
 type CreatePointOptions = {
   x: number;
@@ -44,7 +44,7 @@ export const createPoint = ({
   };
 
   if (label) {
-    const sprite = createLabel(label);
+    const sprite = createLatticePointLabelSprite(label);
     sprite.material.opacity = 0;
 
     sprite.position.set(x * SPACING, y * SPACING + 0.4, z * SPACING);
