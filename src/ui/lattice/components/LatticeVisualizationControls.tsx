@@ -5,6 +5,7 @@ type LatticeVisualizationControlsProps = {
   configuration: LatticePositioningConfiguration;
   onVisualizationTypeChange: (type: "cubic" | "radial") => void;
   onIncludeHigherPrimesChange: (include: boolean) => void;
+  onHigherPrimeRadiusChange: (radius: number) => void;
   onIncludeLowerOctaveChange: (include: boolean) => void;
   onIncludeGeneratorHeightChange: (include: boolean) => void;
   onLowerSymmetryChange: (symmetry: LowerRadialSymmetry) => void;
@@ -14,11 +15,17 @@ function LatticeVisualizationControls({
   configuration,
   onVisualizationTypeChange,
   onIncludeHigherPrimesChange,
+  onHigherPrimeRadiusChange,
   onIncludeLowerOctaveChange,
   onIncludeGeneratorHeightChange,
   onLowerSymmetryChange,
 }: LatticeVisualizationControlsProps) {
   const isCubic = configuration.visualization.type === "cubic";
+
+  const showHigherPrimeControls =
+    isCubic &&
+    configuration.visualization.includeHigherPrimes &&
+    configuration.geometry.type === "cubic";
 
   return (
     <div>
@@ -56,6 +63,23 @@ function LatticeVisualizationControls({
             }
           />
           Include higher primes
+        </label>
+      )}
+
+      {showHigherPrimeControls && (
+        <label>
+          Higher-prime radius:{" "}
+          {configuration.geometry.higherPrimeRadius.toFixed(1)}
+          <input
+            type="range"
+            min="0.5"
+            max="3"
+            step="0.1"
+            value={configuration.geometry.higherPrimeRadius}
+            onChange={(event) =>
+              onHigherPrimeRadiusChange(Number(event.target.value))
+            }
+          />
         </label>
       )}
 

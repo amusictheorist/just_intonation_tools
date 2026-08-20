@@ -1,8 +1,9 @@
 // @vitest-environment jsdom
 
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import LatticeVisualizationControls from "./LatticeVisualizationControls";
+import { DEFAULT_HIGHER_PRIME_RADIUS } from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
 describe("LatticeVisualizationControls", () => {
   it("shows cubic visualization controls for cubic configuration", () => {
@@ -13,10 +14,14 @@ describe("LatticeVisualizationControls", () => {
             type: "cubic",
             includeHigherPrimes: false,
           },
-          geometry: { type: "cubic" },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          },
         }}
         onVisualizationTypeChange={vi.fn()}
         onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -49,6 +54,7 @@ describe("LatticeVisualizationControls", () => {
         }}
         onVisualizationTypeChange={vi.fn()}
         onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -80,10 +86,14 @@ describe("LatticeVisualizationControls", () => {
             type: "cubic",
             includeHigherPrimes: false,
           },
-          geometry: { type: "cubic" },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          },
         }}
         onVisualizationTypeChange={onVisualizationTypeChange}
         onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -104,10 +114,14 @@ describe("LatticeVisualizationControls", () => {
             type: "cubic",
             includeHigherPrimes: false,
           },
-          geometry: { type: "cubic" },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          },
         }}
         onVisualizationTypeChange={vi.fn()}
         onIncludeHigherPrimesChange={onIncludeHigherPrimesChange}
+        onHigherPrimeRadiusChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -116,6 +130,92 @@ describe("LatticeVisualizationControls", () => {
 
     screen.getByRole("checkbox", { name: "Include higher primes" }).click();
     expect(onIncludeHigherPrimesChange).toHaveBeenCalledWith(true);
+  });
+
+  it("shows higher-prime radius control when higher primes are enabled", () => {
+    render(
+      <LatticeVisualizationControls
+        configuration={{
+          visualization: {
+            type: "cubic",
+            includeHigherPrimes: true,
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          },
+        }}
+        onVisualizationTypeChange={vi.fn()}
+        onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
+        onIncludeLowerOctaveChange={vi.fn()}
+        onIncludeGeneratorHeightChange={vi.fn()}
+        onLowerSymmetryChange={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.getByRole("slider", { name: /Higher-prime radius/i }),
+    ).toBeInTheDocument();
+  });
+
+  it("hides higher-prime radius control when higher primes are disabled", () => {
+    render(
+      <LatticeVisualizationControls
+        configuration={{
+          visualization: {
+            type: "cubic",
+            includeHigherPrimes: false,
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          },
+        }}
+        onVisualizationTypeChange={vi.fn()}
+        onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
+        onIncludeLowerOctaveChange={vi.fn()}
+        onIncludeGeneratorHeightChange={vi.fn()}
+        onLowerSymmetryChange={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("slider", { name: /Higher-prime radius/i }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("changes the higher-prime radius", () => {
+    const onHigherPrimeRadiusChange = vi.fn();
+
+    render(
+      <LatticeVisualizationControls
+        configuration={{
+          visualization: {
+            type: "cubic",
+            includeHigherPrimes: true,
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: 1,
+          },
+        }}
+        onVisualizationTypeChange={vi.fn()}
+        onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={onHigherPrimeRadiusChange}
+        onIncludeLowerOctaveChange={vi.fn()}
+        onIncludeGeneratorHeightChange={vi.fn()}
+        onLowerSymmetryChange={vi.fn()}
+      />,
+    );
+
+    fireEvent.change(
+      screen.getByRole("slider", { name: /Higher-prime radius/i }),
+      { target: { value: "2.5" } },
+    );
+
+    expect(onHigherPrimeRadiusChange).toHaveBeenCalledWith(2.5);
   });
 
   it("changes radial boolean options", () => {
@@ -137,6 +237,7 @@ describe("LatticeVisualizationControls", () => {
         }}
         onVisualizationTypeChange={vi.fn()}
         onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
         onIncludeLowerOctaveChange={onIncludeLowerOctaveChange}
         onIncludeGeneratorHeightChange={onIncludeGeneratorHeightChange}
         onLowerSymmetryChange={vi.fn()}
@@ -167,6 +268,7 @@ describe("LatticeVisualizationControls", () => {
         }}
         onVisualizationTypeChange={vi.fn()}
         onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={onLowerSymmetryChange}

@@ -9,6 +9,7 @@ export type LowerRadialSymmetry = "continuous" | "aligned";
 export type LatticeGeometry =
   | Readonly<{
       type: "cubic";
+      higherPrimeRadius: number;
     }>
   | Readonly<{
       type: "radial";

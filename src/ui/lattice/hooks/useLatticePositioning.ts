@@ -3,19 +3,24 @@ import { createPositionedLatticeRatios } from "../../../lib/lattice/state/create
 import type { LatticePositioningConfiguration } from "../../../lib/lattice/state/latticePositioningConfiguration";
 import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
 import type { LowerRadialSymmetry } from "../../../lib/lattice/state/latticeGeometry";
+import { DEFAULT_HIGHER_PRIME_RADIUS } from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
 const DEFAULT_CONFIGURATION: LatticePositioningConfiguration = {
   visualization: {
     type: "cubic",
     includeHigherPrimes: false,
   },
-  geometry: { type: "cubic" },
+  geometry: {
+    type: "cubic",
+    higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+  },
 };
 
 type UseLatticePositioningResult = {
   configuration: LatticePositioningConfiguration;
   positionedRatios: ReturnType<typeof createPositionedLatticeRatios>;
   setIncludeHigherPrimes: (includeHigherPrimes: boolean) => void;
+  setHigherPrimeRadius: (higherPrimeRadius: number) => void;
   setVisualizationType: (type: "cubic" | "radial") => void;
   setIncludeLowerOctave: (includeLowerOctave: boolean) => void;
   setIncludeGeneratorHeight: (includeGeneratorHeight: boolean) => void;
@@ -44,7 +49,25 @@ export function useLatticePositioning(
             type: "cubic",
             includeHigherPrimes,
           },
-          geometry: { type: "cubic" },
+          geometry: previous.geometry,
+        };
+      });
+    },
+    [],
+  );
+
+  const setHigherPrimeRadius = useCallback(
+    (higherPrimeRadius: number): void => {
+      setConfiguration((previous) => {
+        if (previous.geometry.type !== "cubic") return previous;
+        if (previous.visualization.type !== "cubic") return previous;
+
+        return {
+          visualization: previous.visualization,
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius,
+          },
         };
       });
     },
@@ -58,7 +81,10 @@ export function useLatticePositioning(
           type: "cubic",
           includeHigherPrimes: false,
         },
-        geometry: { type: "cubic" },
+        geometry: {
+          type: "cubic",
+          higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+        },
       });
 
       return;
@@ -137,6 +163,7 @@ export function useLatticePositioning(
     configuration,
     positionedRatios,
     setIncludeHigherPrimes,
+    setHigherPrimeRadius,
     setVisualizationType,
     setIncludeLowerOctave,
     setIncludeGeneratorHeight,

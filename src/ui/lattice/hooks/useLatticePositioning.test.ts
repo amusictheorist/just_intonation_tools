@@ -4,6 +4,7 @@ import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
 import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
 import { act, renderHook } from "@testing-library/react";
 import { useLatticePositioning } from "./useLatticePositioning";
+import { DEFAULT_HIGHER_PRIME_RADIUS } from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
 const ratios: readonly LatticeRatio[] = [
   {
@@ -22,7 +23,10 @@ describe("useLatticePositioning", () => {
         type: "cubic",
         includeHigherPrimes: false,
       },
-      geometry: { type: "cubic" },
+      geometry: {
+        type: "cubic",
+        higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+      },
     });
 
     expect(result.current.positionedRatios).toHaveLength(1);
@@ -41,7 +45,10 @@ describe("useLatticePositioning", () => {
         type: "cubic",
         includeHigherPrimes: true,
       },
-      geometry: { type: "cubic" },
+      geometry: {
+        type: "cubic",
+        higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+      },
     });
   });
 
@@ -133,6 +140,52 @@ describe("useLatticePositioning", () => {
         type: "radial",
         includeGeneratorHeight: false,
         lowerSymmetry: "aligned",
+      },
+    });
+  });
+
+  it("changes the higher-prime radius", () => {
+    const { result } = renderHook(() => useLatticePositioning(ratios));
+
+    act(() => {
+      result.current.setHigherPrimeRadius(3);
+    });
+
+    expect(result.current.configuration).toEqual({
+      visualization: {
+        type: "cubic",
+        includeHigherPrimes: false,
+      },
+      geometry: {
+        type: "cubic",
+        higherPrimeRadius: 3,
+      },
+    });
+  });
+
+  it("restores the default higher-prime radius when switching back to cubic", () => {
+    const { result } = renderHook(() => useLatticePositioning(ratios));
+
+    act(() => {
+      result.current.setHigherPrimeRadius(3);
+    });
+
+    act(() => {
+      result.current.setVisualizationType("radial");
+    });
+
+    act(() => {
+      result.current.setVisualizationType("cubic");
+    });
+
+    expect(result.current.configuration).toEqual({
+      visualization: {
+        type: "cubic",
+        includeHigherPrimes: false,
+      },
+      geometry: {
+        type: "cubic",
+        higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
       },
     });
   });

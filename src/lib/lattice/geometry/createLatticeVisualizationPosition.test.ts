@@ -5,6 +5,7 @@ import { createLatticeVisualizationPosition } from "./createLatticeVisualization
 import { createRadialPosition } from "./createRadialPosition";
 import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 import {
+  DEFAULT_HIGHER_PRIME_RADIUS,
   RADIAL_HORIZONTAL_SPACING,
   RADIAL_VERTICAL_SPACING,
 } from "./latticeGeometryConstants";
@@ -25,6 +26,7 @@ describe("createLatticeVisualizationPosition", () => {
       },
       geometry: {
         type: "cubic",
+        higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
       },
     });
 
@@ -55,6 +57,7 @@ describe("createLatticeVisualizationPosition", () => {
           },
           geometry: {
             type: "cubic",
+            higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
           },
         },
         resolveTestPrimeAnchorVector,
@@ -127,5 +130,29 @@ describe("createLatticeVisualizationPosition", () => {
       y: position.y * RADIAL_VERTICAL_SPACING,
       z: position.z * RADIAL_HORIZONTAL_SPACING,
     });
+  });
+
+  it("scales higher-prime anchor displacement by the configured radius", () => {
+    expect(
+      createLatticeVisualizationPosition(
+        {
+          placement: {
+            type: "cubic",
+            placement: {
+              type: "expanded",
+              address: {
+                anchorPath: [{ prime: 11n, direction: 1 }],
+                coordinates357: { x: 0, y: 0, z: 0 },
+              },
+            },
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: 3,
+          },
+        },
+        resolveTestPrimeAnchorVector,
+      ),
+    ).toEqual({ x: 12, y: 0, z: 0 });
   });
 });

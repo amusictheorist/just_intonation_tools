@@ -50,10 +50,13 @@ export function createLatticeVisualizationPosition(
     placement.placement.type === "expanded" &&
     geometry.type === "cubic"
   ) {
+    const resolveScaledAnchorVector: PrimeAnchorVectorResolver = (step) =>
+      scaleVector(resolveAnchorVector(step), geometry.higherPrimeRadius);
+
     const position = createExpandedCubicPosition(
       placement.placement.address,
       { x: 0, y: 0, z: 0 },
-      resolveAnchorVector,
+      resolveScaledAnchorVector,
     );
 
     return scaleVector(position, CUBIC_SPACING);
