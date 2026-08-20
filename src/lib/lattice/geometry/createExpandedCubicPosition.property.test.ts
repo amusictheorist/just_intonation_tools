@@ -3,6 +3,7 @@ import fc from "fast-check";
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
 import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
+import { DEFAULT_CUBIC_LOCAL_ROTATION } from "./latticeGeometryConstants";
 
 const coordinateArbitrary = fc.integer({ min: -100, max: 100 });
 
@@ -39,11 +40,13 @@ describe("createExpandedCubicPosition properties", () => {
           const position = createExpandedCubicPosition(
             address,
             initialPosition,
+            DEFAULT_CUBIC_LOCAL_ROTATION,
           );
 
           const translatedPosition = createExpandedCubicPosition(
             address,
             translatedInitialPosition,
+            DEFAULT_CUBIC_LOCAL_ROTATION,
           );
 
           expect(translatedPosition).toEqual({
@@ -76,12 +79,14 @@ describe("createExpandedCubicPosition properties", () => {
           const firstPosition = createExpandedCubicPosition(
             firstAddress,
             anchorPosition,
+            DEFAULT_CUBIC_LOCAL_ROTATION,
             resolveTestPrimeAnchorVector,
           );
 
           const secondPosition = createExpandedCubicPosition(
             secondAddress,
             anchorPosition,
+            DEFAULT_CUBIC_LOCAL_ROTATION,
             resolveTestPrimeAnchorVector,
           );
 

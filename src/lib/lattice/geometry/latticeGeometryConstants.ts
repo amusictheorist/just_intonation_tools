@@ -3,3 +3,8 @@ export const RADIAL_HORIZONTAL_SPACING = 2;
 export const RADIAL_VERTICAL_SPACING = 1;
 
 export const DEFAULT_HIGHER_PRIME_RADIUS = 1;
+export const DEFAULT_CUBIC_LOCAL_ROTATION = {
+  x: 0,
+  y: 0,
+  z: 0,
+};

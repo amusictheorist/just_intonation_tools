@@ -1,8 +1,10 @@
+import type { CubicLocalRotation } from "../state/latticeGeometry";
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
 import { createAnchorPositionFromPrimePath } from "./createAnchorPositionFromPrimePath";
 import type { PrimeAnchorVectorResolver } from "./createAnchorPositionsFromPrimePath";
 import type { Vector3 } from "./createRadialDirectionVector";
 import { resolvePrimeAnchorVector } from "./resolvePrimeAnchorVector";
+import { rotateVector } from "./rotateVector";
 import { addVectors } from "./vector";
 
 /**
@@ -21,6 +23,7 @@ import { addVectors } from "./vector";
 export function createExpandedCubicPosition(
   address: ExpandedCubicAddress,
   initialPosition: Vector3,
+  localRotation: CubicLocalRotation,
   resolveAnchorVector: PrimeAnchorVectorResolver = resolvePrimeAnchorVector,
 ): Vector3 {
   const anchorPosition = createAnchorPositionFromPrimePath(
@@ -29,5 +32,10 @@ export function createExpandedCubicPosition(
     resolveAnchorVector,
   );
 
-  return addVectors(anchorPosition, address.coordinates357);
+  const rotatedLocalPosition = rotateVector(
+    address.coordinates357,
+    localRotation,
+  );
+
+  return addVectors(anchorPosition, rotatedLocalPosition);
 }

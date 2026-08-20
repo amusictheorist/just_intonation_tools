@@ -4,7 +4,10 @@ import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
 import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
 import { act, renderHook } from "@testing-library/react";
 import { useLatticePositioning } from "./useLatticePositioning";
-import { DEFAULT_HIGHER_PRIME_RADIUS } from "../../../lib/lattice/geometry/latticeGeometryConstants";
+import {
+  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_HIGHER_PRIME_RADIUS,
+} from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
 const ratios: readonly LatticeRatio[] = [
   {
@@ -26,6 +29,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
       },
     });
 
@@ -48,6 +52,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
       },
     });
   });
@@ -159,6 +164,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: 3,
+        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
       },
     });
   });
@@ -186,6 +192,27 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+      },
+    });
+  });
+
+  it("changes the local cubic rotation", () => {
+    const { result } = renderHook(() => useLatticePositioning(ratios));
+
+    act(() => {
+      result.current.setLocalRotation({ x: 10, y: 20, z: 30 });
+    });
+
+    expect(result.current.configuration).toEqual({
+      visualization: {
+        type: "cubic",
+        includeHigherPrimes: false,
+      },
+      geometry: {
+        type: "cubic",
+        higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+        localRotation: { x: 10, y: 20, z: 30 },
       },
     });
   });

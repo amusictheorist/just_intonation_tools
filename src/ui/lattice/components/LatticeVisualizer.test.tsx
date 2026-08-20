@@ -15,7 +15,10 @@ import { DEFAULT_HIGHER_PRIME_POINT_COLOR } from "../../../lib/lattice/presentat
 import LatticeRatioControls from "./LatticeRatioControls";
 import LatticeVisualizationControls from "./LatticeVisualizationControls";
 import LatticeAppearanceControls from "./LatticeAppearanceControls";
-import { DEFAULT_HIGHER_PRIME_RADIUS } from "../../../lib/lattice/geometry/latticeGeometryConstants";
+import {
+  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_HIGHER_PRIME_RADIUS,
+} from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
 vi.mock("../hooks/useLatticeRatios", () => ({
   useLatticeRatios: vi.fn(),
@@ -102,11 +105,13 @@ describe("LatticeVisualizer", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
         },
       },
       positionedRatios,
       setIncludeHigherPrimes: vi.fn(),
       setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
       setVisualizationType: vi.fn(),
       setIncludeLowerOctave: vi.fn(),
       setIncludeGeneratorHeight: vi.fn(),
@@ -160,11 +165,13 @@ describe("LatticeVisualizer", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
         },
       },
       positionedRatios: [],
       setIncludeHigherPrimes: vi.fn(),
       setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
       setVisualizationType: vi.fn(),
       setIncludeLowerOctave: vi.fn(),
       setIncludeGeneratorHeight: vi.fn(),
@@ -211,11 +218,13 @@ describe("LatticeVisualizer", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
         },
       },
       positionedRatios: [],
       setIncludeHigherPrimes: vi.fn(),
       setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
       setVisualizationType: vi.fn(),
       setIncludeLowerOctave: vi.fn(),
       setIncludeGeneratorHeight: vi.fn(),
@@ -266,11 +275,13 @@ describe("LatticeVisualizer", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
         },
       },
       positionedRatios: [],
       setIncludeHigherPrimes: vi.fn(),
       setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
       setVisualizationType: vi.fn(),
       setIncludeLowerOctave: vi.fn(),
       setIncludeGeneratorHeight: vi.fn(),
@@ -312,11 +323,13 @@ describe("LatticeVisualizer", () => {
       geometry: {
         type: "cubic" as const,
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
       },
     };
 
     const setIncludeHigherPrimes = vi.fn();
     const setHigherPrimeRadius = vi.fn();
+    const setLocalRotation = vi.fn();
     const setVisualizationType = vi.fn();
     const setIncludeLowerOctave = vi.fn();
     const setIncludeGeneratorHeight = vi.fn();
@@ -335,6 +348,7 @@ describe("LatticeVisualizer", () => {
       positionedRatios: [],
       setIncludeHigherPrimes,
       setHigherPrimeRadius,
+      setLocalRotation,
       setVisualizationType,
       setIncludeLowerOctave,
       setIncludeGeneratorHeight,
@@ -353,6 +367,7 @@ describe("LatticeVisualizer", () => {
         configuration,
         onVisualizationTypeChange: setVisualizationType,
         onIncludeHigherPrimesChange: setIncludeHigherPrimes,
+        onLocalRotationChange: setLocalRotation,
         onIncludeLowerOctaveChange: setIncludeLowerOctave,
         onIncludeGeneratorHeightChange: setIncludeGeneratorHeight,
         onLowerSymmetryChange: setLowerSymmetry,
@@ -379,11 +394,13 @@ describe("LatticeVisualizer", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
         },
       },
       positionedRatios: [],
       setIncludeHigherPrimes: vi.fn(),
       setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
       setVisualizationType: vi.fn(),
       setIncludeLowerOctave: vi.fn(),
       setIncludeGeneratorHeight: vi.fn(),
@@ -424,11 +441,13 @@ describe("LatticeVisualizer", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
         },
       },
       positionedRatios: [],
       setIncludeHigherPrimes: vi.fn(),
       setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
       setVisualizationType: vi.fn(),
       setIncludeLowerOctave: vi.fn(),
       setIncludeGeneratorHeight: vi.fn(),

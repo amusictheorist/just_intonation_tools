@@ -5,6 +5,7 @@ import { createLatticeVisualizationPosition } from "./createLatticeVisualization
 import { createRadialPosition } from "./createRadialPosition";
 import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 import {
+  DEFAULT_CUBIC_LOCAL_ROTATION,
   DEFAULT_HIGHER_PRIME_RADIUS,
   RADIAL_HORIZONTAL_SPACING,
   RADIAL_VERTICAL_SPACING,
@@ -27,6 +28,7 @@ describe("createLatticeVisualizationPosition", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
       },
     });
 
@@ -58,6 +60,7 @@ describe("createLatticeVisualizationPosition", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
           },
         },
         resolveTestPrimeAnchorVector,
@@ -149,10 +152,38 @@ describe("createLatticeVisualizationPosition", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 3,
+            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
           },
         },
         resolveTestPrimeAnchorVector,
       ),
     ).toEqual({ x: 12, y: 0, z: 0 });
+  });
+
+  it("rotates local expanded-cubic coordinates without rotating the anchor", () => {
+    const position = createLatticeVisualizationPosition(
+      {
+        placement: {
+          type: "cubic",
+          placement: {
+            type: "expanded",
+            address: {
+              anchorPath: [{ prime: 11n, direction: 1 }],
+              coordinates357: { x: 1, y: 0, z: 0 },
+            },
+          },
+        },
+        geometry: {
+          type: "cubic",
+          higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: { x: 0, y: 0, z: 90 },
+        },
+      },
+      resolveTestPrimeAnchorVector,
+    );
+
+    expect(position.x).toBeCloseTo(4);
+    expect(position.y).toBeCloseTo(2);
+    expect(position.z).toBeCloseTo(0);
   });
 });

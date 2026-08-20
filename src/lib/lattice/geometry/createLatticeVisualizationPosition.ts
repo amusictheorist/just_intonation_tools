@@ -56,6 +56,7 @@ export function createLatticeVisualizationPosition(
     const position = createExpandedCubicPosition(
       placement.placement.address,
       { x: 0, y: 0, z: 0 },
+      geometry.localRotation,
       resolveScaledAnchorVector,
     );
 

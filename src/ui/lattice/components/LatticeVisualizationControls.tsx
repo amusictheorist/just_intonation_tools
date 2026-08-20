@@ -1,4 +1,7 @@
-import type { LowerRadialSymmetry } from "../../../lib/lattice/state/latticeGeometry";
+import type {
+  CubicLocalRotation,
+  LowerRadialSymmetry,
+} from "../../../lib/lattice/state/latticeGeometry";
 import type { LatticePositioningConfiguration } from "../../../lib/lattice/state/latticePositioningConfiguration";
 
 type LatticeVisualizationControlsProps = {
@@ -6,6 +9,7 @@ type LatticeVisualizationControlsProps = {
   onVisualizationTypeChange: (type: "cubic" | "radial") => void;
   onIncludeHigherPrimesChange: (include: boolean) => void;
   onHigherPrimeRadiusChange: (radius: number) => void;
+  onLocalRotationChange: (rotation: CubicLocalRotation) => void;
   onIncludeLowerOctaveChange: (include: boolean) => void;
   onIncludeGeneratorHeightChange: (include: boolean) => void;
   onLowerSymmetryChange: (symmetry: LowerRadialSymmetry) => void;
@@ -16,6 +20,7 @@ function LatticeVisualizationControls({
   onVisualizationTypeChange,
   onIncludeHigherPrimesChange,
   onHigherPrimeRadiusChange,
+  onLocalRotationChange,
   onIncludeLowerOctaveChange,
   onIncludeGeneratorHeightChange,
   onLowerSymmetryChange,
@@ -26,6 +31,18 @@ function LatticeVisualizationControls({
     isCubic &&
     configuration.visualization.includeHigherPrimes &&
     configuration.geometry.type === "cubic";
+
+  function updateLocalRotation(
+    axis: keyof CubicLocalRotation,
+    value: number,
+  ): void {
+    if (configuration.geometry.type !== "cubic") return;
+
+    onLocalRotationChange({
+      ...configuration.geometry.localRotation,
+      [axis]: value,
+    });
+  }
 
   return (
     <div>
@@ -67,20 +84,64 @@ function LatticeVisualizationControls({
       )}
 
       {showHigherPrimeControls && (
-        <label>
-          Higher-prime radius:{" "}
-          {configuration.geometry.higherPrimeRadius.toFixed(1)}
-          <input
-            type="range"
-            min="0.5"
-            max="3"
-            step="0.1"
-            value={configuration.geometry.higherPrimeRadius}
-            onChange={(event) =>
-              onHigherPrimeRadiusChange(Number(event.target.value))
-            }
-          />
-        </label>
+        <div>
+          <label>
+            Higher-prime radius:{" "}
+            {configuration.geometry.higherPrimeRadius.toFixed(1)}
+            <input
+              type="range"
+              min="0.5"
+              max="3"
+              step="0.1"
+              value={configuration.geometry.higherPrimeRadius}
+              onChange={(event) =>
+                onHigherPrimeRadiusChange(Number(event.target.value))
+              }
+            />
+          </label>
+
+          <label>
+            Rotate X:{configuration.geometry.localRotation.x.toFixed(0)}°
+            <input
+              type="range"
+              min="-180"
+              max="180"
+              step="1"
+              value={configuration.geometry.localRotation.x}
+              onChange={(event) =>
+                updateLocalRotation("x", Number(event.target.value))
+              }
+            />
+          </label>
+
+          <label>
+            Rotate Y:{configuration.geometry.localRotation.y.toFixed(0)}°
+            <input
+              type="range"
+              min="-180"
+              max="180"
+              step="1"
+              value={configuration.geometry.localRotation.y}
+              onChange={(event) =>
+                updateLocalRotation("y", Number(event.target.value))
+              }
+            />
+          </label>
+
+          <label>
+            Rotate Z:{configuration.geometry.localRotation.z.toFixed(0)}°
+            <input
+              type="range"
+              min="-180"
+              max="180"
+              step="1"
+              value={configuration.geometry.localRotation.z}
+              onChange={(event) =>
+                updateLocalRotation("z", Number(event.target.value))
+              }
+            />
+          </label>
+        </div>
       )}
 
       {!isCubic && configuration.geometry.type === "radial" && (
