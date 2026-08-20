@@ -5,6 +5,7 @@ import {
 } from "../../../lib/lattice/state/addLatticeRatioFromInput";
 import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
 import { removeLastLatticeRatioById } from "../../../lib/lattice/state/removeLastLatticeRatioById";
+import { createInitialLatticeRatio } from "../../../lib/lattice/state/createInitialLatticeRatio";
 
 type UseLatticeRatiosResult = {
   ratios: readonly LatticeRatio[];
@@ -15,8 +16,10 @@ type UseLatticeRatiosResult = {
 };
 
 export function useLatticeRatios(): UseLatticeRatiosResult {
-  const [ratios, setRatios] = useState<readonly LatticeRatio[]>([]);
-  const ratiosRef = useRef<readonly LatticeRatio[]>([]);
+  const [ratios, setRatios] = useState<readonly LatticeRatio[]>(() =>
+    createInitialLatticeRatio(crypto.randomUUID()),
+  );
+  const ratiosRef = useRef<readonly LatticeRatio[]>(ratios);
   const historyRef = useRef<readonly (readonly LatticeRatio[])[]>([]);
 
   function pushHistory(): void {
@@ -42,6 +45,16 @@ export function useLatticeRatios(): UseLatticeRatiosResult {
   );
 
   const removeRatio = useCallback((id: string): void => {
+    const ratioToRemove = ratiosRef.current.find((ratio) => ratio.id === id);
+
+    if (!ratioToRemove) return;
+
+    if (
+      ratioToRemove.ratio.numerator === 1n &&
+      ratioToRemove.ratio.denominator === 1n
+    )
+      return;
+
     const nextRatios = removeLastLatticeRatioById(ratiosRef.current, id);
 
     if (nextRatios.length === ratiosRef.current.length) return;
@@ -53,12 +66,12 @@ export function useLatticeRatios(): UseLatticeRatiosResult {
   }, []);
 
   const reset = useCallback((): void => {
-    if (ratiosRef.current.length === 0) return;
+    const initialRatio = createInitialLatticeRatio(crypto.randomUUID());
 
     pushHistory();
 
-    ratiosRef.current = [];
-    setRatios([]);
+    ratiosRef.current = initialRatio;
+    setRatios(initialRatio);
   }, []);
 
   const undo = useCallback((): void => {

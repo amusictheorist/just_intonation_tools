@@ -27,20 +27,21 @@ function LatticeVisualizer() {
     DEFAULT_HIGHER_PRIME_POINT_COLOR,
   );
 
-  function handleAdd(rawInput: string): void {
+  function handleAdd(rawInput: string): boolean {
     const result = addRatio(rawInput);
 
     if (result.status === "added") {
       setInputError(null);
-      return;
+      return true;
     }
 
     if (result.status === "invalid") {
       setInputError(result.error);
-      return;
+      return false;
     }
 
     setInputError(`Ratio ${result.existingRatio.rawInput} is already present`);
+    return false;
   }
 
   return (

@@ -1,7 +1,9 @@
 // @vitest-environment jsdom
+
 import { act, renderHook } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { useLatticeRatios } from "./useLatticeRatios";
+import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
 
 describe("useLatticeRatios", () => {
   it("adds a valid lattice ratio from input", () => {
@@ -15,11 +17,15 @@ describe("useLatticeRatios", () => {
 
     expect(addResult).toEqual({
       status: "added",
-      ratios: [expect.objectContaining({ rawInput: "3/2" })],
+      ratios: [
+        expect.objectContaining({ rawInput: "1/1" }),
+        expect.objectContaining({ rawInput: "3/2" }),
+      ],
     });
 
-    expect(result.current.ratios).toHaveLength(1);
-    expect(result.current.ratios[0]?.rawInput).toBe("3/2");
+    expect(result.current.ratios).toHaveLength(2);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
+    expect(result.current.ratios[1]?.rawInput).toBe("3/2");
   });
 
   it("does not change the ratio state when the input is invalid", () => {
@@ -33,7 +39,8 @@ describe("useLatticeRatios", () => {
 
     expect(addResult).toEqual(expect.objectContaining({ status: "invalid" }));
 
-    expect(result.current.ratios).toEqual([]);
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 
   it("does not add a duplicate lattice ratio", () => {
@@ -53,8 +60,9 @@ describe("useLatticeRatios", () => {
       expect.objectContaining({ status: "duplicate" }),
     );
 
-    expect(result.current.ratios).toHaveLength(1);
-    expect(result.current.ratios[0]?.rawInput).toBe("3/2");
+    expect(result.current.ratios).toHaveLength(2);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
+    expect(result.current.ratios[1]?.rawInput).toBe("3/2");
   });
 
   it("removes a lattice ratio by id", () => {
@@ -65,7 +73,9 @@ describe("useLatticeRatios", () => {
       result.current.addRatio("5/4");
     });
 
-    const ratioToRemove = result.current.ratios[0];
+    const ratioToRemove = result.current.ratios.find(
+      (ratio) => ratio.rawInput === "3/2",
+    );
 
     expect(ratioToRemove).toBeDefined();
 
@@ -73,11 +83,14 @@ describe("useLatticeRatios", () => {
       result.current.removeRatio(ratioToRemove!.id);
     });
 
-    expect(result.current.ratios).toHaveLength(1);
-    expect(result.current.ratios[0]?.rawInput).toBe("5/4");
+    expect(result.current.ratios).toHaveLength(2);
+    expect(result.current.ratios.map((ratio) => ratio.rawInput)).toEqual([
+      "1/1",
+      "5/4",
+    ]);
   });
 
-  it("rests the lattice ratios", () => {
+  it("resets the lattice ratios", () => {
     const { result } = renderHook(() => useLatticeRatios());
 
     act(() => {
@@ -85,13 +98,14 @@ describe("useLatticeRatios", () => {
       result.current.addRatio("5/4");
     });
 
-    expect(result.current.ratios).toHaveLength(2);
+    expect(result.current.ratios).toHaveLength(3);
 
     act(() => {
       result.current.reset();
     });
 
-    expect(result.current.ratios).toEqual([]);
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 
   it("undoes the most recent ratio change", () => {
@@ -101,13 +115,14 @@ describe("useLatticeRatios", () => {
       result.current.addRatio("3/2");
     });
 
-    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios).toHaveLength(2);
 
     act(() => {
       result.current.undo();
     });
 
-    expect(result.current.ratios).toEqual([]);
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 
   it("undoes a removed lattice ratio", () => {
@@ -118,7 +133,9 @@ describe("useLatticeRatios", () => {
       result.current.addRatio("5/4");
     });
 
-    const ratioToRemove = result.current.ratios[0];
+    const ratioToRemove = result.current.ratios.find(
+      (ratio) => ratio.rawInput === "3/2",
+    );
 
     expect(ratioToRemove).toBeDefined();
 
@@ -126,15 +143,16 @@ describe("useLatticeRatios", () => {
       result.current.removeRatio(ratioToRemove!.id);
     });
 
-    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios).toHaveLength(2);
 
     act(() => {
       result.current.undo();
     });
 
-    expect(result.current.ratios).toHaveLength(2);
-    expect(result.current.ratios[0]?.rawInput).toBe("3/2");
-    expect(result.current.ratios[1]?.rawInput).toBe("5/4");
+    expect(result.current.ratios).toHaveLength(3);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
+    expect(result.current.ratios[1]?.rawInput).toBe("3/2");
+    expect(result.current.ratios[2]?.rawInput).toBe("5/4");
   });
 
   it("does not create an undo step for invalid input", () => {
@@ -152,7 +170,8 @@ describe("useLatticeRatios", () => {
       result.current.undo();
     });
 
-    expect(result.current.ratios).toEqual([]);
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 
   it("does not create an undo step for a duplicate input", () => {
@@ -170,7 +189,8 @@ describe("useLatticeRatios", () => {
       result.current.undo();
     });
 
-    expect(result.current.ratios).toEqual([]);
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 
   it("does not create an undo step when removing an unknown id", () => {
@@ -188,21 +208,12 @@ describe("useLatticeRatios", () => {
       result.current.undo();
     });
 
-    expect(result.current.ratios).toEqual([]);
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 
-  it("does not create an undo step when resetting an empty lattice", () => {
+  it("does not create an undo step when resetting the initial lattice", () => {
     const { result } = renderHook(() => useLatticeRatios());
-
-    act(() => {
-      result.current.addRatio("3/2");
-    });
-
-    act(() => {
-      result.current.reset();
-    });
-
-    expect(result.current.ratios).toEqual([]);
 
     act(() => {
       result.current.reset();
@@ -213,7 +224,7 @@ describe("useLatticeRatios", () => {
     });
 
     expect(result.current.ratios).toHaveLength(1);
-    expect(result.current.ratios[0]?.rawInput).toBe("3/2");
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 
   it("undoes multiple ratio changes in reverse order", () => {
@@ -227,19 +238,67 @@ describe("useLatticeRatios", () => {
       result.current.addRatio("5/4");
     });
 
+    expect(result.current.ratios).toHaveLength(3);
+
+    act(() => {
+      result.current.undo();
+    });
+
     expect(result.current.ratios).toHaveLength(2);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
+    expect(result.current.ratios[1]?.rawInput).toBe("3/2");
 
     act(() => {
       result.current.undo();
     });
 
     expect(result.current.ratios).toHaveLength(1);
-    expect(result.current.ratios[0]?.rawInput).toBe("3/2");
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
+  });
+
+  it("starts with the unison ratio", () => {
+    const { result } = renderHook(() => useLatticeRatios());
+
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]).toMatchObject({
+      rawInput: "1/1",
+      ratio: createTestRatio(1n, 1n),
+    });
+  });
+
+  it("resets the lattice to the unison ratio", () => {
+    const { result } = renderHook(() => useLatticeRatios());
 
     act(() => {
-      result.current.undo();
+      result.current.addRatio("3/2");
+      result.current.addRatio("5/4");
     });
 
-    expect(result.current.ratios).toEqual([]);
+    expect(result.current.ratios).toHaveLength(3);
+
+    act(() => {
+      result.current.reset();
+    });
+
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]).toMatchObject({
+      rawInput: "1/1",
+      ratio: createTestRatio(1n, 1n),
+    });
+  });
+
+  it("does not remove the unison ratio", () => {
+    const { result } = renderHook(() => useLatticeRatios());
+
+    const unison = result.current.ratios[0];
+
+    expect(unison?.rawInput).toBe("1/1");
+
+    act(() => {
+      result.current.removeRatio(unison!.id);
+    });
+
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
 });

@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 
 import { fireEvent, render, screen } from "@testing-library/react";
+import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from "vitest";
 import LatticeRatioControls from "./LatticeRatioControls";
 
@@ -57,5 +58,27 @@ describe("LatticeRatioControls", () => {
     fireEvent.click(screen.getByRole("button", { name: "Reset" }));
 
     expect(onReset).toHaveBeenCalledOnce();
+  });
+
+  it("clears the input after successfully adding a ratio", async () => {
+    const user = userEvent.setup();
+    const onAdd = vi.fn(() => true);
+
+    render(
+      <LatticeRatioControls
+        onAdd={onAdd}
+        onUndo={vi.fn()}
+        onReset={vi.fn()}
+        inputError={null}
+      />,
+    );
+
+    const input = screen.getByRole("textbox", { name: "Ratio" });
+
+    await user.type(input, "3/2");
+    await user.click(screen.getByRole("button", { name: "Add ratio" }));
+
+    expect(onAdd).toHaveBeenCalledWith("3/2");
+    expect(input).toHaveValue("");
   });
 });

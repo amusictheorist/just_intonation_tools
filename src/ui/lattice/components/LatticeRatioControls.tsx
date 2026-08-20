@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 type LatticeRatioControlsProps = {
-  onAdd: (rawInput: string) => void;
+  onAdd: (rawInput: string) => boolean;
   onUndo: () => void;
   onReset: () => void;
   inputError: string | null;
@@ -20,7 +20,9 @@ function LatticeRatioControls({
       <form
         onSubmit={(event) => {
           event.preventDefault();
-          onAdd(rawInput);
+          const wasAdded = onAdd(rawInput);
+          if (!wasAdded) return;
+          setRawInput("");
         }}
       >
         <label>
