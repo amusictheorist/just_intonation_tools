@@ -1,19 +1,16 @@
-import { inverRatio } from "../../ji/invertRatio";
 import type { LowerRadialSymmetry } from "../state/latticeGeometry";
 import type { ExpandedRadialAddress } from "../symbolic/createExpandedRadialAddress";
-import { calculateRadialRatioAngle } from "./calculateRadialRatioAngle";
-import {
-  createRadialDirectionVector,
-  type Vector3,
-} from "./createRadialDirectionVector";
+import { type Vector3 } from "./createRadialDirectionVector";
+import { createRadialPosition } from "./createRadialPosition";
 
 /**
  * Converts an expanded radial address into a Cartesian position.
  *
- * Upper-side and lower-side ratios share the same base angular position.
- * Lower-side ratios are placed below the origin, and continuous mode adds a 180-degree twist to their horizontal direction.
+ * Upper-side addresses use ordinary signed radial placement unchanged.
  *
- * Generator distance determines horizontal radius and, when enabled, vertical height.
+ * Lower-side addresses are placed below the origin. In `aligned` mode, the horizontal vector is inverted so that a lower-sode ratio aligns tiwh its corresponding upper-side inverse. In `continuous` mode, the signed horizontal vector is preserved, placing the lower-side ratio 180 degrees aroung the origin from its aligned position.
+ *
+ * Generator-height handling is delegated to ordinary radial placement, so flattened placement remains available through the same option..
  *
  * @param address The symbolic expanded radial address to place.
  * @param includeGeneratorHeight Whether generator distance contributes to y.
@@ -27,21 +24,21 @@ export function createExpandedRadialPosition(
   includeGeneratorHeight: boolean,
   lowerSymmetry: LowerRadialSymmetry,
 ): Vector3 {
-  const angularRatio =
-    address.side === "lower"
-      ? inverRatio(address.normalizedRatio)
-      : address.normalizedRatio;
+  const position = createRadialPosition(address, includeGeneratorHeight);
 
-  let angle = calculateRadialRatioAngle(angularRatio);
+  if (address.side !== "lower") return position;
 
-  if (address.side === "lower" && lowerSymmetry === "continuous") angle += 180;
-
-  const direction = createRadialDirectionVector(angle);
-  const height = includeGeneratorHeight ? address.distance : 0;
+  if (lowerSymmetry === "aligned") {
+    return {
+      x: -position.x,
+      y: -position.y,
+      z: -position.z,
+    };
+  }
 
   return {
-    x: direction.x * address.distance,
-    y: address.side === "lower" ? -height : height,
-    z: direction.z * address.distance,
+    x: position.x,
+    y: -position.y,
+    z: position.z,
   };
 }
