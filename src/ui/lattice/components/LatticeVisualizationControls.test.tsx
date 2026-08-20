@@ -326,13 +326,25 @@ describe("LatticeVisualizationControls", () => {
     );
 
     expect(
-      screen.getByRole("slider", { name: /Rotate X/i }),
+      screen.getByRole("slider", { name: /Rotate X:/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("slider", { name: /Rotate Y/i }),
+      screen.getByRole("slider", { name: /Rotate Y:/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("slider", { name: /Rotate Z/i }),
+      screen.getByRole("slider", { name: /Rotate Z:/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: /Master rotation/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: /Rotate XY/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: /Rotate YZ/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("slider", { name: /Rotate XZ/i }),
     ).toBeInTheDocument();
   });
 
@@ -366,13 +378,95 @@ describe("LatticeVisualizationControls", () => {
       />,
     );
 
-    fireEvent.change(screen.getByRole("slider", { name: /Rotate X/i }), {
+    fireEvent.change(screen.getByRole("slider", { name: /Rotate X:/i }), {
       target: { value: "45" },
     });
 
     expect(onLocalRotationChange).toHaveBeenCalledWith({
       x: 45,
       y: 20,
+      z: 30,
+    });
+  });
+
+  it("combines coupled rotation controls into local cubic rotation", () => {
+    const onLocalRotationChange = vi.fn();
+
+    render(
+      <LatticeVisualizationControls
+        configuration={{
+          visualization: {
+            type: "cubic",
+            includeHigherPrimes: true,
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: 1,
+            localRotation: {
+              x: 0,
+              y: 0,
+              z: 0,
+            },
+          },
+        }}
+        onVisualizationTypeChange={vi.fn()}
+        onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
+        onLocalRotationChange={onLocalRotationChange}
+        onIncludeLowerOctaveChange={vi.fn()}
+        onIncludeGeneratorHeightChange={vi.fn()}
+        onLowerSymmetryChange={vi.fn()}
+      />,
+    );
+
+    fireEvent.change(screen.getByRole("slider", { name: /Rotate XY/i }), {
+      target: { value: "30" },
+    });
+
+    expect(onLocalRotationChange).toHaveBeenCalledWith({
+      x: 30,
+      y: 30,
+      z: 0,
+    });
+  });
+
+  it("applies master rotation to all three axes", () => {
+    const onLocalRotationChange = vi.fn();
+
+    render(
+      <LatticeVisualizationControls
+        configuration={{
+          visualization: {
+            type: "cubic",
+            includeHigherPrimes: true,
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: 1,
+            localRotation: {
+              x: 0,
+              y: 0,
+              z: 0,
+            },
+          },
+        }}
+        onVisualizationTypeChange={vi.fn()}
+        onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
+        onLocalRotationChange={onLocalRotationChange}
+        onIncludeLowerOctaveChange={vi.fn()}
+        onIncludeGeneratorHeightChange={vi.fn()}
+        onLowerSymmetryChange={vi.fn()}
+      />,
+    );
+
+    fireEvent.change(screen.getByRole("slider", { name: /Master rotation/i }), {
+      target: { value: "30" },
+    });
+
+    expect(onLocalRotationChange).toHaveBeenCalledWith({
+      x: 30,
+      y: 30,
       z: 30,
     });
   });
