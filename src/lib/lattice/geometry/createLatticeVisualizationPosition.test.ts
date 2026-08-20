@@ -4,30 +4,34 @@ import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
 import { createLatticeVisualizationPosition } from "./createLatticeVisualizationPosition";
 import { createRadialPosition } from "./createRadialPosition";
 import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
+import {
+  RADIAL_HORIZONTAL_SPACING,
+  RADIAL_VERTICAL_SPACING,
+} from "./latticeGeometryConstants";
 
 describe("createLatticeVisualizationPosition", () => {
   it("creates a position from standard cubic placement", () => {
-    expect(
-      createLatticeVisualizationPosition({
+    const latticeVisualizationPosition = createLatticeVisualizationPosition({
+      placement: {
+        type: "cubic",
         placement: {
-          type: "cubic",
-          placement: {
-            type: "standard",
-            coordinates: {
-              x: 1,
-              y: -2,
-              z: 3,
-            },
+          type: "standard",
+          coordinates: {
+            x: 1,
+            y: -2,
+            z: 3,
           },
         },
-        geometry: {
-          type: "cubic",
-        },
-      }),
-    ).toEqual({
-      x: 1,
-      y: -2,
-      z: 3,
+      },
+      geometry: {
+        type: "cubic",
+      },
+    });
+
+    expect(latticeVisualizationPosition).toEqual({
+      x: 2,
+      y: -4,
+      z: 6,
     });
   });
 
@@ -56,9 +60,9 @@ describe("createLatticeVisualizationPosition", () => {
         resolveTestPrimeAnchorVector,
       ),
     ).toEqual({
-      x: 3,
-      y: 2,
-      z: 3,
+      x: 6,
+      y: 4,
+      z: 6,
     });
   });
 
@@ -67,6 +71,8 @@ describe("createLatticeVisualizationPosition", () => {
       path: [{ prime: 3n, direction: 1 as const }],
       distance: 1,
     };
+
+    const position = createRadialPosition(address, true);
 
     expect(
       createLatticeVisualizationPosition({
@@ -83,7 +89,11 @@ describe("createLatticeVisualizationPosition", () => {
           lowerSymmetry: "continuous",
         },
       }),
-    ).toEqual(createRadialPosition(address, true));
+    ).toEqual({
+      x: position.x * RADIAL_HORIZONTAL_SPACING,
+      y: position.y * RADIAL_VERTICAL_SPACING,
+      z: position.z * RADIAL_HORIZONTAL_SPACING,
+    });
   });
 
   it("creates a position from expanded radial placement", () => {
@@ -93,6 +103,8 @@ describe("createLatticeVisualizationPosition", () => {
       path: [{ prime: 3n, direction: 1 as const }],
       distance: 1,
     };
+
+    const position = createExpandedRadialPosition(address, true, "continuous");
 
     expect(
       createLatticeVisualizationPosition({
@@ -109,6 +121,10 @@ describe("createLatticeVisualizationPosition", () => {
           lowerSymmetry: "continuous",
         },
       }),
-    ).toEqual(createExpandedRadialPosition(address, true, "continuous"));
+    ).toEqual({
+      x: position.x * RADIAL_HORIZONTAL_SPACING,
+      y: position.y * RADIAL_VERTICAL_SPACING,
+      z: position.z * RADIAL_HORIZONTAL_SPACING,
+    });
   });
 });

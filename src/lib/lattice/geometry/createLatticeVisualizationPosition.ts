@@ -6,6 +6,12 @@ import type { Vector3 } from "./createRadialDirectionVector";
 import { resolvePrimeAnchorVector } from "./resolvePrimeAnchorVector";
 import { createRadialPosition } from "./createRadialPosition";
 import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
+import {
+  CUBIC_SPACING,
+  RADIAL_HORIZONTAL_SPACING,
+  RADIAL_VERTICAL_SPACING,
+} from "./latticeGeometryConstants";
+import { scaleVector } from "./vector";
 
 export type LatticeVisualizationPositionInput =
   | Readonly<{
@@ -16,6 +22,14 @@ export type LatticeVisualizationPositionInput =
       placement: Extract<LatticeVisualizationPlacement, { type: "radial" }>;
       geometry: Extract<LatticeGeometry, { type: "radial" }>;
     }>;
+
+function scaleRadialPosition(position: Vector3): Vector3 {
+  return {
+    x: position.x * RADIAL_HORIZONTAL_SPACING,
+    y: position.y * RADIAL_VERTICAL_SPACING,
+    z: position.z * RADIAL_HORIZONTAL_SPACING,
+  };
+}
 
 export function createLatticeVisualizationPosition(
   input: LatticeVisualizationPositionInput,
@@ -28,7 +42,7 @@ export function createLatticeVisualizationPosition(
     placement.placement.type === "standard" &&
     geometry.type === "cubic"
   ) {
-    return placement.placement.coordinates;
+    return scaleVector(placement.placement.coordinates, CUBIC_SPACING);
   }
 
   if (
@@ -36,11 +50,13 @@ export function createLatticeVisualizationPosition(
     placement.placement.type === "expanded" &&
     geometry.type === "cubic"
   ) {
-    return createExpandedCubicPosition(
+    const position = createExpandedCubicPosition(
       placement.placement.address,
       { x: 0, y: 0, z: 0 },
       resolveAnchorVector,
     );
+
+    return scaleVector(position, CUBIC_SPACING);
   }
 
   if (
@@ -48,10 +64,12 @@ export function createLatticeVisualizationPosition(
     placement.placement.type === "standard" &&
     geometry.type === "radial"
   ) {
-    return createRadialPosition(
+    const position = createRadialPosition(
       placement.placement.address,
       geometry.includeGeneratorHeight,
     );
+
+    return scaleRadialPosition(position);
   }
 
   if (
@@ -59,11 +77,13 @@ export function createLatticeVisualizationPosition(
     placement.placement.type === "expanded" &&
     geometry.type === "radial"
   ) {
-    return createExpandedRadialPosition(
+    const position = createExpandedRadialPosition(
       placement.placement.address,
       geometry.includeGeneratorHeight,
       geometry.lowerSymmetry,
     );
+
+    return scaleRadialPosition(position);
   }
 
   throw new Error("Unsupported lattice visualization position");

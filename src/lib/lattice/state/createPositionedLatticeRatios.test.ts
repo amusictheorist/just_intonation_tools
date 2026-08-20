@@ -2,6 +2,10 @@ import { describe, expect, it } from "vitest";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 import { createPositionedLatticeRatios } from "./createPositionedLatticeRatios";
 import { createExpandedRadialPosition } from "../geometry/createExpandedRadialPosition";
+import {
+  RADIAL_HORIZONTAL_SPACING,
+  RADIAL_VERTICAL_SPACING,
+} from "../geometry/latticeGeometryConstants";
 
 describe("createPositionedLatticeRatios", () => {
   it("creates positions for stored ratios visible in a cubic visualization", () => {
@@ -32,8 +36,8 @@ describe("createPositionedLatticeRatios", () => {
           },
         },
         position: {
-          x: 1,
-          y: 1,
+          x: 2,
+          y: 2,
           z: 0,
         },
       },
@@ -53,6 +57,12 @@ describe("createPositionedLatticeRatios", () => {
       path: [{ prime: 3n, direction: 1 as const }],
       distance: 1,
     };
+
+    const radialPosition = createExpandedRadialPosition(
+      address,
+      true,
+      "continuous",
+    );
 
     expect(
       createPositionedLatticeRatios([latticeRatio], {
@@ -76,16 +86,11 @@ describe("createPositionedLatticeRatios", () => {
             address,
           },
         },
-        position: createExpandedRadialPosition(
-          {
-            normalizedRatio: createTestRatio(3n, 4n),
-            side: "lower",
-            path: [{ prime: 3n, direction: 1 }],
-            distance: 1,
-          },
-          true,
-          "continuous",
-        ),
+        position: {
+          x: radialPosition.x * RADIAL_HORIZONTAL_SPACING,
+          y: radialPosition.y * RADIAL_VERTICAL_SPACING,
+          z: radialPosition.z * RADIAL_HORIZONTAL_SPACING,
+        },
       },
     ]);
   });
@@ -123,7 +128,7 @@ describe("createPositionedLatticeRatios", () => {
           },
         },
         position: {
-          x: 1,
+          x: 2,
           y: 0,
           z: 0,
         },
@@ -164,7 +169,7 @@ describe("createPositionedLatticeRatios", () => {
           },
         },
         position: {
-          x: 1,
+          x: 2,
           y: 0,
           z: 0,
         },
@@ -180,7 +185,7 @@ describe("createPositionedLatticeRatios", () => {
         },
         position: {
           x: 0,
-          y: 1,
+          y: 2,
           z: 0,
         },
       },
