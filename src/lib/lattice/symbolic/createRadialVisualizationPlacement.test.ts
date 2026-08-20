@@ -4,11 +4,12 @@ import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 
 describe("createRadialVisualizationPlacement", () => {
   it("uses standard radial placement when lower-octave placement is disabled", () => {
-    expect(
-      createRadialVisualizationPlacement(createTestRatio(3n, 2n), false),
-    ).toEqual({
+    const normalizedRatio = createTestRatio(3n, 2n);
+
+    expect(createRadialVisualizationPlacement(normalizedRatio, false)).toEqual({
       type: "standard",
       address: {
+        normalizedRatio,
         path: [{ prime: 3n, direction: 1 }],
         distance: 1,
       },
@@ -16,12 +17,12 @@ describe("createRadialVisualizationPlacement", () => {
   });
 
   it("uses expanded radial placement when lower-octave placement is enabled", () => {
-    expect(
-      createRadialVisualizationPlacement(createTestRatio(3n, 4n), true),
-    ).toEqual({
+    const ratio = createTestRatio(3n, 4n);
+
+    expect(createRadialVisualizationPlacement(ratio, true)).toEqual({
       type: "expanded",
       address: {
-        normalizedRatio: createTestRatio(3n, 4n),
+        normalizedRatio: ratio,
         side: "lower",
         path: [{ prime: 3n, direction: 1 }],
         distance: 1,
@@ -29,12 +30,14 @@ describe("createRadialVisualizationPlacement", () => {
     });
   });
 
-  it("uses standard radial placement when lower-octave placement is disabled", () => {
-    expect(
-      createRadialVisualizationPlacement(createTestRatio(3n, 4n), false),
-    ).toEqual({
+  it("normalizes lower-octave ratios into the upper octave for standard radial placement", () => {
+    const ratio = createTestRatio(3n, 4n);
+    const normalizedRatio = createTestRatio(3n, 2n);
+
+    expect(createRadialVisualizationPlacement(ratio, false)).toEqual({
       type: "standard",
       address: {
+        normalizedRatio,
         path: [{ prime: 3n, direction: 1 }],
         distance: 1,
       },

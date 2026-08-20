@@ -68,6 +68,7 @@ describe("createLatticeVisualizationPosition", () => {
 
   it("creates a position from standard radial placement", () => {
     const address = {
+      normalizedRatio: createTestRatio(3n, 2n),
       path: [{ prime: 3n, direction: 1 as const }],
       distance: 1,
     };

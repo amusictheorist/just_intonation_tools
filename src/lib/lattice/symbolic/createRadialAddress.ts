@@ -1,3 +1,4 @@
+import type { Ratio } from "../../ji/ratio";
 import { calculateGeneratorDistance } from "./calculateGeneratorDistance";
 import {
   createCanonicalPrimeFactorPath,
@@ -14,6 +15,7 @@ import type { PrimeExponents } from "./factorPrimesIgnoringTwo";
  */
 
 export type RadialAddress = Readonly<{
+  normalizedRatio: Ratio;
   path: readonly PrimeFactorStep[];
   distance: number;
 }>;
@@ -29,10 +31,14 @@ export type RadialAddress = Readonly<{
  * @see `docs/subsystems/lattice/PLACEMENT.md`
  */
 
-export function createRadialAddress(factors: PrimeExponents): RadialAddress {
+export function createRadialAddress(
+  normalizedRatio: Ratio,
+  factors: PrimeExponents,
+): RadialAddress {
   const path = createCanonicalPrimeFactorPath(factors);
 
   return {
+    normalizedRatio,
     path,
     distance: calculateGeneratorDistance(path),
   };

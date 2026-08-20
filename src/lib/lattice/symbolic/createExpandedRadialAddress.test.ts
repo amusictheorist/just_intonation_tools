@@ -21,7 +21,7 @@ describe("createExpandedRadialAddress", () => {
     });
   });
 
-  it("normalizes an lower-side ratio and preserves its symbolic path", () => {
+  it("normalizes a lower-side ratio and preserves its symbolic path", () => {
     expect(createExpandedRadialAddress(createTestRatio(1n, 11n))).toEqual({
       normalizedRatio: createTestRatio(8n, 11n),
       side: "lower",

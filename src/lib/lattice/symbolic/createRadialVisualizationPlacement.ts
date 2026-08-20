@@ -5,6 +5,7 @@ import {
 } from "./createExpandedRadialAddress";
 import { createRadialAddress, type RadialAddress } from "./createRadialAddress";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { normalizeRadialRatio } from "./normalizeRadialRatio";
 
 export type RadialVisualizationPlacement =
   | Readonly<{
@@ -27,8 +28,13 @@ export function createRadialVisualizationPlacement(
     };
   }
 
+  const normalizedRatio = normalizeRadialRatio(ratio);
+
   return {
     type: "standard",
-    address: createRadialAddress(factorPrimesIgnoringTwo(ratio)),
+    address: createRadialAddress(
+      normalizedRatio,
+      factorPrimesIgnoringTwo(ratio),
+    ),
   };
 }

@@ -37,6 +37,7 @@ export function createExpandedRadialAddress(
 ): ExpandedRadialAddress {
   const normalizedRatio = normalizeExpandedRadialRatio(ratio);
   const radialAddress = createRadialAddress(
+    normalizedRatio,
     factorPrimesIgnoringTwo(normalizedRatio),
   );
   const side: "upper" | "lower" =

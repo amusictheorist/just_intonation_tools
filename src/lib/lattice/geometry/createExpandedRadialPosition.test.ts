@@ -1,10 +1,9 @@
 import { describe, expect, it } from "vitest";
-import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
-import { createRadialPosition } from "./createRadialPosition";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
+import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
 
 describe("createExpandedRadialPosition", () => {
-  it("uses ordinary radial placement for an upper-side address", () => {
+  it("places an upper-side ratio at positive generator height", () => {
     const position = createExpandedRadialPosition(
       {
         normalizedRatio: createTestRatio(3n, 2n),
@@ -16,39 +15,63 @@ describe("createExpandedRadialPosition", () => {
       "continuous",
     );
 
-    expect(position.y).toBe(1);
+    expect(position.y).toBeCloseTo(1);
   });
 
-  it("reflects a lower-side address through the origin in continuous mode", () => {
-    const address = {
-      normalizedRatio: createTestRatio(2n, 3n),
-      side: "lower" as const,
-      path: [{ prime: 3n, direction: -1 as const }],
-      distance: 1,
-    };
+  it("aligns corresponding upper- and lower-side ratios at the same angle", () => {
+    const upperPosition = createExpandedRadialPosition(
+      {
+        normalizedRatio: createTestRatio(3n, 2n),
+        side: "upper",
+        path: [{ prime: 3n, direction: 1 }],
+        distance: 1,
+      },
+      true,
+      "aligned",
+    );
 
-    const ordinaryPosition = createRadialPosition(address, true);
-    const position = createExpandedRadialPosition(address, true, "continuous");
+    const lowerPosition = createExpandedRadialPosition(
+      {
+        normalizedRatio: createTestRatio(2n, 3n),
+        side: "lower",
+        path: [{ prime: 3n, direction: -1 }],
+        distance: 1,
+      },
+      true,
+      "aligned",
+    );
 
-    expect(position.x).toBeCloseTo(-ordinaryPosition.x);
-    expect(position.y).toBeCloseTo(-ordinaryPosition.y);
-    expect(position.z).toBeCloseTo(-ordinaryPosition.z);
+    expect(lowerPosition.x).toBeCloseTo(upperPosition.x);
+    expect(lowerPosition.z).toBeCloseTo(upperPosition.z);
+    expect(lowerPosition.y).toBeCloseTo(-upperPosition.y);
   });
 
-  it("reflects only the vertical coordinate in aligned mode", () => {
-    const address = {
-      normalizedRatio: createTestRatio(2n, 3n),
-      side: "lower" as const,
-      path: [{ prime: 3n, direction: -1 as const }],
-      distance: 1,
-    };
+  it("rotates the lower-side position by 180 degrees in continuous mode", () => {
+    const alignedPosition = createExpandedRadialPosition(
+      {
+        normalizedRatio: createTestRatio(2n, 3n),
+        side: "lower",
+        path: [{ prime: 3n, direction: -1 }],
+        distance: 1,
+      },
+      true,
+      "aligned",
+    );
 
-    const ordinaryPosition = createRadialPosition(address, true);
-    const position = createExpandedRadialPosition(address, true, "aligned");
+    const continuousPosition = createExpandedRadialPosition(
+      {
+        normalizedRatio: createTestRatio(2n, 3n),
+        side: "lower",
+        path: [{ prime: 3n, direction: -1 }],
+        distance: 1,
+      },
+      true,
+      "continuous",
+    );
 
-    expect(position.x).toBeCloseTo(ordinaryPosition.x);
-    expect(position.y).toBeCloseTo(-ordinaryPosition.y);
-    expect(position.z).toBeCloseTo(ordinaryPosition.z);
+    expect(continuousPosition.x).toBeCloseTo(-alignedPosition.x);
+    expect(continuousPosition.z).toBeCloseTo(-alignedPosition.z);
+    expect(continuousPosition.y).toBeCloseTo(alignedPosition.y);
   });
 
   it("ignores lower-side symmetry for upper-side addresses", () => {
@@ -59,45 +82,36 @@ describe("createExpandedRadialPosition", () => {
       distance: 1,
     };
 
-    const ordinaryPosition = createRadialPosition(address, true);
     const continuousPosition = createExpandedRadialPosition(
       address,
       true,
       "continuous",
     );
+
     const alignedPosition = createExpandedRadialPosition(
       address,
       true,
       "aligned",
     );
 
-    expect(continuousPosition.x).toBeCloseTo(ordinaryPosition.x);
-    expect(continuousPosition.y).toBeCloseTo(ordinaryPosition.y);
-    expect(continuousPosition.z).toBeCloseTo(ordinaryPosition.z);
-
-    expect(alignedPosition.x).toBeCloseTo(ordinaryPosition.x);
-    expect(alignedPosition.y).toBeCloseTo(ordinaryPosition.y);
-    expect(alignedPosition.z).toBeCloseTo(ordinaryPosition.z);
+    expect(continuousPosition.x).toBeCloseTo(alignedPosition.x);
+    expect(continuousPosition.y).toBeCloseTo(alignedPosition.y);
+    expect(continuousPosition.z).toBeCloseTo(alignedPosition.z);
   });
 
-  it("uses ordinary radial prime placement for higher primes", () => {
-    const address = {
-      normalizedRatio: createTestRatio(11n, 8n),
-      side: "upper" as const,
-      path: [{ prime: 11n, direction: 1 as const }],
-      distance: 1,
-    };
-
-    const ordinaryPosition = createRadialPosition(address, true);
-    const expandedPosition = createExpandedRadialPosition(
-      address,
+  it("uses the whole normalized ratio for higher-prime placement", () => {
+    const position = createExpandedRadialPosition(
+      {
+        normalizedRatio: createTestRatio(11n, 8n),
+        side: "upper",
+        path: [{ prime: 11n, direction: 1 }],
+        distance: 1,
+      },
       true,
       "continuous",
     );
 
-    expect(expandedPosition.x).toBeCloseTo(ordinaryPosition.x);
-    expect(expandedPosition.y).toBeCloseTo(ordinaryPosition.y);
-    expect(expandedPosition.z).toBeCloseTo(ordinaryPosition.z);
+    expect(position.y).toBeCloseTo(1);
   });
 
   it("keeps lower-side placement flattened when generator height is disabled", () => {

@@ -1,5 +1,5 @@
 import type { RadialAddress } from "../symbolic/createRadialAddress";
-import { calculateRadialPrimeAngle } from "./calculateRadialPrimeAngle";
+import { calculateRadialRatioAngle } from "./calculateRadialRatioAngle";
 import {
   createRadialDirectionVector,
   type Vector3,
@@ -8,8 +8,9 @@ import {
 /**
  * Converts a symbolic radial address into a Cartesian position.
  *
- * Each prime-factor step contributes one unit direction vector in the x-y-z plane. Those vectors are summed to determine horizontal placement.
- * When generator height is enabled, the y-coordinate equals the address's generator distance; otherwise the position is flattened to y = 0.
+ * The octave-normalized ratio determines a single angluar direction in the radial plane. Generator distance determines how far the ratio lies from the origin along that direction.
+ *
+ * When generator height is enabled, the y-coordinate equls the address's generator distance; otherwise the position is flattened to y = 0.
  *
  * @param address The symbolic radial address to place.
  * @param includesGeneratorHeight Whether to use generator distance as the vertical coordinate.
@@ -22,16 +23,12 @@ export function createRadialPosition(
   address: RadialAddress,
   includesGeneratorHeight: boolean,
 ): Vector3 {
-  let x = 0;
-  let z = 0;
+  const angle = calculateRadialRatioAngle(address.normalizedRatio);
+  const direction = createRadialDirectionVector(angle);
 
-  for (const step of address.path) {
-    const angle = calculateRadialPrimeAngle(step);
-    const direction = createRadialDirectionVector(angle);
-
-    x += direction.x;
-    z += direction.z;
-  }
-
-  return { x, y: includesGeneratorHeight ? address.distance : 0, z };
+  return {
+    x: direction.x * address.distance,
+    y: includesGeneratorHeight ? address.distance : 0,
+    z: direction.z * address.distance,
+  };
 }

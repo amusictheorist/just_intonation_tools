@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
 import type { PositionedLatticeRatio } from "../../../lib/lattice/state/createPositionedLatticeRatios";
 import { createLatticeScenePoint } from "./createLatticeScenePoint";
+import { normalizeRadialRatio } from "../symbolic/normalizeRadialRatio";
 
 describe("createLatticeScenePoint", () => {
   it("creates a scene point from a standard cubic positioned ratio", () => {
@@ -81,6 +82,7 @@ describe("createLatticeScenePoint", () => {
         placement: {
           type: "standard",
           address: {
+            normalizedRatio: normalizeRadialRatio(ratio),
             path: [{ prime: 5n, direction: 1 }],
             distance: 1,
           },

@@ -56,6 +56,7 @@ describe("useLatticeSceneData", () => {
           placement: {
             type: "standard",
             address: {
+              normalizedRatio: createTestRatio(3n, 2n),
               path: [{ prime: 3n, direction: 1 }],
               distance: 0,
             },
