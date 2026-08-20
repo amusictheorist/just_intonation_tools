@@ -1,5 +1,6 @@
 import * as THREE from "three";
 import type { LatticeSceneConnection } from "./latticeSceneConnection";
+import { DEFAULT_LATTICE_CONNECTION_COLOR } from "./latticeConnectionStyle";
 
 export function createLatticeConnectionLine(
   connection: LatticeSceneConnection,
@@ -17,7 +18,9 @@ export function createLatticeConnectionLine(
     ),
   ]);
 
-  const material = new THREE.LineBasicMaterial();
+  const material = new THREE.LineBasicMaterial({
+    color: DEFAULT_LATTICE_CONNECTION_COLOR,
+  });
   const line = new THREE.Line(geometry, material);
 
   line.userData.fromLatticeScenePointId = connection.fromId;

@@ -1,3 +1,4 @@
+import * as THREE from "three";
 import { describe, expect, it } from "vitest";
 import type { LatticeSceneConnection } from "./latticeSceneConnection";
 import { createLatticeConnectionLine } from "./createLatticeConnectionLine";
@@ -38,5 +39,19 @@ describe("createLatticeConnectionLine", () => {
 
     expect(line.userData.fromLatticeScenePointId).toBe("ratio-1");
     expect(line.userData.toLatticeScenePointId).toBe("ratio-2");
+  });
+
+  it("uses the default lattice connection color", () => {
+    const connection = {
+      fromId: "ratio-1",
+      toId: "ratio-2",
+      fromPosition: { x: 1, y: 2, z: 3 },
+      toPosition: { x: 4, y: 5, z: 6 },
+    } satisfies LatticeSceneConnection;
+
+    const line = createLatticeConnectionLine(connection);
+    const material = line.material as THREE.LineBasicMaterial;
+
+    expect(material.color.getHexString()).toBe("444444");
   });
 });
