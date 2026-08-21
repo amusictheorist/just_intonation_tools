@@ -21,8 +21,16 @@ function LatticeVisualizer() {
     setIncludeGeneratorHeight,
     setLowerSymmetry,
   } = useLatticePositioning(ratios);
-  const { scenePoints, sceneConnections } =
-    useLatticeSceneData(positionedRatios);
+
+  const [showConnections, setShowConnections] = useState(true);
+  const [visibleConnectionPrimes, setVisibleConnectionPrimes] =
+    useState<ReadonlySet<bigint> | null>(null);
+
+  const { scenePoints, sceneConnections, availableConnectionPrimes } =
+    useLatticeSceneData(positionedRatios, {
+      showConnections,
+      visiblePrimes: visibleConnectionPrimes,
+    });
 
   const [inputError, setInputError] = useState<string | null>(null);
   const [higherPrimeColor, setHigherPrimeColor] = useState(
@@ -44,6 +52,19 @@ function LatticeVisualizer() {
 
     setInputError(`Ratio ${result.existingRatio.rawInput} is already present`);
     return false;
+  }
+
+  function toggleConnectionPrime(prime: bigint, visible: boolean): void {
+    const currentVisiblePrimes =
+      visibleConnectionPrimes ?? new Set(availableConnectionPrimes);
+
+    const nextVisiblePrimes = new Set(currentVisiblePrimes);
+
+    if (visible) nextVisiblePrimes.add(prime);
+
+    if (!visible) nextVisiblePrimes.delete(prime);
+
+    setVisibleConnectionPrimes(nextVisiblePrimes);
   }
 
   return (
@@ -69,6 +90,11 @@ function LatticeVisualizer() {
       <LatticeAppearanceControls
         higherPrimeColor={higherPrimeColor}
         onHigherPrimeColorChange={setHigherPrimeColor}
+        showConnections={showConnections}
+        onShowConnectionsChange={setShowConnections}
+        availableConnectionPrimes={availableConnectionPrimes}
+        visibleConnectionPrimes={visibleConnectionPrimes}
+        onConnectionPrimeVisibilityChange={toggleConnectionPrime}
       />
 
       <LatticeCanvas

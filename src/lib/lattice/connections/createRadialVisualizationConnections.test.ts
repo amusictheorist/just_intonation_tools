@@ -33,7 +33,7 @@ describe("createRadialVisualizationConnections", () => {
           },
         },
       ]),
-    ).toEqual([{ fromId: "three", toId: "fifteen" }]);
+    ).toEqual([{ fromId: "three", toId: "fifteen", prime: 5n }]);
   });
 
   it("creates connections from expanded radial placements", () => {
@@ -77,8 +77,8 @@ describe("createRadialVisualizationConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "lower-three", toId: "unison" },
-      { fromId: "unison", toId: "upper-three" },
+      { fromId: "lower-three", toId: "unison", prime: 3n },
+      { fromId: "unison", toId: "upper-three", prime: 3n },
     ]);
   });
 
@@ -123,8 +123,8 @@ describe("createRadialVisualizationConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "three", toId: "thirty-three" },
-      { fromId: "eleven", toId: "thirty-three" },
+      { fromId: "three", toId: "thirty-three", prime: 11n },
+      { fromId: "eleven", toId: "thirty-three", prime: 3n },
     ]);
   });
 });

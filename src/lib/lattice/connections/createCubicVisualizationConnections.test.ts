@@ -20,7 +20,7 @@ describe("createCubicVisualizationConnections", () => {
           },
         },
       ]),
-    ).toEqual([{ fromId: "a", toId: "b" }]);
+    ).toEqual([{ fromId: "a", toId: "b", prime: 3n }]);
   });
 
   it("creates connections for expanded cubic placements", () => {
@@ -47,7 +47,7 @@ describe("createCubicVisualizationConnections", () => {
           },
         },
       ]),
-    ).toEqual([{ fromId: "origin", toId: "high-prime" }]);
+    ).toEqual([{ fromId: "origin", toId: "high-prime", prime: 11n }]);
   });
 
   it("rejects mixed standard and expanded cubic placements", () => {

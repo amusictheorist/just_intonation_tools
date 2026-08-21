@@ -121,12 +121,16 @@ describe("LatticeVisualizer", () => {
     vi.mocked(useLatticeSceneData).mockReturnValue({
       scenePoints,
       sceneConnections,
+      availableConnectionPrimes: [],
     });
 
     render(<LatticeVisualizer />);
 
     expect(useLatticePositioning).toHaveBeenCalledWith([ratio]);
-    expect(useLatticeSceneData).toHaveBeenCalledWith(positionedRatios);
+    expect(useLatticeSceneData).toHaveBeenCalledWith(positionedRatios, {
+      showConnections: true,
+      visiblePrimes: null,
+    });
 
     expect(LatticeCanvas).toHaveBeenCalledWith(
       expect.objectContaining({
@@ -181,6 +185,7 @@ describe("LatticeVisualizer", () => {
     vi.mocked(useLatticeSceneData).mockReturnValue({
       scenePoints: [],
       sceneConnections: [],
+      availableConnectionPrimes: [],
     });
 
     render(<LatticeVisualizer />);
@@ -234,6 +239,7 @@ describe("LatticeVisualizer", () => {
     vi.mocked(useLatticeSceneData).mockReturnValue({
       scenePoints: [],
       sceneConnections: [],
+      availableConnectionPrimes: [],
     });
 
     render(<LatticeVisualizer />);
@@ -291,6 +297,7 @@ describe("LatticeVisualizer", () => {
     vi.mocked(useLatticeSceneData).mockReturnValue({
       scenePoints: [],
       sceneConnections: [],
+      availableConnectionPrimes: [],
     });
 
     render(<LatticeVisualizer />);
@@ -358,6 +365,7 @@ describe("LatticeVisualizer", () => {
     vi.mocked(useLatticeSceneData).mockReturnValue({
       scenePoints: [],
       sceneConnections: [],
+      availableConnectionPrimes: [],
     });
 
     render(<LatticeVisualizer />);
@@ -410,6 +418,7 @@ describe("LatticeVisualizer", () => {
     vi.mocked(useLatticeSceneData).mockReturnValue({
       scenePoints: [],
       sceneConnections: [],
+      availableConnectionPrimes: [],
     });
 
     render(<LatticeVisualizer />);
@@ -418,6 +427,11 @@ describe("LatticeVisualizer", () => {
       expect.objectContaining({
         higherPrimeColor: DEFAULT_HIGHER_PRIME_POINT_COLOR,
         onHigherPrimeColorChange: expect.any(Function),
+        showConnections: true,
+        onShowConnectionsChange: expect.any(Function),
+        availableConnectionPrimes: [],
+        visibleConnectionPrimes: null,
+        onConnectionPrimeVisibilityChange: expect.any(Function),
       }),
       undefined,
     );
@@ -457,6 +471,7 @@ describe("LatticeVisualizer", () => {
     vi.mocked(useLatticeSceneData).mockReturnValue({
       scenePoints: [],
       sceneConnections: [],
+      availableConnectionPrimes: [],
     });
 
     render(<LatticeVisualizer />);
@@ -478,5 +493,113 @@ describe("LatticeVisualizer", () => {
       }),
       undefined,
     );
+  });
+
+  it("filters scene connections by selected prime axes", () => {
+    vi.mocked(useLatticeRatios).mockReturnValue({
+      ratios: [],
+      addRatio: vi.fn(),
+      removeRatio: vi.fn(),
+      undo: vi.fn(),
+      reset: vi.fn(),
+    });
+
+    vi.mocked(useLatticePositioning).mockReturnValue({
+      configuration: {
+        visualization: {
+          type: "cubic",
+          includeHigherPrimes: false,
+        },
+        geometry: {
+          type: "cubic",
+          higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        },
+      },
+      positionedRatios: [],
+      setIncludeHigherPrimes: vi.fn(),
+      setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
+      setVisualizationType: vi.fn(),
+      setIncludeLowerOctave: vi.fn(),
+      setIncludeGeneratorHeight: vi.fn(),
+      setLowerSymmetry: vi.fn(),
+    });
+
+    vi.mocked(useLatticeSceneData).mockReturnValue({
+      scenePoints: [],
+      sceneConnections: [],
+      availableConnectionPrimes: [3n, 5n, 11n],
+    });
+
+    render(<LatticeVisualizer />);
+
+    const appearanceProps = vi.mocked(LatticeAppearanceControls).mock
+      .lastCall?.[0];
+
+    if (!appearanceProps) {
+      throw new Error("Expected LatticeAppearanceControls to render");
+    }
+
+    act(() => appearanceProps.onConnectionPrimeVisibilityChange(5n, false));
+
+    expect(useLatticeSceneData).toHaveBeenLastCalledWith([], {
+      showConnections: true,
+      visiblePrimes: new Set([3n, 11n]),
+    });
+  });
+
+  it("hides all scene connections from the appearance controls", () => {
+    vi.mocked(useLatticeRatios).mockReturnValue({
+      ratios: [],
+      addRatio: vi.fn(),
+      removeRatio: vi.fn(),
+      undo: vi.fn(),
+      reset: vi.fn(),
+    });
+
+    vi.mocked(useLatticePositioning).mockReturnValue({
+      configuration: {
+        visualization: {
+          type: "cubic",
+          includeHigherPrimes: false,
+        },
+        geometry: {
+          type: "cubic",
+          higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        },
+      },
+      positionedRatios: [],
+      setIncludeHigherPrimes: vi.fn(),
+      setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
+      setVisualizationType: vi.fn(),
+      setIncludeLowerOctave: vi.fn(),
+      setIncludeGeneratorHeight: vi.fn(),
+      setLowerSymmetry: vi.fn(),
+    });
+
+    vi.mocked(useLatticeSceneData).mockReturnValue({
+      scenePoints: [],
+      sceneConnections: [],
+      availableConnectionPrimes: [3n, 5n, 11n],
+    });
+
+    render(<LatticeVisualizer />);
+
+    const appearanceProps = vi.mocked(LatticeAppearanceControls).mock
+      .lastCall?.[0];
+
+    if (!appearanceProps) {
+      throw new Error("Expected LatticeAppearanceControls to render");
+    }
+
+    act(() => appearanceProps.onShowConnectionsChange(false));
+
+    expect(useLatticeSceneData).toHaveBeenLastCalledWith([], {
+      showConnections: false,
+      visiblePrimes: null,
+    });
   });
 });

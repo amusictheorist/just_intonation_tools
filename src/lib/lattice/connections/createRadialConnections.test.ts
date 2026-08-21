@@ -14,7 +14,7 @@ describe("createRadialConnections", () => {
           exponents: new Map([[3n, 1]]),
         },
       ]),
-    ).toEqual([{ fromId: "unison", toId: "three" }]);
+    ).toEqual([{ fromId: "unison", toId: "three", prime: 3n }]);
   });
 
   it("connects a composite along each prime axis", () => {
@@ -37,8 +37,8 @@ describe("createRadialConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "three", toId: "fifteen" },
-      { fromId: "five", toId: "fifteen" },
+      { fromId: "three", toId: "fifteen", prime: 5n },
+      { fromId: "five", toId: "fifteen", prime: 3n },
     ]);
   });
 
@@ -62,8 +62,8 @@ describe("createRadialConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "three", toId: "thirty-three" },
-      { fromId: "eleven", toId: "thirty-three" },
+      { fromId: "three", toId: "thirty-three", prime: 11n },
+      { fromId: "eleven", toId: "thirty-three", prime: 3n },
     ]);
   });
 
@@ -84,8 +84,8 @@ describe("createRadialConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "unison", toId: "three" },
-      { fromId: "three", toId: "nine" },
+      { fromId: "unison", toId: "three", prime: 3n },
+      { fromId: "three", toId: "nine", prime: 3n },
     ]);
   });
 
@@ -106,8 +106,8 @@ describe("createRadialConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "lower-three", toId: "unison" },
-      { fromId: "unison", toId: "upper-three" },
+      { fromId: "lower-three", toId: "unison", prime: 3n },
+      { fromId: "unison", toId: "upper-three", prime: 3n },
     ]);
   });
 });

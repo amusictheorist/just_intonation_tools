@@ -10,8 +10,8 @@ describe("createStandardCubicConnections", () => {
         { id: "c", coordinates: { x: 2, y: 0, z: 0 } },
       ]),
     ).toEqual([
-      { fromId: "a", toId: "b" },
-      { fromId: "b", toId: "c" },
+      { fromId: "a", toId: "b", prime: 3n },
+      { fromId: "b", toId: "c", prime: 3n },
     ]);
   });
 
@@ -21,7 +21,7 @@ describe("createStandardCubicConnections", () => {
         { id: "a", coordinates: { x: 0, y: 0, z: 0 } },
         { id: "c", coordinates: { x: 2, y: 0, z: 0 } },
       ]),
-    ).toEqual([{ fromId: "a", toId: "c" }]);
+    ).toEqual([{ fromId: "a", toId: "c", prime: 3n }]);
   });
 
   it("does not connect points that are not aligned on a cubic axis", () => {

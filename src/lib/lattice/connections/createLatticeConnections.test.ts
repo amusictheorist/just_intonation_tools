@@ -38,7 +38,7 @@ describe("createLatticeConnections", () => {
           position: { x: 2, y: 0, z: 0 },
         },
       ]),
-    ).toEqual([{ fromId: "a", toId: "b" }]);
+    ).toEqual([{ fromId: "a", toId: "b", prime: 3n }]);
   });
 
   it("creates connections from radial positioned ratios", () => {
@@ -83,7 +83,7 @@ describe("createLatticeConnections", () => {
           position: { x: 1, y: 0, z: 0 },
         },
       ]),
-    ).toEqual([{ fromId: "a", toId: "b" }]);
+    ).toEqual([{ fromId: "a", toId: "b", prime: 3n }]);
   });
 
   it("rejects mixed cubic and radial positioned ratios", () => {

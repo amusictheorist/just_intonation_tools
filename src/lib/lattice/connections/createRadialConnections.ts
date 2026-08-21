@@ -1,3 +1,4 @@
+import { findDifferingPrime } from "./findDifferingPrime";
 import { isPrimeAxisConnectionVisible } from "./isPrimeAxisConnectionVisible";
 import type { LatticeConnection } from "./latticeConnection";
 
@@ -34,7 +35,11 @@ export function createRadialConnections(
       )
         continue;
 
-      connections.push({ fromId: first.id, toId: second.id });
+      const prime = findDifferingPrime(first.exponents, second.exponents);
+
+      if (prime === null) continue;
+
+      connections.push({ fromId: first.id, toId: second.id, prime });
     }
   }
 

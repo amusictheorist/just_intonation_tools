@@ -7,6 +7,20 @@ export type StandardCubicConnectionPoint = Readonly<{
   coordinates: CubicCoordinates;
 }>;
 
+function findStandardCubicConnectionPrime(
+  first: CubicCoordinates,
+  second: CubicCoordinates,
+): bigint | null {
+  if (first.x !== second.x && first.y === second.y && first.z === second.z)
+    return 3n;
+  if (first.y !== second.y && first.x === second.x && first.z === second.z)
+    return 5n;
+  if (first.z !== second.z && first.x === second.x && first.y === second.y)
+    return 7n;
+
+  return null;
+}
+
 export function createStandardCubicConnections(
   points: readonly StandardCubicConnectionPoint[],
 ): readonly LatticeConnection[] {
@@ -35,7 +49,14 @@ export function createStandardCubicConnections(
       )
         continue;
 
-      connections.push({ fromId: first.id, toId: second.id });
+      const prime = findStandardCubicConnectionPrime(
+        first.coordinates,
+        second.coordinates,
+      );
+
+      if (prime === null) continue;
+
+      connections.push({ fromId: first.id, toId: second.id, prime });
     }
   }
   return connections;

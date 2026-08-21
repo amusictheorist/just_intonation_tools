@@ -1,16 +1,5 @@
 import { arePrimeExponentPositionsAxisAligned } from "./arePrimeExponentPositionsAxisAligned";
-
-function findDifferingPrime(
-  first: ReadonlyMap<bigint, number>,
-  second: ReadonlyMap<bigint, number>,
-): bigint | null {
-  const primes = new Set([...first.keys(), ...second.keys()]);
-
-  for (const prime of primes) {
-    if ((first.get(prime) ?? 0) !== (second.get(prime) ?? 0)) return prime;
-  }
-  return null;
-}
+import { findDifferingPrime } from "./findDifferingPrime";
 
 function liesBetweenOnPrimeAxis(
   reference: ReadonlyMap<bigint, number>,

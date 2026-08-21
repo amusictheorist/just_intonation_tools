@@ -12,6 +12,11 @@ describe("LatticeAppearanceControls", () => {
       <LatticeAppearanceControls
         higherPrimeColor="#00008b"
         onHigherPrimeColorChange={onHigherPrimeColorChange}
+        showConnections={true}
+        onShowConnectionsChange={vi.fn()}
+        availableConnectionPrimes={[]}
+        visibleConnectionPrimes={null}
+        onConnectionPrimeVisibilityChange={vi.fn()}
       />,
     );
 
@@ -20,5 +25,87 @@ describe("LatticeAppearanceControls", () => {
     });
 
     expect(onHigherPrimeColorChange).toHaveBeenCalledWith("#800080");
+  });
+
+  it("changes whether connections are shown", () => {
+    const onShowConnectionsChange = vi.fn();
+
+    render(
+      <LatticeAppearanceControls
+        higherPrimeColor="#00008b"
+        onHigherPrimeColorChange={vi.fn()}
+        showConnections={true}
+        onShowConnectionsChange={onShowConnectionsChange}
+        availableConnectionPrimes={[]}
+        visibleConnectionPrimes={null}
+        onConnectionPrimeVisibilityChange={vi.fn()}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "Show connections" }));
+
+    expect(onShowConnectionsChange).toHaveBeenCalledWith(false);
+  });
+
+  it("shows available connection prime axes when connections are enabled", () => {
+    render(
+      <LatticeAppearanceControls
+        higherPrimeColor="#00008b"
+        onHigherPrimeColorChange={vi.fn()}
+        showConnections={true}
+        onShowConnectionsChange={vi.fn()}
+        availableConnectionPrimes={[3n, 5n, 11n]}
+        visibleConnectionPrimes={null}
+        onConnectionPrimeVisibilityChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("checkbox", { name: "3" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "5" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "11" })).toBeChecked();
+  });
+
+  it("hides prime-axis controls when connections are disabled", () => {
+    render(
+      <LatticeAppearanceControls
+        higherPrimeColor="#00008b"
+        onHigherPrimeColorChange={vi.fn()}
+        showConnections={false}
+        onShowConnectionsChange={vi.fn()}
+        availableConnectionPrimes={[3n, 5n, 11n]}
+        visibleConnectionPrimes={null}
+        onConnectionPrimeVisibilityChange={vi.fn()}
+      />,
+    );
+
+    expect(
+      screen.queryByRole("checkbox", { name: "3" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("checkbox", { name: "5" }),
+    ).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("checkbox", { name: "11" }),
+    ).not.toBeInTheDocument();
+  });
+
+  it("changes connection-prime visibility", () => {
+    const onConnectionPrimeVisibilityChange = vi.fn();
+
+    render(
+      <LatticeAppearanceControls
+        higherPrimeColor="#00008b"
+        onHigherPrimeColorChange={vi.fn()}
+        showConnections={true}
+        onShowConnectionsChange={vi.fn()}
+        availableConnectionPrimes={[3n, 5n]}
+        visibleConnectionPrimes={null}
+        onConnectionPrimeVisibilityChange={onConnectionPrimeVisibilityChange}
+      />,
+    );
+
+    fireEvent.click(screen.getByRole("checkbox", { name: "5" }));
+
+    expect(onConnectionPrimeVisibilityChange).toHaveBeenCalledWith(5n, false);
   });
 });

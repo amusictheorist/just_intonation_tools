@@ -10,10 +10,12 @@ describe("createLatticeSceneConnections", () => {
       {
         fromId: "ratio-1",
         toId: "ratio-2",
+        prime: 3n,
       },
       {
         fromId: "ratio-2",
         toId: "ratio-3",
+        prime: 5n,
       },
     ] satisfies readonly LatticeConnection[];
 

@@ -5,23 +5,37 @@ import type { PositionedLatticeRatio } from "../../../lib/lattice/state/createPo
 import { createLatticeScenePoints } from "../../../lib/lattice/presentation/createLatticeScenePoints";
 import { createLatticeConnections } from "../../../lib/lattice/connections/createLatticeConnections";
 import { createLatticeSceneConnections } from "../../../lib/lattice/presentation/createLatticeSceneConnections";
+import {
+  filterLatticeConnections,
+  type LatticeConnectionVisibility,
+} from "../../../lib/lattice/connections/filterLatticeConnections";
+import { createAvailableConnectionPrimes } from "../../../lib/lattice/connections/createAvailableConnectionPrimes";
 
 type UseLatticeSceneDataResult = {
   scenePoints: readonly LatticeScenePoint[];
   sceneConnections: readonly LatticeSceneConnection[];
+  availableConnectionPrimes: readonly bigint[];
 };
 
 export function useLatticeSceneData(
   positionedRatios: readonly PositionedLatticeRatio[],
+  connectionVisibility: LatticeConnectionVisibility,
 ): UseLatticeSceneDataResult {
   return useMemo(() => {
     const scenePoints = createLatticeScenePoints(positionedRatios);
     const connections = createLatticeConnections(positionedRatios);
-    const sceneConnections = createLatticeSceneConnections(
+    const availableConnectionPrimes =
+      createAvailableConnectionPrimes(connections);
+
+    const visibleConnections = filterLatticeConnections(
       connections,
+      connectionVisibility,
+    );
+    const sceneConnections = createLatticeSceneConnections(
+      visibleConnections,
       scenePoints,
     );
 
-    return { scenePoints, sceneConnections };
-  }, [positionedRatios]);
+    return { scenePoints, sceneConnections, availableConnectionPrimes };
+  }, [positionedRatios, connectionVisibility]);
 }

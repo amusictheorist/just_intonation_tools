@@ -9,6 +9,7 @@ describe("createLatticeSceneConnection", () => {
     const connection = {
       fromId: "ratio-1",
       toId: "ratio-2",
+      prime: 3n,
     } satisfies LatticeConnection;
 
     const ratio1 = createTestRatio(3n, 2n);
@@ -47,6 +48,7 @@ describe("createLatticeSceneConnection", () => {
     const connection = {
       fromId: "ratio-1",
       toId: "ratio-2",
+      prime: 3n,
     } satisfies LatticeConnection;
 
     const ratio2 = createTestRatio(5n, 4n);
@@ -72,6 +74,7 @@ describe("createLatticeSceneConnection", () => {
     const connection = {
       fromId: "ratio-1",
       toId: "ratio-2",
+      prime: 3n,
     } satisfies LatticeConnection;
 
     const ratio1 = createTestRatio(3n, 2n);

@@ -28,8 +28,8 @@ describe("createExpandedCubicConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "origin", toId: "local" },
-      { fromId: "origin", toId: "high-prime" },
+      { fromId: "origin", toId: "local", prime: 3n },
+      { fromId: "origin", toId: "high-prime", prime: 11n },
     ]);
   });
 
@@ -59,8 +59,8 @@ describe("createExpandedCubicConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "a", toId: "b" },
-      { fromId: "b", toId: "c" },
+      { fromId: "a", toId: "b", prime: 3n },
+      { fromId: "b", toId: "c", prime: 3n },
     ]);
   });
 
@@ -90,8 +90,8 @@ describe("createExpandedCubicConnections", () => {
         },
       ]),
     ).toEqual([
-      { fromId: "lower", toId: "origin" },
-      { fromId: "origin", toId: "upper" },
+      { fromId: "lower", toId: "origin", prime: 11n },
+      { fromId: "origin", toId: "upper", prime: 11n },
     ]);
   });
 });
