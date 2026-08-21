@@ -4,7 +4,7 @@ import {
   createCanonicalPrimeFactorPath,
   type PrimeFactorStep,
 } from "./createCanonicalPrimeFactorPath";
-import type { PrimeExponents } from "./factorPrimesIgnoringTwo";
+import type { PrimeExponents } from "./primeExponents";
 
 /**
  * Represents the symbolic prime-factor structure used by radial placement.

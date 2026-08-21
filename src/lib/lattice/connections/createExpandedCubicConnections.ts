@@ -1,5 +1,6 @@
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
 import { createHigherPrimeExponents } from "./createHigherPrimeExponents";
+import { findCubicConnectionPrime } from "./findCubicConnectionPrime";
 import { findDifferingPrime } from "./findDifferingPrime";
 import { isExpandedCubicHigherPrimeConnectionVisible } from "./isExpandedCubicHigherPrimeConnectionVisible";
 import { isExpandedCubicLocalConnectionVisible } from "./isExpandedCubicLocalConnectionVisible";
@@ -9,37 +10,6 @@ export type ExpandedCubicConnectionPoint = Readonly<{
   id: string;
   address: ExpandedCubicAddress;
 }>;
-
-function findLocalConnectionPrime(
-  first: ExpandedCubicAddress,
-  second: ExpandedCubicAddress,
-): bigint | null {
-  const firstCoorindates = first.coordinates357;
-  const secondCoorindates = second.coordinates357;
-
-  if (
-    firstCoorindates.x !== secondCoorindates.x &&
-    firstCoorindates.y === secondCoorindates.y &&
-    firstCoorindates.z === secondCoorindates.z
-  )
-    return 3n;
-
-  if (
-    firstCoorindates.x === secondCoorindates.x &&
-    firstCoorindates.y !== secondCoorindates.y &&
-    firstCoorindates.z === secondCoorindates.z
-  )
-    return 5n;
-
-  if (
-    firstCoorindates.x === secondCoorindates.x &&
-    firstCoorindates.y === secondCoorindates.y &&
-    firstCoorindates.z !== secondCoorindates.z
-  )
-    return 7n;
-
-  return null;
-}
 
 export function createExpandedCubicConnections(
   points: ExpandedCubicConnectionPoint[],
@@ -67,7 +37,10 @@ export function createExpandedCubicConnections(
       );
 
       if (localConnectionVisible) {
-        const prime = findLocalConnectionPrime(first.address, second.address);
+        const prime = findCubicConnectionPrime(
+          first.address.coordinates357,
+          second.address.coordinates357,
+        );
 
         if (prime !== null) {
           connections.push({ fromId: first.id, toId: second.id, prime });

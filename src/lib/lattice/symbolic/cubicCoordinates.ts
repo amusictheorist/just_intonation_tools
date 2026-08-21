@@ -1,4 +1,4 @@
-import type { PrimeExponents } from "./factorPrimesIgnoringTwo";
+import type { PrimeExponents } from "./primeExponents";
 
 /**
  * Represents symbolic coordinates in the standard 3-5-7 cubic lattice.

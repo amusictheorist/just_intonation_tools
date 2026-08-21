@@ -1,11 +1,11 @@
-import type { PrimeExponents } from "./factorPrimesIgnoringTwo";
-
 /**
  * Represents one step in a symbolic prime-factor path.
  *
  * `prime` identifies the prime factor that contributes the step.
  * `direction` is `1` for a numerator factor and `-1` for a denominator factor.
  */
+
+import type { PrimeExponents } from "./primeExponents";
 
 export type PrimeFactorStep = Readonly<{
   prime: bigint;

@@ -1,8 +1,9 @@
 import type { PrimeFactorStep } from "../symbolic/createCanonicalPrimeFactorPath";
+import type { PrimeExponents } from "../symbolic/primeExponents";
 
 export function createPrimeExponents(
   path: readonly PrimeFactorStep[],
-): Map<bigint, number> {
+): PrimeExponents {
   const exponents = new Map<bigint, number>();
 
   for (const step of path) {

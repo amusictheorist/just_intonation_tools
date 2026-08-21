@@ -1,4 +1,5 @@
 import type { RadialVisualizationPlacement } from "../symbolic/createRadialVisualizationPlacement";
+import type { PrimeExponents } from "../symbolic/primeExponents";
 import { createPrimeExponents } from "./createPrimeExponents";
 import { createRadialConnections } from "./createRadialConnections";
 import type { LatticeConnection } from "./latticeConnection";
@@ -10,7 +11,7 @@ export type RadialVisualizationConnectionPoint = Readonly<{
 
 function createRadialConnectionExponents(
   placement: RadialVisualizationPlacement,
-): ReadonlyMap<bigint, number> {
+): PrimeExponents {
   const exponents = createPrimeExponents(placement.address.path);
 
   if (placement.type === "standard") return exponents;

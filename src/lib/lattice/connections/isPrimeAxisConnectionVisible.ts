@@ -1,9 +1,9 @@
-import { arePrimeExponentPositionsAxisAligned } from "./arePrimeExponentPositionsAxisAligned";
+import type { PrimeExponents } from "../symbolic/primeExponents";
 import { findDifferingPrime } from "./findDifferingPrime";
 
 function liesBetweenOnPrimeAxis(
-  reference: ReadonlyMap<bigint, number>,
-  other: ReadonlyMap<bigint, number>,
+  reference: PrimeExponents,
+  other: PrimeExponents,
   prime: bigint,
   firstExponent: number,
   secondExponent: number,
@@ -27,13 +27,22 @@ function liesBetweenOnPrimeAxis(
   );
 }
 
-export function isPrimeAxisConnectionVisible(
-  first: ReadonlyMap<bigint, number>,
-  second: ReadonlyMap<bigint, number>,
-  others: readonly ReadonlyMap<bigint, number>[],
-): boolean {
-  if (!arePrimeExponentPositionsAxisAligned(first, second)) return false;
+/**
+ * Determines whether two prime-exponent positions should be connected.
+ *
+ * A connection is visible when the positions differ along exactly one prime axis and no other displayed position lies strictly between them on that axis.
+ *
+ * @param first Map of prime exponents.
+ * @param second Map of prime exponents
+ * @param others Map of surrounding prime exponents.
+ * @returns Whether a connection is visible along a prime axis or not.
+ */
 
+export function isPrimeAxisConnectionVisible(
+  first: PrimeExponents,
+  second: PrimeExponents,
+  others: readonly PrimeExponents[],
+): boolean {
   const prime = findDifferingPrime(first, second);
 
   if (prime === null) return false;

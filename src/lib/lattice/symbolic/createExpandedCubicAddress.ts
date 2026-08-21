@@ -6,7 +6,7 @@ import {
   extractCubicCoordinates,
   type CubicCoordinates,
 } from "./cubicCoordinates";
-import type { PrimeExponents } from "./factorPrimesIgnoringTwo";
+import type { PrimeExponents } from "./primeExponents";
 
 /**
  * Represents a symbolic location in the expanded cubic lattice.

@@ -1,12 +1,5 @@
 import type { Ratio } from "../../ji/ratio";
-
-/**
- * Maps prime factors to their signed exponents in a ratio.
- *
- * Positive exponents come from the numerator and negative exponents come from the denominator. Powers of 2 are omitted because they represent octave displacement rather than symbolic lattice movement.
- */
-
-export type PrimeExponents = ReadonlyMap<bigint, number>;
+import type { PrimeExponents } from "./primeExponents";
 
 function factorIntegerIgnoringTwo(input: bigint): Map<bigint, number> {
   const factors = new Map<bigint, number>();
@@ -31,8 +24,8 @@ function factorIntegerIgnoringTwo(input: bigint): Map<bigint, number> {
 }
 
 function mergePrimeExponents(
-  numeratorFactors: ReadonlyMap<bigint, number>,
-  denominatorFactors: ReadonlyMap<bigint, number>,
+  numeratorFactors: PrimeExponents,
+  denominatorFactors: PrimeExponents,
 ): PrimeExponents {
   const result = new Map<bigint, number>();
 

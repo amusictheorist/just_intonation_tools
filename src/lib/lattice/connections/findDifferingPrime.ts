@@ -1,6 +1,8 @@
+import type { PrimeExponents } from "../symbolic/primeExponents";
+
 export function findDifferingPrime(
-  first: ReadonlyMap<bigint, number>,
-  second: ReadonlyMap<bigint, number>,
+  first: PrimeExponents,
+  second: PrimeExponents,
 ): bigint | null {
   const primes = new Set([...first.keys(), ...second.keys()]);
   let differingPrime: bigint | null = null;

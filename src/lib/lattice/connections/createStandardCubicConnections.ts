@@ -1,4 +1,5 @@
 import type { CubicCoordinates } from "../symbolic/cubicCoordinates";
+import { findCubicConnectionPrime } from "./findCubicConnectionPrime";
 import { isStandardCubicConnectionVisible } from "./isStandardCubicConnectionVisible";
 import type { LatticeConnection } from "./latticeConnection";
 
@@ -6,20 +7,6 @@ export type StandardCubicConnectionPoint = Readonly<{
   id: string;
   coordinates: CubicCoordinates;
 }>;
-
-function findStandardCubicConnectionPrime(
-  first: CubicCoordinates,
-  second: CubicCoordinates,
-): bigint | null {
-  if (first.x !== second.x && first.y === second.y && first.z === second.z)
-    return 3n;
-  if (first.y !== second.y && first.x === second.x && first.z === second.z)
-    return 5n;
-  if (first.z !== second.z && first.x === second.x && first.y === second.y)
-    return 7n;
-
-  return null;
-}
 
 export function createStandardCubicConnections(
   points: readonly StandardCubicConnectionPoint[],
@@ -49,7 +36,7 @@ export function createStandardCubicConnections(
       )
         continue;
 
-      const prime = findStandardCubicConnectionPrime(
+      const prime = findCubicConnectionPrime(
         first.coordinates,
         second.coordinates,
       );
