@@ -41,12 +41,31 @@ describe("createLatticeConnections", () => {
     ).toEqual([{ fromId: "a", toId: "b" }]);
   });
 
-  it("returns no connections for radial positioned ratios", () => {
+  it("creates connections from radial positioned ratios", () => {
     expect(
       createLatticeConnections([
         {
           latticeRatio: {
             id: "a",
+            rawInput: "1",
+            ratio: createUnisonRatio(),
+          },
+          placement: {
+            type: "radial",
+            placement: {
+              type: "standard",
+              address: {
+                normalizedRatio: createUnisonRatio(),
+                path: [],
+                distance: 0,
+              },
+            },
+          },
+          position: { x: 0, y: 0, z: 0 },
+        },
+        {
+          latticeRatio: {
+            id: "b",
             rawInput: "3/2",
             ratio: createTestRatio(3n, 2n),
           },
@@ -61,10 +80,10 @@ describe("createLatticeConnections", () => {
               },
             },
           },
-          position: { x: 0, y: 0, z: 0 },
+          position: { x: 1, y: 0, z: 0 },
         },
       ]),
-    ).toEqual([]);
+    ).toEqual([{ fromId: "a", toId: "b" }]);
   });
 
   it("rejects mixed cubic and radial positioned ratios", () => {

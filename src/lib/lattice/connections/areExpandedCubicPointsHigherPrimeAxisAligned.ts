@@ -1,4 +1,5 @@
 import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
+import { arePrimeExponentPositionsAxisAligned } from "./arePrimeExponentPositionsAxisAligned";
 import { createHigherPrimeExponents } from "./createHigherPrimeExponents";
 
 export function areExpandedCubicPointsHigherPrimeAxisAligned(
@@ -12,17 +13,8 @@ export function areExpandedCubicPointsHigherPrimeAxisAligned(
   )
     return false;
 
-  const firstExponents = createHigherPrimeExponents(first);
-  const secondExponents = createHigherPrimeExponents(second);
-
-  const primes = new Set([...firstExponents.keys(), ...secondExponents.keys()]);
-
-  let differingPrimes = 0;
-
-  for (const prime of primes) {
-    if ((firstExponents.get(prime) ?? 0) !== (secondExponents.get(prime) ?? 0))
-      differingPrimes++;
-  }
-
-  return differingPrimes === 1;
+  return arePrimeExponentPositionsAxisAligned(
+    createHigherPrimeExponents(first),
+    createHigherPrimeExponents(second),
+  );
 }
