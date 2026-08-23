@@ -1,4 +1,4 @@
-import type { Vector3 } from "../geometry/createRadialDirectionVector";
+import type { Vector3 } from "../geometry/vector";
 import { createLatticeVisualizationPosition } from "../geometry/createLatticeVisualizationPosition";
 import type { LatticeRatio } from "./latticeRatio";
 import type { LatticePositioningConfiguration } from "./latticePositioningConfiguration";

@@ -1,6 +1,6 @@
 import type { LowerRadialSymmetry } from "../state/latticeGeometry";
 import type { ExpandedRadialAddress } from "../symbolic/createExpandedRadialAddress";
-import { type Vector3 } from "./createRadialDirectionVector";
+import { type Vector3 } from "./vector";
 import { createRadialPosition } from "./createRadialPosition";
 
 /**
@@ -8,9 +8,9 @@ import { createRadialPosition } from "./createRadialPosition";
  *
  * Upper-side addresses use ordinary signed radial placement unchanged.
  *
- * Lower-side addresses are placed below the origin. In `aligned` mode, the horizontal vector is inverted so that a lower-sode ratio aligns tiwh its corresponding upper-side inverse. In `continuous` mode, the signed horizontal vector is preserved, placing the lower-side ratio 180 degrees aroung the origin from its aligned position.
+ * Lower-side addresses are placed below the origin. In `aligned` mode, the horizontal vector is inverted so that a lower-side ratio aligns with its corresponding upper-side inverse. In `continuous` mode, the signed horizontal vector is preserved, placing the lower-side ratio 180 degrees around the origin from its aligned position.
  *
- * Generator-height handling is delegated to ordinary radial placement, so flattened placement remains available through the same option..
+ * Generator-height handling is delegated to ordinary radial placement, so flattened placement remains available through the same option.
  *
  * @param address The symbolic expanded radial address to place.
  * @param includeGeneratorHeight Whether generator distance contributes to y.

@@ -1,4 +1,8 @@
-import type { Vector3 } from "./createRadialDirectionVector";
+export type Vector3 = Readonly<{
+  x: number;
+  y: number;
+  z: number;
+}>;
 
 export function addVectors(first: Vector3, second: Vector3): Vector3 {
   return {

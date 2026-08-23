@@ -9,7 +9,7 @@ import {
 import { coordinateArbitrary } from "./test/coordinateArbitrary";
 
 describe("vector properties", () => {
-  it("nomalizes nonzero vectors to unit length", () => {
+  it("normalizes nonzero vectors to unit length", () => {
     fc.assert(
       fc.property(
         coordinateArbitrary,

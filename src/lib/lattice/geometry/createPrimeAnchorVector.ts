@@ -1,10 +1,10 @@
-import type { Vector3 } from "./createRadialDirectionVector";
+import type { Vector3 } from "./vector";
 import { getHigherPrimeOrdinal } from "./getHigherPrimeOrdinal";
 
 /**
  * Computes the radical inverse of a non-negative integer in the given base.
  *
- * The digits of the integer are reflected across the radix point to produce a deterministic value in the interval [0, 1). This is used to generate the low-discrepancy corrdinates for the provisional prime-anchor sphere.
+ * The digits of the integer are reflected across the radix point to produce a deterministic value in the interval [0, 1). This is used to generate the low-discrepancy coordinates for the provisional prime-anchor sphere.
  *
  * @param index The non-negative integer whose digits are reflected.
  * @param base The integer used for the radical inverse.
@@ -27,7 +27,7 @@ function radicalInverse(index: bigint, base: bigint): number {
 }
 
 /**
- * Creates the provisional unit-sphere snachor vector for a higher prime.
+ * Creates a deterministic unit-sphere anchor vector for a higher prime.
  *
  * Higher primes are assigned permanent sequence positions by their higher-prime ordinal. A low-discrepancy spherical sequence then maps that ordinal to a deterministic unit vector.
  *
@@ -39,10 +39,10 @@ function radicalInverse(index: bigint, base: bigint): number {
 
 export function createPrimeAnchorVector(prime: bigint): Vector3 {
   const ordinal = getHigherPrimeOrdinal(prime);
-  const sequenceIncex = ordinal + 1n;
+  const sequenceIndex = ordinal + 1n;
 
-  const latitudePosition = radicalInverse(sequenceIncex, 2n);
-  const longitudePosition = radicalInverse(sequenceIncex, 3n);
+  const latitudePosition = radicalInverse(sequenceIndex, 2n);
+  const longitudePosition = radicalInverse(sequenceIndex, 3n);
 
   const z = 1 - 2 * latitudePosition;
   const radius = Math.sqrt(1 - z ** 2);

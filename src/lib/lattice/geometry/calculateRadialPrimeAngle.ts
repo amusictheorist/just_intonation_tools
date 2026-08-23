@@ -3,7 +3,7 @@ import type { PrimeFactorStep } from "../symbolic/createCanonicalPrimeFactorPath
 /**
  * Calculates the radial angle of a signed prime-factor step.
  *
- * The prime is octave-normalized into [1, 2) before conversion to an angular position. Negative steps use the octave-normalized inverse interval, placing positive and negative directions at complementary angles aroung the radial plane.
+ * The prime is octave-normalized into [1, 2) before conversion to an angular position. Negative steps use the octave-normalized inverse interval, placing positive and negative directions at complementary angles around the radial plane.
  *
  * This function marks an explicit boundary between exact symbolic lattice values and floating-point geometry.
  *

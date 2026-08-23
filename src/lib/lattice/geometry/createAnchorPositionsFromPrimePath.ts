@@ -1,6 +1,5 @@
 import type { PrimeFactorStep } from "../symbolic/createCanonicalPrimeFactorPath";
-import type { Vector3 } from "./createRadialDirectionVector";
-import { addVectors } from "./vector";
+import { addVectors, type Vector3 } from "./vector";
 
 export type PrimeAnchorVectorResolver = (step: PrimeFactorStep) => Vector3;
 

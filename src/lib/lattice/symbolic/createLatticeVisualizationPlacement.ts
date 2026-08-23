@@ -12,7 +12,7 @@ import {
 /**
  * Symbolic placement for one ratio within the selected visualization family.
  *
- * The outer type distinguishes cubic from radial visualization, while the nested variant distinguishes from the standard and expanded representation within that familyt.
+ * The outer type distinguishes cubic from radial visualization, while the nested variant distinguishes the standard and expanded representation within that family.
  */
 
 export type LatticeVisualizationPlacement =

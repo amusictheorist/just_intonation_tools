@@ -1,6 +1,6 @@
 import type { PrimeFactorStep } from "../symbolic/createCanonicalPrimeFactorPath";
 import { createPrimeAnchorVector } from "./createPrimeAnchorVector";
-import type { Vector3 } from "./createRadialDirectionVector";
+import type { Vector3 } from "./vector";
 import { scaleVector } from "./vector";
 
 /**

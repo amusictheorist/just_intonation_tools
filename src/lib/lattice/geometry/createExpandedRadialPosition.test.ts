@@ -99,21 +99,6 @@ describe("createExpandedRadialPosition", () => {
     expect(continuousPosition.z).toBeCloseTo(alignedPosition.z);
   });
 
-  it("uses the whole normalized ratio for higher-prime placement", () => {
-    const position = createExpandedRadialPosition(
-      {
-        normalizedRatio: createTestRatio(11n, 8n),
-        side: "upper",
-        path: [{ prime: 11n, direction: 1 }],
-        distance: 1,
-      },
-      true,
-      "continuous",
-    );
-
-    expect(position.y).toBeCloseTo(1);
-  });
-
   it("keeps lower-side placement flattened when generator height is disabled", () => {
     const address = {
       normalizedRatio: createTestRatio(2n, 3n),

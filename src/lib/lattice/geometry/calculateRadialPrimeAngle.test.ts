@@ -38,7 +38,7 @@ describe("calculateRadialPrimeAngle", () => {
     ).toBeCloseTo(Math.log2(8 / 5) * 360);
   });
 
-  it("places positie and negative directions at complementary angles", () => {
+  it("places positive and negative directions at complementary angles", () => {
     const positiveAngle = calculateRadialPrimeAngle({
       prime: 7n,
       direction: 1,

@@ -10,6 +10,15 @@ function isPrime(value: bigint): boolean {
   return true;
 }
 
+/**
+ * Returns a higher-prime's zero-based ordinal in the sequence beginning at 11.
+ *
+ * For example, 11 → 0, 13 → 1, 17 → 2.
+ *
+ * @param prime The prime to check.
+ * @returns The prime's ordinal number.
+ */
+
 export function getHigherPrimeOrdinal(prime: bigint): bigint {
   let ordinal = 0n;
 

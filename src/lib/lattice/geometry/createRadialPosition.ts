@@ -1,16 +1,14 @@
 import type { RadialAddress } from "../symbolic/createRadialAddress";
 import { calculateRadialPrimeAngle } from "./calculateRadialPrimeAngle";
-import {
-  createRadialDirectionVector,
-  type Vector3,
-} from "./createRadialDirectionVector";
+import { createRadialDirectionVector } from "./createRadialDirectionVector";
+import type { Vector3 } from "./vector";
 
 /**
  * Converts a symbolic radial address into a Cartesian position.
  *
- * Each prime factor contributes its canonical radial direction vector. Positive prime-factor steps add that vector, while nefative steps subtract it. Repeated factors therefore extend along the same straight line, and composite ratios are positioned by vector addition.
+ * Each prime factor contributes its canonical radial direction vector. Positive prime-factor steps add that vector, while negative steps subtract it. Repeated factors therefore extend along the same straight line, and composite ratios are positioned by vector addition.
  *
- * When generator height is enabled, the y-coordinate equls the address's generator distance; otherwise the position is flattened to y = 0.
+ * When generator height is enabled, the y-coordinate equals the address's generator distance; otherwise the position is flattened to y = 0.
  *
  * @param address The symbolic radial address to place.
  * @param includesGeneratorHeight Whether to use generator distance as the vertical coordinate.

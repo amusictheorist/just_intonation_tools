@@ -1,5 +1,5 @@
 import type { Ratio } from "../../ji/ratio";
-import type { Vector3 } from "../geometry/createRadialDirectionVector";
+import type { Vector3 } from "../geometry/vector";
 
 export type LatticeScenePoint = Readonly<{
   id: string;

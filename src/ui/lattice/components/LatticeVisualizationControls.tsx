@@ -4,6 +4,7 @@ import type {
   LowerRadialSymmetry,
 } from "../../../lib/lattice/state/latticeGeometry";
 import type { LatticePositioningConfiguration } from "../../../lib/lattice/state/latticePositioningConfiguration";
+import { DEFAULT_CUBIC_LOCAL_ROTATION } from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
 type LatticeVisualizationControlsProps = {
   configuration: LatticePositioningConfiguration;
@@ -39,7 +40,7 @@ function LatticeVisualizationControls({
   const initialLocalRotation =
     configuration.geometry.type === "cubic"
       ? configuration.geometry.localRotation
-      : { x: 0, y: 0, z: 0 };
+      : DEFAULT_CUBIC_LOCAL_ROTATION;
 
   const [rotationControls, setRotationControls] =
     useState<RotationControlsState>({

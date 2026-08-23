@@ -1,5 +1,5 @@
 import type { PrimeFactorStep } from "../../symbolic/createCanonicalPrimeFactorPath";
-import type { Vector3 } from "../createRadialDirectionVector";
+import type { Vector3 } from "../vector";
 
 const anchorVectors = new Map<bigint, Vector3>([
   [11n, { x: 2, y: 0, z: 0 }],

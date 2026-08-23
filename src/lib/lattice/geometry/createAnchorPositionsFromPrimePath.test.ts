@@ -73,7 +73,7 @@ describe("createAnchorPositionsFromPrimePath", () => {
     expect(second.z).toBeCloseTo(first.z * 2);
   });
 
-  it("establishes a new nested direction when the prime changes", () => {
+  it("uses the canonical direction when the prime changes", () => {
     const positions = createAnchorPositionsFromPrimePath(
       [
         { prime: 11n, direction: 1 },

@@ -2,12 +2,13 @@ import type { LatticeGeometry } from "../state/latticeGeometry";
 import type { LatticeVisualizationPlacement } from "../symbolic/createLatticeVisualizationPlacement";
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
 import type { PrimeAnchorVectorResolver } from "./createAnchorPositionsFromPrimePath";
-import type { Vector3 } from "./createRadialDirectionVector";
+import type { Vector3 } from "./vector";
 import { resolvePrimeAnchorVector } from "./resolvePrimeAnchorVector";
 import { createRadialPosition } from "./createRadialPosition";
 import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
 import {
   CUBIC_SPACING,
+  LATTICE_ORIGIN,
   RADIAL_HORIZONTAL_SPACING,
   RADIAL_VERTICAL_SPACING,
 } from "./latticeGeometryConstants";
@@ -30,6 +31,16 @@ function scaleRadialPosition(position: Vector3): Vector3 {
     z: position.z * RADIAL_HORIZONTAL_SPACING,
   };
 }
+
+/**
+ * Resolves symbolic lattice placement into scaled Cartesian geometry.
+ *
+ * Visualization-family spacing is applied here, keeping symbolic placement independent from rendered scene scale.
+ *
+ * @param input The compatible symbolic placement and geometry configuration for the selected lattice visualization family.
+ * @param resolveAnchorVector Resolves higher-prime steps to canonical anchor vectors before higher-prime radius and cubic spacing are applied.
+ * @returns The final scaled Cartesian position.
+ */
 
 export function createLatticeVisualizationPosition(
   input: LatticeVisualizationPositionInput,
@@ -55,7 +66,7 @@ export function createLatticeVisualizationPosition(
 
     const position = createExpandedCubicPosition(
       placement.variant.address,
-      { x: 0, y: 0, z: 0 },
+      LATTICE_ORIGIN,
       geometry.localRotation,
       resolveScaledAnchorVector,
     );

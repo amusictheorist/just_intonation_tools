@@ -3,14 +3,11 @@ import {
   createStandardCubicCoordinates,
   extractCubicCoordinates,
 } from "./cubicCoordinates";
+import { LATTICE_ORIGIN } from "../geometry/latticeGeometryConstants";
 
 describe("createStandardCubicCoordinates", () => {
   it("places unison at the origin", () => {
-    expect(createStandardCubicCoordinates(new Map())).toEqual({
-      x: 0,
-      y: 0,
-      z: 0,
-    });
+    expect(createStandardCubicCoordinates(new Map())).toEqual(LATTICE_ORIGIN);
   });
 
   it("maps the exponent of 3 to the x-axis", () => {
@@ -83,11 +80,7 @@ describe("createStandardCubicCoordinates", () => {
 
 describe("extractCubicCoordinates", () => {
   it("places unison at the origin", () => {
-    expect(extractCubicCoordinates(new Map())).toEqual({
-      x: 0,
-      y: 0,
-      z: 0,
-    });
+    expect(extractCubicCoordinates(new Map())).toEqual(LATTICE_ORIGIN);
   });
 
   it("maps 3, 5, and 7 exponents to cubic coordinates", () => {

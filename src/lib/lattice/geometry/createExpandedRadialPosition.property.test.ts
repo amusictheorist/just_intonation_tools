@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { factorableRatioArbitrary } from "../../ji/test/ratioArbitraries";
 import { createExpandedRadialAddress } from "../symbolic/createExpandedRadialAddress";
 import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
-import { inverRatio } from "../../ji/invertRatio";
+import { invertRatio } from "../../ji/invertRatio";
 
 describe("createExpandedRadialPosition properties", () => {
   it("aligns lower-side ratios with their upper-side inverses", () => {
@@ -13,7 +13,7 @@ describe("createExpandedRadialPosition properties", () => {
 
         fc.pre(lowerAddress.side === "lower");
 
-        const upperAddress = createExpandedRadialAddress(inverRatio(ratio));
+        const upperAddress = createExpandedRadialAddress(invertRatio(ratio));
 
         const lowerPosition = createExpandedRadialPosition(
           lowerAddress,

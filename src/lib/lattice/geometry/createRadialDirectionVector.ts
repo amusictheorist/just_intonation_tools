@@ -1,8 +1,4 @@
-export type Vector3 = Readonly<{
-  x: number;
-  y: number;
-  z: number;
-}>;
+import type { Vector3 } from "./vector";
 
 /**
  * Converts a radial angle in degrees into a unit direction vector in the x-y-z plane.

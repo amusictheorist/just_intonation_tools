@@ -1,9 +1,19 @@
 import type { CubicLocalRotation } from "../state/latticeGeometry";
-import type { Vector3 } from "./createRadialDirectionVector";
+import type { Vector3 } from "./vector";
 
 function degreesToRadians(degrees: number): number {
   return (degrees * Math.PI) / 180;
 }
+
+/**
+ * Rotates a vector by Euler angles in X → Y → Z order.
+ *
+ * Rotation values are expressed in degrees.
+ *
+ * @param vector The vector to be rotated.
+ * @param rotation The amount of rotation per axis.
+ * @returns The rotated vector.
+ */
 
 export function rotateVector(
   vector: Vector3,

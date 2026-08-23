@@ -4,14 +4,7 @@ import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddres
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
 import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 import { DEFAULT_CUBIC_LOCAL_ROTATION } from "./latticeGeometryConstants";
-
-const coordinateArbitrary = fc.integer({ min: -100, max: 100 });
-
-const vectorArbitrary = fc.record({
-  x: coordinateArbitrary,
-  y: coordinateArbitrary,
-  z: coordinateArbitrary,
-});
+import { vectorArbitrary } from "./test/vectorArbitrary";
 
 const cubicAddressArbitrary = fc.record({
   anchorPath: fc.constant([]),
