@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { primeExponentsArbitrary } from "./arbitraries/primeExponentsArbitrary";
 import { createExpandedCubicAddress } from "./createExpandedCubicAddress";
 
-describe("createExpandedCubicAddress propertis", () => {
+describe("createExpandedCubicAddress properties", () => {
   it("uses only primes above 7 in the anchor path", () => {
     fc.assert(
       fc.property(primeExponentsArbitrary, (factors) => {

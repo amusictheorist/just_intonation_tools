@@ -1,11 +1,12 @@
+import type { PrimeExponents } from "./primeExponents";
+import { comparePrimesAscending } from "./comparePrimesAscending";
+
 /**
  * Represents one step in a symbolic prime-factor path.
  *
  * `prime` identifies the prime factor that contributes the step.
  * `direction` is `1` for a numerator factor and `-1` for a denominator factor.
  */
-
-import type { PrimeExponents } from "./primeExponents";
 
 export type PrimeFactorStep = Readonly<{
   prime: bigint;
@@ -29,8 +30,9 @@ export function createCanonicalPrimeFactorPath(
   factors: PrimeExponents,
 ): readonly PrimeFactorStep[] {
   const steps: PrimeFactorStep[] = [];
-  const sortedFactors = [...factors.entries()].sort(([primeA], [primeB]) =>
-    primeA < primeB ? -1 : primeA > primeB ? 1 : 0,
+  const sortedFactors = [...factors.entries()].sort(
+    ([firstPrime], [secondPrime]) =>
+      comparePrimesAscending(firstPrime, secondPrime),
   );
 
   for (const [prime, exponent] of sortedFactors) {
