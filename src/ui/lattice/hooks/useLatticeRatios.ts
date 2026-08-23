@@ -4,7 +4,7 @@ import {
   type AddLatticeRatioFromInputResult,
 } from "../../../lib/lattice/state/addLatticeRatioFromInput";
 import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
-import { removeLastLatticeRatioById } from "../../../lib/lattice/state/removeLastLatticeRatioById";
+import { removeLatticeRatioById } from "../../../lib/lattice/state/removeLatticeRatioById";
 import { createInitialLatticeRatio } from "../../../lib/lattice/state/createInitialLatticeRatio";
 
 type UseLatticeRatiosResult = {
@@ -55,7 +55,7 @@ export function useLatticeRatios(): UseLatticeRatiosResult {
     )
       return;
 
-    const nextRatios = removeLastLatticeRatioById(ratiosRef.current, id);
+    const nextRatios = removeLatticeRatioById(ratiosRef.current, id);
 
     if (nextRatios.length === ratiosRef.current.length) return;
 

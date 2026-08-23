@@ -18,6 +18,15 @@ export type AddLatticeRatioFromInputResult =
       error: string;
     }>;
 
+/**
+ * Parses and adds a raw lattice ratio input.
+ *
+ * @param ratios The current lattice ratios.
+ * @param id The identifier to assign if the input creates a new ratio.
+ * @param rawInput The raw ratio string to parse and add.
+ * @returns An added, duplicate, or invalid result with the resulting lattice ratio state and any relevant duplicate or validation information.
+ */
+
 export function addLatticeRatioFromInput(
   ratios: readonly LatticeRatio[],
   id: string,

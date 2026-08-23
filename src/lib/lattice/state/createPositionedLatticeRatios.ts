@@ -12,6 +12,16 @@ export type PositionedLatticeRatio = Readonly<{
   position: Vector3;
 }>;
 
+/**
+ * Resolves lattice ratios into symbolic placements and Cartesian positions using one compatible visualization and geometry configuration.
+ *
+ * Ratios excluded by the current visualization configuration are omitted.
+ *
+ * @param ratios The lattice ratios to position.
+ * @param configuration The compatible visualization and geometry settings used to create symbolic placements and Cartesian positions.
+ * @returns The positioned lattice ratios that are included by the current visualization configuration.
+ */
+
 export function createPositionedLatticeRatios(
   ratios: readonly LatticeRatio[],
   configuration: LatticePositioningConfiguration,

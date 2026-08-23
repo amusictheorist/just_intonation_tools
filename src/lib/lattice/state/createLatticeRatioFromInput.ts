@@ -12,6 +12,14 @@ export type CreateLatticeRatioFromInputResult =
       error: string;
     }>;
 
+/**
+ * Parses raw lattice input and creates a lattice ratio when valid.
+ *
+ * @param id The identifier to assign a successfully create lattice ratio.
+ * @param rawInput The raw ratio string to parse.
+ * @returns A success result containing the lattice ratio, or a failure result containing the parse error.
+ */
+
 export function createLatticeRatioFromInput(
   id: string,
   rawInput: string,

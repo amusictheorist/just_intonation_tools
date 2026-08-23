@@ -1,9 +1,10 @@
 /**
- * Selects how lower-side expanded radial positions are reflected.
+ * Selects the relationship between upper- and lower-side expanded radial positions.
  *
- * `continuous` reflects through the origin, preserving continuity around the radial path. `aligned` reflects only the vertical axis, keeping lower-side positions horizontally aligned with their upper-side counterparts.
+ * `continuous` preserves the lower ratio's signed horizontal direction, placing it 180 degrees around the origin from its aligned upper-side counterpart.
+ *
+ * `aligned` places a lower-side ratio at the same horizontal position as its upper-side inverse, with the vertical coordinate reflected below the origin.
  */
-
 export type LowerRadialSymmetry = "continuous" | "aligned";
 
 export type CubicLocalRotation = Readonly<{

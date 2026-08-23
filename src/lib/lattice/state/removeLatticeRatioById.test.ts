@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import { createLatticeRatio } from "./createLatticeRatio";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
-import { removeLastLatticeRatioById } from "./removeLastLatticeRatioById";
+import { removeLatticeRatioById } from "./removeLatticeRatioById";
 
-describe("removeLastLatticeRatioById", () => {
+describe("removeLatticeRatioById", () => {
   it("removes the lattice ratio with the matching id", () => {
     const first = createLatticeRatio("ratio-1", "3/2", createTestRatio(3n, 2n));
     const second = createLatticeRatio(
@@ -12,7 +12,7 @@ describe("removeLastLatticeRatioById", () => {
       createTestRatio(5n, 4n),
     );
 
-    expect(removeLastLatticeRatioById([first, second], "ratio-1")).toEqual([
+    expect(removeLatticeRatioById([first, second], "ratio-1")).toEqual([
       second,
     ]);
   });
@@ -20,6 +20,6 @@ describe("removeLastLatticeRatioById", () => {
   it("leaves the collection unchanged when no id matches", () => {
     const first = createLatticeRatio("ratio-1", "3/2", createTestRatio(3n, 2n));
 
-    expect(removeLastLatticeRatioById([first], "ratio-2")).toEqual([first]);
+    expect(removeLatticeRatioById([first], "ratio-2")).toEqual([first]);
   });
 });
