@@ -2,6 +2,15 @@ import type { PositionedLatticeRatio } from "../state/createPositionedLatticeRat
 import type { LatticeScenePoint } from "./latticeScenePoint";
 import { normalizeLatticeLabelRatio } from "./normalizeLatticeLabelRatio";
 
+/**
+ * Converts a positioned lattice ratio into renderer-ready scene-point data.
+ *
+ * Label normalization, higher-prime styling metadata, and expanded-radial side metadata are derived here without altering the underlying lattice ratio.
+ *
+ * @param positionedRatio The positioned lattice ratio to present in the scene.
+ * @returns The scene-point data used by the lattice renderer.
+ */
+
 export function createLatticeScenePoint(
   positionedRatio: PositionedLatticeRatio,
 ): LatticeScenePoint {

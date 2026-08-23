@@ -2,6 +2,15 @@ import type { LatticeConnection } from "../connections/latticeConnection";
 import type { LatticeSceneConnection } from "./latticeSceneConnection";
 import type { LatticeScenePoint } from "./latticeScenePoint";
 
+/**
+ * Resolves a lattice connection to the positions of its scene-point endpoints.
+ *
+ * @param connection The lattice connection whose endpoints should be resolved.
+ * @param scenePoints The available scene points used to resolve endpoint IDs.
+ * @returns The renderer-ready scene connection containing both endpoint positions.
+ * @throws If either connection endpoint has no corresponding scene point.
+ */
+
 export function createLatticeSceneConnection(
   connection: LatticeConnection,
   scenePoints: readonly LatticeScenePoint[],

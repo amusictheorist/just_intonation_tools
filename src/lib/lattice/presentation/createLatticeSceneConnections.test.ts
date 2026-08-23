@@ -6,7 +6,7 @@ import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 
 describe("createLatticeSceneConnections", () => {
   it("creates scene connections from lattice connections and scene points", () => {
-    const connection = [
+    const connections = [
       {
         fromId: "ratio-1",
         toId: "ratio-2",
@@ -53,7 +53,7 @@ describe("createLatticeSceneConnections", () => {
       },
     ] satisfies LatticeScenePoint[];
 
-    expect(createLatticeSceneConnections(connection, scenePoints)).toEqual([
+    expect(createLatticeSceneConnections(connections, scenePoints)).toEqual([
       {
         fromId: "ratio-1",
         toId: "ratio-2",

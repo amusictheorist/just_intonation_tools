@@ -2,6 +2,13 @@ import * as THREE from "three";
 import type { LatticeSceneConnection } from "./latticeSceneConnection";
 import { DEFAULT_LATTICE_CONNECTION_COLOR } from "./latticeConnectionStyle";
 
+/**
+ * Creates a Three.js line for a lattice scene connection.
+ *
+ * @param connection The scene connection whose endpoints define the line.
+ * @returns A Three.js line with endpoint metadata stored in `userData`.
+ */
+
 export function createLatticeConnectionLine(
   connection: LatticeSceneConnection,
 ): THREE.Line {

@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
 import type { PositionedLatticeRatio } from "../../../lib/lattice/state/createPositionedLatticeRatios";
 import { createLatticeScenePoint } from "./createLatticeScenePoint";
-import { normalizeRadialRatio } from "../symbolic/normalizeRadialRatio";
+import { normalizeRatioToUpperOctave } from "../symbolic/normalizeRatioToUpperOctave";
 
 describe("createLatticeScenePoint", () => {
   it("creates a scene point from a standard cubic positioned ratio", () => {
@@ -82,7 +82,7 @@ describe("createLatticeScenePoint", () => {
         variant: {
           type: "standard",
           address: {
-            normalizedRatio: normalizeRadialRatio(ratio),
+            normalizedRatio: normalizeRatioToUpperOctave(ratio),
             path: [{ prime: 5n, direction: 1 }],
             distance: 1,
           },
@@ -102,7 +102,7 @@ describe("createLatticeScenePoint", () => {
     });
   });
 
-  it("preserves the normalized ratio, side, and higher-prime status of an expanded radial point", () => {
+  it("uses the normalized ratio and side and identifies higher-prime factors for an expanded radial point", () => {
     const ratio = createTestRatio(8n, 11n);
     const normalizedRatio = createTestRatio(8n, 11n);
 
