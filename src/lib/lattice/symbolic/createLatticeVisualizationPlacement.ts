@@ -1,22 +1,28 @@
 import type { Ratio } from "../../ji/ratio";
 import type { LatticeVisualization } from "../state/latticeVisualization";
 import {
-  createCubicVisualizationPlacement,
-  type CubicVisualizationPlacement,
-} from "./createCubicVisualizationPlacement";
+  createCubicVisualizationVariant,
+  type CubicVisualizationVariant,
+} from "./createCubicVisualizationVariant";
 import {
-  createRadialVisualizationPlacement,
-  type RadialVisualizationPlacement,
-} from "./createRadialVisualizationPlacement";
+  createRadialVisualizationVariant,
+  type RadialVisualizationVariant,
+} from "./createRadialVisualizationVariant";
+
+/**
+ * Symbolic placement for one ratio within the selected visualization family.
+ *
+ * The outer type distinguishes cubic from radial visualization, while the nested variant distinguishes from the standard and expanded representation within that familyt.
+ */
 
 export type LatticeVisualizationPlacement =
   | Readonly<{
       type: "cubic";
-      placement: CubicVisualizationPlacement;
+      variant: CubicVisualizationVariant;
     }>
   | Readonly<{
       type: "radial";
-      placement: RadialVisualizationPlacement;
+      variant: RadialVisualizationVariant;
     }>;
 
 export function createLatticeVisualizationPlacement(
@@ -24,22 +30,22 @@ export function createLatticeVisualizationPlacement(
   visualization: LatticeVisualization,
 ): LatticeVisualizationPlacement | null {
   if (visualization.type === "cubic") {
-    const placement = createCubicVisualizationPlacement(
+    const variant = createCubicVisualizationVariant(
       ratio,
       visualization.includeHigherPrimes,
     );
 
-    if (!placement) return null;
+    if (!variant) return null;
 
     return {
       type: "cubic",
-      placement,
+      variant,
     };
   }
 
   return {
     type: "radial",
-    placement: createRadialVisualizationPlacement(
+    variant: createRadialVisualizationVariant(
       ratio,
       visualization.includeLowerOctave,
     ),

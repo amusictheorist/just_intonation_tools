@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { primeExponentsArbitrary } from "./arbitraries/primeExponentsArbitrary";
 import { createCanonicalPrimeFactorPath } from "./createCanonicalPrimeFactorPath";
 
-describe("createCanonicalPrimeFactorPath", () => {
+describe("createCanonicalPrimeFactorPath properties", () => {
   it("has one step for each prime-factor occurrence", () => {
     fc.assert(
       fc.property(primeExponentsArbitrary, (factors) => {

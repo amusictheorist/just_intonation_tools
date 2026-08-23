@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createLatticeVisualizationPlacement } from "./createLatticeVisualizationPlacement";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
+import { createLatticeVisualizationPlacement } from "./createLatticeVisualizationPlacement";
 
 describe("createLatticeVisualizationPlacement", () => {
   it("creates symbolic placement for a cubic visualization", () => {
@@ -11,7 +11,7 @@ describe("createLatticeVisualizationPlacement", () => {
       }),
     ).toEqual({
       type: "cubic",
-      placement: {
+      variant: {
         type: "standard",
         coordinates: {
           x: 1,
@@ -30,7 +30,7 @@ describe("createLatticeVisualizationPlacement", () => {
       }),
     ).toEqual({
       type: "radial",
-      placement: {
+      variant: {
         type: "expanded",
         address: {
           normalizedRatio: createTestRatio(3n, 4n),

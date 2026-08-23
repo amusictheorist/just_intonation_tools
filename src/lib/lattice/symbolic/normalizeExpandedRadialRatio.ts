@@ -2,7 +2,7 @@ import { createPositiveInteger } from "../../ji/positiveInteger";
 import { createRatio, type Ratio } from "../../ji/ratio";
 
 /**
- * Normalizes a ratio for expanded radial placement while preserving cwhich side of unison the original ratio occupies.
+ * Normalizes a ratio for expanded radial placement while preserving which side of unison the original ratio occupies.
  *
  * Ratios at or above 1/1 are reduced by powers of 2 into [1, 2).
  * Ratios below 1/1 are raised by powers of 2 into [1/2, 1).

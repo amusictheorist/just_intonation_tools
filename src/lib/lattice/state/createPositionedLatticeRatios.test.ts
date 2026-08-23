@@ -34,16 +34,12 @@ describe("createPositionedLatticeRatios", () => {
         latticeRatio,
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 1, y: 1, z: 0 },
           },
         },
-        position: {
-          x: 2,
-          y: 2,
-          z: 0,
-        },
+        position: { x: 2, y: 2, z: 0 },
       },
     ]);
   });
@@ -85,7 +81,7 @@ describe("createPositionedLatticeRatios", () => {
         latticeRatio,
         placement: {
           type: "radial",
-          placement: {
+          variant: {
             type: "expanded",
             address,
           },
@@ -128,16 +124,12 @@ describe("createPositionedLatticeRatios", () => {
         latticeRatio: visibleRatio,
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 1, y: 0, z: 0 },
           },
         },
-        position: {
-          x: 2,
-          y: 0,
-          z: 0,
-        },
+        position: { x: 2, y: 0, z: 0 },
       },
     ]);
   });
@@ -171,31 +163,23 @@ describe("createPositionedLatticeRatios", () => {
         latticeRatio: firstRatio,
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 1, y: 0, z: 0 },
           },
         },
-        position: {
-          x: 2,
-          y: 0,
-          z: 0,
-        },
+        position: { x: 2, y: 0, z: 0 },
       },
       {
         latticeRatio: secondRatio,
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 0, y: 1, z: 0 },
           },
         },
-        position: {
-          x: 0,
-          y: 2,
-          z: 0,
-        },
+        position: { x: 0, y: 2, z: 0 },
       },
     ]);
   });

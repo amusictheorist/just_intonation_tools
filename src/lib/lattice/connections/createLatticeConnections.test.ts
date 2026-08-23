@@ -4,7 +4,7 @@ import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 import { createUnisonRatio } from "../../ji/createUnisonRatio";
 
 describe("createLatticeConnections", () => {
-  it("creates connections from cubic positiond ratios", () => {
+  it("creates connections from cubic positioned ratios", () => {
     expect(
       createLatticeConnections([
         {
@@ -15,7 +15,7 @@ describe("createLatticeConnections", () => {
           },
           placement: {
             type: "cubic",
-            placement: {
+            variant: {
               type: "standard",
               coordinates: { x: 0, y: 0, z: 0 },
             },
@@ -30,7 +30,7 @@ describe("createLatticeConnections", () => {
           },
           placement: {
             type: "cubic",
-            placement: {
+            variant: {
               type: "standard",
               coordinates: { x: 2, y: 0, z: 0 },
             },
@@ -52,7 +52,7 @@ describe("createLatticeConnections", () => {
           },
           placement: {
             type: "radial",
-            placement: {
+            variant: {
               type: "standard",
               address: {
                 normalizedRatio: createUnisonRatio(),
@@ -71,7 +71,7 @@ describe("createLatticeConnections", () => {
           },
           placement: {
             type: "radial",
-            placement: {
+            variant: {
               type: "standard",
               address: {
                 normalizedRatio: createTestRatio(3n, 2n),
@@ -97,7 +97,7 @@ describe("createLatticeConnections", () => {
           },
           placement: {
             type: "cubic",
-            placement: {
+            variant: {
               type: "standard",
               coordinates: { x: 0, y: 0, z: 0 },
             },
@@ -112,7 +112,7 @@ describe("createLatticeConnections", () => {
           },
           placement: {
             type: "radial",
-            placement: {
+            variant: {
               type: "standard",
               address: {
                 normalizedRatio: createTestRatio(3n, 2n),

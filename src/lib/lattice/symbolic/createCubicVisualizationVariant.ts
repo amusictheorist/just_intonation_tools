@@ -7,7 +7,7 @@ import {
 import type { CubicCoordinates } from "./cubicCoordinates";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
 
-export type CubicVisualizationPlacement =
+export type CubicVisualizationVariant =
   | Readonly<{
       type: "standard";
       coordinates: CubicCoordinates;
@@ -17,10 +17,10 @@ export type CubicVisualizationPlacement =
       address: ExpandedCubicAddress;
     }>;
 
-export function createCubicVisualizationPlacement(
+export function createCubicVisualizationVariant(
   ratio: Ratio,
   includeHigherPrimes: boolean,
-): CubicVisualizationPlacement | null {
+): CubicVisualizationVariant | null {
   if (includeHigherPrimes) {
     return {
       type: "expanded",

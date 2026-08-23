@@ -41,7 +41,7 @@ function mergePrimeExponents(
 }
 
 /**
- * Factors an exact ratio into signed prime exopnents while ignoring powers of 2.
+ * Factors an exact ratio into signed prime exponents while ignoring powers of 2.
  *
  * Each remaining prime records its net exponent across the numerator and denominator. Numerator factors are positive, denominator factors are negative, and factors that cancel completely are omitted.
  *

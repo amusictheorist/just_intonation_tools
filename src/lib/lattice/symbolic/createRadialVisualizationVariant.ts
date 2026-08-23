@@ -7,7 +7,7 @@ import { createRadialAddress, type RadialAddress } from "./createRadialAddress";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
 import { normalizeRadialRatio } from "./normalizeRadialRatio";
 
-export type RadialVisualizationPlacement =
+export type RadialVisualizationVariant =
   | Readonly<{
       type: "standard";
       address: RadialAddress;
@@ -17,10 +17,10 @@ export type RadialVisualizationPlacement =
       address: ExpandedRadialAddress;
     }>;
 
-export function createRadialVisualizationPlacement(
+export function createRadialVisualizationVariant(
   ratio: Ratio,
   includeLowerOctave: boolean,
-): RadialVisualizationPlacement {
+): RadialVisualizationVariant {
   if (includeLowerOctave) {
     return {
       type: "expanded",

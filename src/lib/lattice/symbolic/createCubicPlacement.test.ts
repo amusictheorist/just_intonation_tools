@@ -3,7 +3,7 @@ import { createCubicPlacement } from "./createCubicPlacement";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 
 describe("createCubicPlacement", () => {
-  it("creates cubic placement for a 7-limit ratio", () => {
+  it("creates standard cubic coordinates for a 7-limit ratio", () => {
     expect(createCubicPlacement(createTestRatio(15n, 8n))).toEqual({
       x: 1,
       y: 1,

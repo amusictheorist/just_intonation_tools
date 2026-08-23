@@ -14,7 +14,7 @@ describe("createLatticeScenePoints", () => {
         },
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 1, y: 0, z: 0 },
           },
@@ -29,7 +29,7 @@ describe("createLatticeScenePoints", () => {
         },
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 0, y: 1, z: 0 },
           },

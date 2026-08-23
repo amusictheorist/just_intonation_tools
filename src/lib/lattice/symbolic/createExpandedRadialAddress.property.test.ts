@@ -19,27 +19,24 @@ describe("createExpandedRadialAddress properties", () => {
     );
   });
 
-  it("derives side from the normalized ratio", () => {
+  it("preserves the original ratio's side of unison", () => {
     fc.assert(
       fc.property(factorableRatioArbitrary, (ratio) => {
         const address = createExpandedRadialAddress(ratio);
 
         const expectedSide =
-          address.normalizedRatio.numerator >=
-          address.normalizedRatio.denominator
-            ? "upper"
-            : "lower";
+          ratio.numerator >= ratio.denominator ? "upper" : "lower";
 
         expect(address.side).toBe(expectedSide);
       }),
     );
   });
 
-  it("uses the canonical prime-factor path of the normalized ratio", () => {
+  it("uses the canonical prime-factor path of the original ratio", () => {
     fc.assert(
       fc.property(factorableRatioArbitrary, (ratio) => {
         const address = createExpandedRadialAddress(ratio);
-        const factors = factorPrimesIgnoringTwo(address.normalizedRatio);
+        const factors = factorPrimesIgnoringTwo(ratio);
 
         expect(address.path).toEqual(createCanonicalPrimeFactorPath(factors));
       }),

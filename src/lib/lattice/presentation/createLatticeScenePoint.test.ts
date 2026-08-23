@@ -16,7 +16,7 @@ describe("createLatticeScenePoint", () => {
       },
       placement: {
         type: "cubic",
-        placement: {
+        variant: {
           type: "standard",
           coordinates: { x: 1, y: 0, z: 0 },
         },
@@ -46,7 +46,7 @@ describe("createLatticeScenePoint", () => {
       },
       placement: {
         type: "cubic",
-        placement: {
+        variant: {
           type: "expanded",
           address: {
             anchorPath: [{ prime: 11n, direction: 1 }],
@@ -79,7 +79,7 @@ describe("createLatticeScenePoint", () => {
       },
       placement: {
         type: "radial",
-        placement: {
+        variant: {
           type: "standard",
           address: {
             normalizedRatio: normalizeRadialRatio(ratio),
@@ -114,7 +114,7 @@ describe("createLatticeScenePoint", () => {
       },
       placement: {
         type: "radial",
-        placement: {
+        variant: {
           type: "expanded",
           address: {
             normalizedRatio,

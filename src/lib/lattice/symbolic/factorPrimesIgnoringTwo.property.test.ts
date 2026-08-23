@@ -4,7 +4,7 @@ import { createRatio } from "../../ji/ratio";
 import { createPositiveInteger } from "../../ji/positiveInteger";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
 
-describe("factorOddPrimes properties", () => {
+describe("factorPrimesIgnoringTwo properties", () => {
   it("never includes 2 as a factor", () => {
     fc.assert(
       fc.property(
@@ -63,6 +63,40 @@ describe("factorOddPrimes properties", () => {
           expect(factorPrimesIgnoringTwo(octaveEquivalent)).toEqual(
             factorPrimesIgnoringTwo(original),
           );
+        },
+      ),
+    );
+  });
+
+  it("nogates exponents for reciprocal ratios", () => {
+    fc.assert(
+      fc.property(
+        fc.bigInt({ min: 1n, max: 1_000_000n }),
+        fc.bigInt({ min: 1n, max: 1_000_000n }),
+        (numerator, denominator) => {
+          const original = createRatio(
+            createPositiveInteger(numerator),
+            createPositiveInteger(denominator),
+          );
+
+          const reciprocal = createRatio(
+            createPositiveInteger(denominator),
+            createPositiveInteger(numerator),
+          );
+
+          const originalFactors = factorPrimesIgnoringTwo(original);
+          const reciprocalFactors = factorPrimesIgnoringTwo(reciprocal);
+
+          const primes = new Set([
+            ...originalFactors.keys(),
+            ...reciprocalFactors.keys(),
+          ]);
+
+          for (const prime of primes) {
+            expect(reciprocalFactors.get(prime) ?? 0).toBe(
+              -(originalFactors.get(prime) ?? 0),
+            );
+          }
         },
       ),
     );

@@ -65,7 +65,7 @@ describe("LatticeVisualizer", () => {
         latticeRatio: ratio,
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 1, y: 0, z: 0 },
           },

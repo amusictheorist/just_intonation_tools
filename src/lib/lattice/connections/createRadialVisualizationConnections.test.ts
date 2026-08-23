@@ -9,7 +9,7 @@ describe("createRadialVisualizationConnections", () => {
       createRadialVisualizationConnections([
         {
           id: "three",
-          placement: {
+          variant: {
             type: "standard",
             address: {
               normalizedRatio: createTestRatio(3n, 2n),
@@ -20,7 +20,7 @@ describe("createRadialVisualizationConnections", () => {
         },
         {
           id: "fifteen",
-          placement: {
+          variant: {
             type: "standard",
             address: {
               normalizedRatio: createTestRatio(15n, 8n),
@@ -41,7 +41,7 @@ describe("createRadialVisualizationConnections", () => {
       createRadialVisualizationConnections([
         {
           id: "lower-three",
-          placement: {
+          variant: {
             type: "expanded",
             address: {
               normalizedRatio: createTestRatio(3n, 4n),
@@ -53,7 +53,7 @@ describe("createRadialVisualizationConnections", () => {
         },
         {
           id: "unison",
-          placement: {
+          variant: {
             type: "expanded",
             address: {
               normalizedRatio: createUnisonRatio(),
@@ -65,7 +65,7 @@ describe("createRadialVisualizationConnections", () => {
         },
         {
           id: "upper-three",
-          placement: {
+          variant: {
             type: "expanded",
             address: {
               normalizedRatio: createTestRatio(3n, 2n),
@@ -87,7 +87,7 @@ describe("createRadialVisualizationConnections", () => {
       createRadialVisualizationConnections([
         {
           id: "three",
-          placement: {
+          variant: {
             type: "standard",
             address: {
               normalizedRatio: createTestRatio(3n, 2n),
@@ -98,7 +98,7 @@ describe("createRadialVisualizationConnections", () => {
         },
         {
           id: "eleven",
-          placement: {
+          variant: {
             type: "standard",
             address: {
               normalizedRatio: createTestRatio(11n, 8n),
@@ -109,7 +109,7 @@ describe("createRadialVisualizationConnections", () => {
         },
         {
           id: "thirty-three",
-          placement: {
+          variant: {
             type: "standard",
             address: {
               normalizedRatio: createTestRatio(33n, 32n),

@@ -19,7 +19,7 @@ export function createLatticeConnections(
     )
     .map((ratio) => ({
       id: ratio.latticeRatio.id,
-      placement: ratio.placement.placement,
+      variant: ratio.placement.variant,
     }));
 
   const radialPoints = ratios
@@ -35,7 +35,7 @@ export function createLatticeConnections(
     )
     .map((ratio) => ({
       id: ratio.latticeRatio.id,
-      placement: ratio.placement.placement,
+      variant: ratio.placement.variant,
     }));
 
   if (cubicPoints.length === ratios.length) {

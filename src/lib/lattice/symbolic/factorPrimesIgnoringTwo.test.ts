@@ -10,7 +10,7 @@ const ratio = (numerator: bigint, denominator: bigint) =>
     createPositiveInteger(denominator),
   );
 
-describe("factorOddPrimes", () => {
+describe("factorPrimesIgnoringTwo", () => {
   it("returns no factor for unison", () => {
     expect(factorPrimesIgnoringTwo(createUnisonRatio())).toEqual(new Map());
   });

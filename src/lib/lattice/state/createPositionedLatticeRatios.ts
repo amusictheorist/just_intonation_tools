@@ -1,10 +1,10 @@
 import type { Vector3 } from "../geometry/createRadialDirectionVector";
 import { createLatticeVisualizationPosition } from "../geometry/createLatticeVisualizationPosition";
-import { createCubicVisualizationPlacement } from "../symbolic/createCubicVisualizationPlacement";
 import type { LatticeRatio } from "./latticeRatio";
-import { createRadialVisualizationPlacement } from "../symbolic/createRadialVisualizationPlacement";
 import type { LatticePositioningConfiguration } from "./latticePositioningConfiguration";
 import type { LatticeVisualizationPlacement } from "../symbolic/createLatticeVisualizationPlacement";
+import { createCubicVisualizationVariant } from "../symbolic/createCubicVisualizationVariant";
+import { createRadialVisualizationVariant } from "../symbolic/createRadialVisualizationVariant";
 
 export type PositionedLatticeRatio = Readonly<{
   latticeRatio: LatticeRatio;
@@ -23,28 +23,23 @@ export function createPositionedLatticeRatios(
     configuration.geometry.type === "cubic"
   ) {
     for (const latticeRatio of ratios) {
-      const placement = createCubicVisualizationPlacement(
+      const variant = createCubicVisualizationVariant(
         latticeRatio.ratio,
         configuration.visualization.includeHigherPrimes,
       );
 
-      if (!placement) {
-        continue;
-      }
+      if (!variant) continue;
 
-      const visualizationPlacement: LatticeVisualizationPlacement = {
+      const placement: LatticeVisualizationPlacement = {
         type: "cubic",
-        placement,
+        variant,
       };
 
       positionedRatios.push({
         latticeRatio,
-        placement: visualizationPlacement,
+        placement,
         position: createLatticeVisualizationPosition({
-          placement: {
-            type: "cubic",
-            placement,
-          },
+          placement,
           geometry: configuration.geometry,
         }),
       });
@@ -58,21 +53,21 @@ export function createPositionedLatticeRatios(
     configuration.geometry.type === "radial"
   ) {
     for (const latticeRatio of ratios) {
-      const placement = createRadialVisualizationPlacement(
+      const variant = createRadialVisualizationVariant(
         latticeRatio.ratio,
         configuration.visualization.includeLowerOctave,
       );
 
-      const visualizationPlacement: LatticeVisualizationPlacement = {
+      const placement: LatticeVisualizationPlacement = {
         type: "radial",
-        placement,
+        variant,
       };
 
       positionedRatios.push({
         latticeRatio,
-        placement: visualizationPlacement,
+        placement,
         position: createLatticeVisualizationPosition({
-          placement: { type: "radial", placement },
+          placement,
           geometry: configuration.geometry,
         }),
       });

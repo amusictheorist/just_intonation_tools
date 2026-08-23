@@ -16,7 +16,7 @@ describe("createLatticeVisualizationPosition", () => {
     const latticeVisualizationPosition = createLatticeVisualizationPosition({
       placement: {
         type: "cubic",
-        placement: {
+        variant: {
           type: "standard",
           coordinates: {
             x: 1,
@@ -45,7 +45,7 @@ describe("createLatticeVisualizationPosition", () => {
         {
           placement: {
             type: "cubic",
-            placement: {
+            variant: {
               type: "expanded",
               address: {
                 anchorPath: [{ prime: 11n, direction: 1 }],
@@ -85,7 +85,7 @@ describe("createLatticeVisualizationPosition", () => {
       createLatticeVisualizationPosition({
         placement: {
           type: "radial",
-          placement: {
+          variant: {
             type: "standard",
             address,
           },
@@ -117,7 +117,7 @@ describe("createLatticeVisualizationPosition", () => {
       createLatticeVisualizationPosition({
         placement: {
           type: "radial",
-          placement: {
+          variant: {
             type: "expanded",
             address,
           },
@@ -141,7 +141,7 @@ describe("createLatticeVisualizationPosition", () => {
         {
           placement: {
             type: "cubic",
-            placement: {
+            variant: {
               type: "expanded",
               address: {
                 anchorPath: [{ prime: 11n, direction: 1 }],
@@ -165,7 +165,7 @@ describe("createLatticeVisualizationPosition", () => {
       {
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "expanded",
             address: {
               anchorPath: [{ prime: 11n, direction: 1 }],

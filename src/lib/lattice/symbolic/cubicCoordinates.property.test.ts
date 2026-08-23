@@ -2,7 +2,7 @@ import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { createStandardCubicCoordinates } from "./cubicCoordinates";
 
-describe("createCubicCoordinates properties", () => {
+describe("createStandardCubicCoordinates properties", () => {
   it("maps 3, 5, and 7 exponents directly to cubic coordinates", () => {
     fc.assert(
       fc.property(

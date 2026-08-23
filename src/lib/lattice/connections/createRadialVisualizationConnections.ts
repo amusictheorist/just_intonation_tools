@@ -1,4 +1,4 @@
-import type { RadialVisualizationPlacement } from "../symbolic/createRadialVisualizationPlacement";
+import type { RadialVisualizationVariant } from "../symbolic/createRadialVisualizationVariant";
 import type { PrimeExponents } from "../symbolic/primeExponents";
 import { createPrimeExponents } from "./createPrimeExponents";
 import { createRadialConnections } from "./createRadialConnections";
@@ -6,16 +6,16 @@ import type { LatticeConnection } from "./latticeConnection";
 
 export type RadialVisualizationConnectionPoint = Readonly<{
   id: string;
-  placement: RadialVisualizationPlacement;
+  variant: RadialVisualizationVariant;
 }>;
 
 function createRadialConnectionExponents(
-  placement: RadialVisualizationPlacement,
+  variant: RadialVisualizationVariant,
 ): PrimeExponents {
-  const exponents = createPrimeExponents(placement.address.path);
+  const exponents = createPrimeExponents(variant.address.path);
 
-  if (placement.type === "standard") return exponents;
-  if (placement.address.side === "upper") return exponents;
+  if (variant.type === "standard") return exponents;
+  if (variant.address.side === "upper") return exponents;
 
   return new Map([...exponents].map(([prime, exponent]) => [prime, -exponent]));
 }
@@ -26,7 +26,7 @@ export function createRadialVisualizationConnections(
   return createRadialConnections(
     points.map((point) => ({
       id: point.id,
-      exponents: createRadialConnectionExponents(point.placement),
+      exponents: createRadialConnectionExponents(point.variant),
     })),
   );
 }

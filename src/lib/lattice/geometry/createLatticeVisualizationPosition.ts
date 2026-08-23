@@ -39,22 +39,22 @@ export function createLatticeVisualizationPosition(
 
   if (
     placement.type === "cubic" &&
-    placement.placement.type === "standard" &&
+    placement.variant.type === "standard" &&
     geometry.type === "cubic"
   ) {
-    return scaleVector(placement.placement.coordinates, CUBIC_SPACING);
+    return scaleVector(placement.variant.coordinates, CUBIC_SPACING);
   }
 
   if (
     placement.type === "cubic" &&
-    placement.placement.type === "expanded" &&
+    placement.variant.type === "expanded" &&
     geometry.type === "cubic"
   ) {
     const resolveScaledAnchorVector: PrimeAnchorVectorResolver = (step) =>
       scaleVector(resolveAnchorVector(step), geometry.higherPrimeRadius);
 
     const position = createExpandedCubicPosition(
-      placement.placement.address,
+      placement.variant.address,
       { x: 0, y: 0, z: 0 },
       geometry.localRotation,
       resolveScaledAnchorVector,
@@ -65,11 +65,11 @@ export function createLatticeVisualizationPosition(
 
   if (
     placement.type === "radial" &&
-    placement.placement.type === "standard" &&
+    placement.variant.type === "standard" &&
     geometry.type === "radial"
   ) {
     const position = createRadialPosition(
-      placement.placement.address,
+      placement.variant.address,
       geometry.includeGeneratorHeight,
     );
 
@@ -78,11 +78,11 @@ export function createLatticeVisualizationPosition(
 
   if (
     placement.type === "radial" &&
-    placement.placement.type === "expanded" &&
+    placement.variant.type === "expanded" &&
     geometry.type === "radial"
   ) {
     const position = createExpandedRadialPosition(
-      placement.placement.address,
+      placement.variant.address,
       geometry.includeGeneratorHeight,
       geometry.lowerSymmetry,
     );

@@ -4,7 +4,7 @@ import {
   extractCubicCoordinates,
 } from "./cubicCoordinates";
 
-describe("createCubicCoordinates", () => {
+describe("createStandardCubicCoordinates", () => {
   it("places unison at the origin", () => {
     expect(createStandardCubicCoordinates(new Map())).toEqual({
       x: 0,
@@ -81,7 +81,7 @@ describe("createCubicCoordinates", () => {
   });
 });
 
-describe("createBaseCubicCoordinates", () => {
+describe("extractCubicCoordinates", () => {
   it("places unison at the origin", () => {
     expect(extractCubicCoordinates(new Map())).toEqual({
       x: 0,

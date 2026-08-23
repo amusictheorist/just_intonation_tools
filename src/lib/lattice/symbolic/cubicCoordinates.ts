@@ -3,7 +3,7 @@ import type { PrimeExponents } from "./primeExponents";
 /**
  * Represents symbolic coordinates in the standard 3-5-7 cubic lattice.
  *
- * the exponent of 3 maps to `x`, the exponent of 5 maps to `y`, and the exponent of 7 maps to `z`. Positive and negative exponents therefore place ratios on opposite sides of the origin along each axis.
+ * The exponent of 3 maps to `x`, the exponent of 5 maps to `y`, and the exponent of 7 maps to `z`. Positive and negative exponents therefore place ratios on opposite sides of the origin along each axis.
  */
 
 export type CubicCoordinates = Readonly<{
@@ -15,10 +15,10 @@ export type CubicCoordinates = Readonly<{
 /**
  * Creates cubic coordinates from the exponents of 3, 5, and 7.
  *
- * Any other prime factors in the map are ignored. This function is intended for placement logic that has already separated higher-prime factors from the local 3-5-7 coordinates.
+ * Any other prime factors in the map are ignored.
  *
  * @param factors A validated map of prime exponents.
- * @returns The corresponding 3-57 cubic coordinates.
+ * @returns The corresponding 3-5-7 cubic coordinates.
  */
 
 export function extractCubicCoordinates(

@@ -6,7 +6,7 @@ import {
   normalizeVector,
   vectorLength,
 } from "./vector";
-import { coordinateArbitrary } from "./coordinateArbitrary";
+import { coordinateArbitrary } from "./test/coordinateArbitrary";
 
 describe("vector properties", () => {
   it("nomalizes nonzero vectors to unit length", () => {

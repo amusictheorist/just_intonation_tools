@@ -1,11 +1,11 @@
-import type { CubicVisualizationPlacement } from "../symbolic/createCubicVisualizationPlacement";
+import type { CubicVisualizationVariant } from "../symbolic/createCubicVisualizationVariant";
 import { createExpandedCubicConnections } from "./createExpandedCubicConnections";
 import { createStandardCubicConnections } from "./createStandardCubicConnections";
 import type { LatticeConnection } from "./latticeConnection";
 
 export type CubicVisualizationConnectionPoint = Readonly<{
   id: string;
-  placement: CubicVisualizationPlacement;
+  variant: CubicVisualizationVariant;
 }>;
 
 export function createCubicVisualizationConnections(
@@ -17,12 +17,12 @@ export function createCubicVisualizationConnections(
         point,
       ): point is Readonly<{
         id: string;
-        placement: Extract<CubicVisualizationPlacement, { type: "standard" }>;
-      }> => point.placement.type === "standard",
+        variant: Extract<CubicVisualizationVariant, { type: "standard" }>;
+      }> => point.variant.type === "standard",
     )
     .map((point) => ({
       id: point.id,
-      coordinates: point.placement.coordinates,
+      coordinates: point.variant.coordinates,
     }));
 
   const expandedPoints = points
@@ -31,16 +31,16 @@ export function createCubicVisualizationConnections(
         point,
       ): point is Readonly<{
         id: string;
-        placement: Extract<CubicVisualizationPlacement, { type: "expanded" }>;
-      }> => point.placement.type === "expanded",
+        variant: Extract<CubicVisualizationVariant, { type: "expanded" }>;
+      }> => point.variant.type === "expanded",
     )
     .map((point) => ({
       id: point.id,
-      address: point.placement.address,
+      address: point.variant.address,
     }));
 
   if (standardPoints.length > 0 && expandedPoints.length > 0) {
-    throw new Error("Mixed cubic visualization placements");
+    throw new Error("Mixed cubic visualization variants");
   }
 
   if (expandedPoints.length > 0)

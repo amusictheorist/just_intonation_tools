@@ -15,7 +15,7 @@ const positionedRatios: readonly PositionedLatticeRatio[] = [
     },
     placement: {
       type: "cubic",
-      placement: {
+      variant: {
         type: "standard",
         coordinates: { x: 1, y: 0, z: 0 },
       },
@@ -60,7 +60,7 @@ describe("useLatticeSceneData", () => {
         },
         placement: {
           type: "radial",
-          placement: {
+          variant: {
             type: "standard",
             address: {
               normalizedRatio: createTestRatio(1n, 1n),
@@ -79,7 +79,7 @@ describe("useLatticeSceneData", () => {
         },
         placement: {
           type: "radial",
-          placement: {
+          variant: {
             type: "standard",
             address: {
               normalizedRatio: createTestRatio(3n, 2n),
@@ -116,7 +116,7 @@ describe("useLatticeSceneData", () => {
         },
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 0, y: 0, z: 0 },
           },
@@ -131,7 +131,7 @@ describe("useLatticeSceneData", () => {
         },
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 1, y: 0, z: 0 },
           },
@@ -160,7 +160,7 @@ describe("useLatticeSceneData", () => {
         },
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 0, y: 0, z: 0 },
           },
@@ -175,7 +175,7 @@ describe("useLatticeSceneData", () => {
         },
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 1, y: 0, z: 0 },
           },
@@ -190,7 +190,7 @@ describe("useLatticeSceneData", () => {
         },
         placement: {
           type: "cubic",
-          placement: {
+          variant: {
             type: "standard",
             coordinates: { x: 0, y: 1, z: 0 },
           },
