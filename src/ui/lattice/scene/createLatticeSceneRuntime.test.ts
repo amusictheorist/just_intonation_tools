@@ -1,8 +1,12 @@
 import * as THREE from "three";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { LatticeSceneRenderer } from "./LatticeSceneRenderer";
 import { createLatticeSceneRuntime } from "./createLatticeSceneRuntime";
 import type { LatticeSceneViewport } from "./LatticeSceneViewport";
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("createLatticeSceneRuntime", () => {
   it("creates the viewport for the lattice scene renderer", () => {
@@ -71,8 +75,6 @@ describe("createLatticeSceneRuntime", () => {
     });
 
     expect(webGLRenderer.setPixelRatio).toHaveBeenCalledWith(2);
-
-    vi.unstubAllGlobals();
   });
 
   it("starts the viewport", () => {

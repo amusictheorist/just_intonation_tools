@@ -17,6 +17,14 @@ type UseLatticeSceneDataResult = {
   availableConnectionPrimes: readonly bigint[];
 };
 
+/**
+ * Derives renderer-ready lattice scene data and connection-axis metadata.
+ *
+ * @param positionedRatios The positioned lattice ratios represented in the scene.
+ * @param connectionVisibility The current connection visibility settings.
+ * @returns The scene points, visible scene connections, and available connection primes.
+ */
+
 export function useLatticeSceneData(
   positionedRatios: readonly PositionedLatticeRatio[],
   connectionVisibility: LatticeConnectionVisibility,

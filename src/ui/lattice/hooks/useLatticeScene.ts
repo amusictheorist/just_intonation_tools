@@ -43,6 +43,15 @@ const defaultDependencies: UseLatticeSceneDependencies = {
   },
 };
 
+/**
+ * Owns the lifecycle of the Three.js lattice scene and synchronizes it with current scene data and appearance settings.
+ *
+ * @param containerRef The DOM container in which the lattice viewport is created.
+ * @param options The current scene points, scene connections, and appearance settings.
+ * @param dependencies Factories used to create the scene renderer and runtime.
+ * @returns Nothing.
+ */
+
 export function useLatticeScene(
   containerRef: RefObject<HTMLDivElement | null>,
   { scenePoints, sceneConnections, higherPrimeColor }: UseLatticeSceneOptions,

@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+
 import { describe, expect, it } from "vitest";
 import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
 import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
@@ -71,7 +72,7 @@ describe("useLatticePositioning", () => {
       },
       geometry: {
         type: "radial",
-        includeGeneratorHeight: false,
+        includeGeneratorHeight: true,
         lowerSymmetry: "continuous",
       },
     });
@@ -95,13 +96,13 @@ describe("useLatticePositioning", () => {
       },
       geometry: {
         type: "radial",
-        includeGeneratorHeight: false,
+        includeGeneratorHeight: true,
         lowerSymmetry: "continuous",
       },
     });
   });
 
-  it("enables radial generator height", () => {
+  it("disables radial generator height", () => {
     const { result } = renderHook(() => useLatticePositioning(ratios));
 
     act(() => {
@@ -109,7 +110,7 @@ describe("useLatticePositioning", () => {
     });
 
     act(() => {
-      result.current.setIncludeGeneratorHeight(true);
+      result.current.setIncludeGeneratorHeight(false);
     });
 
     expect(result.current.configuration).toEqual({
@@ -119,7 +120,7 @@ describe("useLatticePositioning", () => {
       },
       geometry: {
         type: "radial",
-        includeGeneratorHeight: true,
+        includeGeneratorHeight: false,
         lowerSymmetry: "continuous",
       },
     });
@@ -143,7 +144,7 @@ describe("useLatticePositioning", () => {
       },
       geometry: {
         type: "radial",
-        includeGeneratorHeight: false,
+        includeGeneratorHeight: true,
         lowerSymmetry: "aligned",
       },
     });
@@ -215,5 +216,33 @@ describe("useLatticePositioning", () => {
         localRotation: { x: 10, y: 20, z: 30 },
       },
     });
+  });
+
+  it("ignores cubic-only updates while using radial positioning", () => {
+    const { result } = renderHook(() => useLatticePositioning(ratios));
+
+    act(() => {
+      result.current.setVisualizationType("radial");
+    });
+
+    const radialConfiguration = result.current.configuration;
+
+    act(() => {
+      result.current.setIncludeHigherPrimes(true);
+    });
+
+    expect(result.current.configuration).toBe(radialConfiguration);
+  });
+
+  it("ignores radial-only updates while using cubic positioning", () => {
+    const { result } = renderHook(() => useLatticePositioning(ratios));
+
+    const cubicConfiguration = result.current.configuration;
+
+    act(() => {
+      result.current.setIncludeLowerOctave(true);
+    });
+
+    expect(result.current.configuration).toBe(cubicConfiguration);
   });
 });

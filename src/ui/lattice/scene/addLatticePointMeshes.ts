@@ -6,6 +6,15 @@ type AddLatticePointMeshesOptions = Readonly<{
   higherPrimeColor?: THREE.ColorRepresentation;
 }>;
 
+/**
+ * Creates and adds point meshes for the supplied lattice scene points.
+ *
+ * @param scene The Three.js scene that receives the point meshes.
+ * @param scenePoints The scene points to render.
+ * @param options Optional point-mesh appearance settings.
+ * @returns The point meshes added to the scene, in input order.
+ */
+
 export function addLatticePointMeshes(
   scene: THREE.Scene,
   scenePoints: readonly LatticeScenePoint[],

@@ -73,7 +73,7 @@ describe("createLatticePointMesh", () => {
     expect(label?.position.z).toBe(0);
   });
 
-  it("creates the point label from the normalzed label ratio", () => {
+  it("creates the point label from the normalized label ratio", () => {
     const scenePoint = {
       id: "ratio-1",
       rawInput: "3/1",

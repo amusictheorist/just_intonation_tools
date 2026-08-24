@@ -1,5 +1,13 @@
 import * as THREE from "three";
 
+/**
+ * Creates a canvas-backed Three.js sprite for a lattice point label.
+ *
+ * @param text The label text to draw on the sprite texture.
+ * @returns The label sprite containing the rendered text.
+ * @throws If a 2D canvas rendering context cannot be created.
+ */
+
 export function createLatticePointLabelSprite(text: string): THREE.Sprite {
   const canvas = document.createElement("canvas");
   canvas.width = 512;

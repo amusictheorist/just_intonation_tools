@@ -108,4 +108,22 @@ describe("LatticeAppearanceControls", () => {
 
     expect(onConnectionPrimeVisibilityChange).toHaveBeenCalledWith(5n, false);
   });
+
+  it("shows only explicitly visible prime axes as checked", () => {
+    render(
+      <LatticeAppearanceControls
+        higherPrimeColor="#00008b"
+        onHigherPrimeColorChange={vi.fn()}
+        showConnections={true}
+        onShowConnectionsChange={vi.fn()}
+        availableConnectionPrimes={[3n, 5n, 11n]}
+        visibleConnectionPrimes={new Set([3n, 11n])}
+        onConnectionPrimeVisibilityChange={vi.fn()}
+      />,
+    );
+
+    expect(screen.getByRole("checkbox", { name: "3" })).toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "5" })).not.toBeChecked();
+    expect(screen.getByRole("checkbox", { name: "11" })).toBeChecked();
+  });
 });

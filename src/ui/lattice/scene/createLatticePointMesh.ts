@@ -10,6 +10,17 @@ type CreateLatticePointMeshOptions = Readonly<{
   higherPrimeColor?: THREE.ColorRepresentation;
 }>;
 
+/**
+ * Creates a Three.js mesh representing a lattice scene point.
+ *
+ * The mesh stores scene-point metadata in `userData` and includes a label
+ * sprite derived from the point's presentation label ratio.
+ *
+ * @param scenePoint The renderer-ready lattice scene point to represent.
+ * @param options Optional point-mesh appearance settings.
+ * @returns The Three.js mesh representing the scene point.
+ */
+
 export function createLatticePointMesh(
   scenePoint: LatticeScenePoint,
   options: CreateLatticePointMeshOptions = {},

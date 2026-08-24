@@ -3,7 +3,7 @@ import { describe, expect, it, vi } from "vitest";
 import { resizeLatticeViewPort } from "./resizeLatticeViewPort";
 
 describe("resizeLatticeViewPort", () => {
-  it("resized the renderer and updates the camera aspect ratio", () => {
+  it("resizes the renderer and updates the camera aspect ratio", () => {
     const container = {
       clientWidth: 800,
       clientHeight: 400,
@@ -36,9 +36,12 @@ describe("resizeLatticeViewPort", () => {
     const camera = new THREE.PerspectiveCamera();
     const updateProjectionMatrix = vi.spyOn(camera, "updateProjectionMatrix");
 
+    const initialAspect = camera.aspect;
+
     resizeLatticeViewPort(container, renderer, camera);
 
-    expect(renderer.setSize).not.toHaveBeenCalledWith();
-    expect(updateProjectionMatrix).not.toHaveBeenCalledWith();
+    expect(renderer.setSize).not.toHaveBeenCalled();
+    expect(camera.aspect).toBe(initialAspect);
+    expect(updateProjectionMatrix).not.toHaveBeenCalled();
   });
 });

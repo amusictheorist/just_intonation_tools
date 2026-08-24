@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+
 import { describe, expect, it, vi } from "vitest";
 import { useLatticeScene } from "../hooks/useLatticeScene";
 import type { LatticeScenePoint } from "../../../lib/lattice/presentation/latticeScenePoint";

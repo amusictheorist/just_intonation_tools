@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { LatticeSceneViewport } from "./LatticeSceneViewport";
 
 function createTestContainer(
@@ -57,6 +57,10 @@ function createViewportFixture(options?: {
 
   return { container, canvas, renderer, scene, camera, cameraSystem, viewport };
 }
+
+afterEach(() => {
+  vi.unstubAllGlobals();
+});
 
 describe("LatticeSceneViewport", () => {
   it("renders the lattice scene with the supplied camera", () => {
@@ -159,8 +163,6 @@ describe("LatticeSceneViewport", () => {
     frameCallback(0);
 
     expect(renderer.render).toHaveBeenCalledWith(scene, camera);
-
-    vi.unstubAllGlobals();
   });
 
   it("continues scheduling animation frames after starting", () => {
@@ -186,8 +188,6 @@ describe("LatticeSceneViewport", () => {
     frameCallback(0);
 
     expect(requestAnimationFrame).toHaveBeenCalledTimes(2);
-
-    vi.unstubAllGlobals();
   });
 
   it("cancels the scheduled animation frame when stopped", () => {
@@ -203,8 +203,6 @@ describe("LatticeSceneViewport", () => {
     viewport.stop();
 
     expect(cancelAnimationFrame).toHaveBeenCalledWith(42);
-
-    vi.unstubAllGlobals();
   });
 
   it("stops the animation loop when disposed", () => {
@@ -220,7 +218,5 @@ describe("LatticeSceneViewport", () => {
     viewport.dispose();
 
     expect(cancelAnimationFrame).toHaveBeenCalledWith(42);
-
-    vi.unstubAllGlobals();
   });
 });

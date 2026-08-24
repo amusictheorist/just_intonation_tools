@@ -9,6 +9,14 @@ type LatticeSceneRendererOptions = Readonly<{
   higherPrimeColor?: THREE.ColorRepresentation;
 }>;
 
+/**
+ * Owns the renderable objects that represent the current lattice scene.
+ *
+ * Point meshes and connection lines are replaced as scene data changes, and
+ * their Three.js resources are disposed when replaced or when the renderer is
+ * disposed.
+ */
+
 export class LatticeSceneRenderer {
   readonly scene: THREE.Scene;
   pointMeshes: readonly THREE.Mesh[];
@@ -35,6 +43,16 @@ export class LatticeSceneRenderer {
     );
   }
 
+  /**
+   * Replaces the currently rendered lattice points and connections.
+   *
+   * Existing mesh and line resources are disposed before replacements are added.
+   *
+   * @param scenePoints The scene points to render.
+   * @param sceneConnections The scene connections to render.
+   * @returns Nothing.
+   */
+
   setScene(
     scenePoints: readonly LatticeScenePoint[],
     sceneConnections: readonly LatticeSceneConnection[],
@@ -50,6 +68,12 @@ export class LatticeSceneRenderer {
       sceneConnections,
     );
   }
+
+  /**
+   * Disposes all point-mesh and connection-line resources owned by the renderer.
+   *
+   * @returns Nothing.
+   */
 
   dispose(): void {
     this.disposePointMeshes();
@@ -75,6 +99,13 @@ export class LatticeSceneRenderer {
 
     this.pointMeshes = [];
   }
+
+  /**
+   * Updates the color used by existing and subsequently created higher-prime points.
+   *
+   * @param color The Three.js color representation to apply.
+   * @returns Nothing.
+   */
 
   setHigherPrimeColor(color: THREE.ColorRepresentation): void {
     this.higherPrimeColor = color;

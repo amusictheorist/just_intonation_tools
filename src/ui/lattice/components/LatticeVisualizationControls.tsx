@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type {
   CubicLocalRotation,
   LowerRadialSymmetry,
@@ -27,6 +27,30 @@ type RotationControlsState = Readonly<{
   xz: number;
 }>;
 
+function createRotationControls(
+  localRotation: CubicLocalRotation,
+): RotationControlsState {
+  return {
+    x: localRotation.x,
+    y: localRotation.y,
+    z: localRotation.z,
+    master: 0,
+    xy: 0,
+    yz: 0,
+    xz: 0,
+  };
+}
+
+function createCombinedRotation(
+  controls: RotationControlsState,
+): CubicLocalRotation {
+  return {
+    x: controls.x + controls.master + controls.xy + controls.xz,
+    y: controls.y + controls.master + controls.xy + controls.yz,
+    z: controls.z + controls.master + controls.yz + controls.xz,
+  };
+}
+
 function LatticeVisualizationControls({
   configuration,
   onVisualizationTypeChange,
@@ -37,21 +61,17 @@ function LatticeVisualizationControls({
   onIncludeGeneratorHeightChange,
   onLowerSymmetryChange,
 }: LatticeVisualizationControlsProps) {
+  const pendingLocalRotation = useRef<CubicLocalRotation | null>(null);
+
   const initialLocalRotation =
     configuration.geometry.type === "cubic"
       ? configuration.geometry.localRotation
       : DEFAULT_CUBIC_LOCAL_ROTATION;
 
   const [rotationControls, setRotationControls] =
-    useState<RotationControlsState>({
-      x: initialLocalRotation.x,
-      y: initialLocalRotation.y,
-      z: initialLocalRotation.z,
-      master: 0,
-      xy: 0,
-      yz: 0,
-      xz: 0,
-    });
+    useState<RotationControlsState>(() =>
+      createRotationControls(initialLocalRotation),
+    );
 
   const isCubic = configuration.visualization.type === "cubic";
 
@@ -60,43 +80,70 @@ function LatticeVisualizationControls({
     configuration.visualization.includeHigherPrimes &&
     configuration.geometry.type === "cubic";
 
-  function createCombinedRotation(
-    controls: RotationControlsState,
-  ): CubicLocalRotation {
-    return {
-      x: controls.x + controls.master + controls.xy + controls.xz,
-      y: controls.y + controls.master + controls.xy + controls.yz,
-      z: controls.z + controls.master + controls.yz + controls.xz,
-    };
-  }
-
   function updateRotationControl(
-    controls: keyof RotationControlsState,
+    control: keyof RotationControlsState,
     value: number,
   ): void {
     const nextControls = {
       ...rotationControls,
-      [controls]: value,
+      [control]: value,
     };
 
+    const nextRotation = createCombinedRotation(nextControls);
+
     setRotationControls(nextControls);
-    onLocalRotationChange(createCombinedRotation(nextControls));
+    pendingLocalRotation.current = nextRotation;
+    onLocalRotationChange(nextRotation);
   }
 
   function resetRotationControls(): void {
-    const resetControls: RotationControlsState = {
-      x: 0,
-      y: 0,
-      z: 0,
-      master: 0,
-      xy: 0,
-      yz: 0,
-      xz: 0,
-    };
+    const resetControls = createRotationControls(DEFAULT_CUBIC_LOCAL_ROTATION);
+    const resetRotation = createCombinedRotation(resetControls);
 
     setRotationControls(resetControls);
-    onLocalRotationChange(createCombinedRotation(resetControls));
+    pendingLocalRotation.current = resetRotation;
+    onLocalRotationChange(resetRotation);
   }
+
+  const configuredRotation =
+    configuration.geometry.type === "cubic"
+      ? configuration.geometry.localRotation
+      : null;
+
+  const configuredRotationX = configuredRotation?.x ?? null;
+  const configuredRotationY = configuredRotation?.y ?? null;
+  const configuredRotationZ = configuredRotation?.z ?? null;
+
+  useEffect(() => {
+    if (
+      configuredRotationX === null ||
+      configuredRotationY === null ||
+      configuredRotationZ === null
+    )
+      return;
+
+    const pendingRotation = pendingLocalRotation.current;
+
+    if (
+      pendingRotation &&
+      pendingRotation.x === configuredRotationX &&
+      pendingRotation.y === configuredRotationY &&
+      pendingRotation.z === configuredRotationZ
+    ) {
+      pendingLocalRotation.current = null;
+      return;
+    }
+
+    pendingLocalRotation.current = null;
+
+    setRotationControls(
+      createRotationControls({
+        x: configuredRotationX,
+        y: configuredRotationY,
+        z: configuredRotationZ,
+      }),
+    );
+  }, [configuredRotationX, configuredRotationY, configuredRotationZ]);
 
   return (
     <div>

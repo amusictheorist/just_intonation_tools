@@ -30,6 +30,17 @@ const defaultDependencies: LatticeSceneRuntimeDependencies = {
   },
 };
 
+/**
+ * Creates and starts the Three.js runtime for a lattice scene.
+ *
+ * The renderer pixel ratio is capped to limit rendering cost on high-density displays.
+ *
+ * @param container The DOM container that owns the lattice viewport.
+ * @param sceneRenderer The source of the Three.js scene to render.
+ * @param dependencies Factories used to create the renderer, camera system, and viewport.
+ * @returns The started lattice scene viewport.
+ */
+
 export function createLatticeSceneRuntime(
   container: HTMLElement,
   sceneRenderer: LatticeSceneSource,

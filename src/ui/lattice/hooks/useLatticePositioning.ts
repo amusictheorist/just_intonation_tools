@@ -1,27 +1,15 @@
 import { useCallback, useMemo, useState } from "react";
 import { createPositionedLatticeRatios } from "../../../lib/lattice/state/createPositionedLatticeRatios";
-import type { LatticePositioningConfiguration } from "../../../lib/lattice/state/latticePositioningConfiguration";
+import {
+  DEFAULT_CUBIC_POSITIONING_CONFIGURATION,
+  DEFAULT_RADIAL_POSITIONING_CONFIGURATION,
+  type LatticePositioningConfiguration,
+} from "../../../lib/lattice/state/latticePositioningConfiguration";
 import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
 import type {
   CubicLocalRotation,
   LowerRadialSymmetry,
 } from "../../../lib/lattice/state/latticeGeometry";
-import {
-  DEFAULT_CUBIC_LOCAL_ROTATION,
-  DEFAULT_HIGHER_PRIME_RADIUS,
-} from "../../../lib/lattice/geometry/latticeGeometryConstants";
-
-const DEFAULT_CONFIGURATION: LatticePositioningConfiguration = {
-  visualization: {
-    type: "cubic",
-    includeHigherPrimes: false,
-  },
-  geometry: {
-    type: "cubic",
-    higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-    localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
-  },
-};
 
 type UseLatticePositioningResult = {
   configuration: LatticePositioningConfiguration;
@@ -35,11 +23,20 @@ type UseLatticePositioningResult = {
   setLowerSymmetry: (lowerSymmetry: LowerRadialSymmetry) => void;
 };
 
+/**
+ * Manages lattice visualization and geometry configuration and derives positioned ratios from the current ratio collection.
+ *
+ * @param ratios The lattice ratios to position with the current configuration.
+ * @returns The current positioning configuration, positioned ratios, and family-specific configuration update functions.
+ */
+
 export function useLatticePositioning(
   ratios: readonly LatticeRatio[],
 ): UseLatticePositioningResult {
   const [configuration, setConfiguration] =
-    useState<LatticePositioningConfiguration>(DEFAULT_CONFIGURATION);
+    useState<LatticePositioningConfiguration>(
+      DEFAULT_CUBIC_POSITIONING_CONFIGURATION,
+    );
 
   const positionedRatios = useMemo(
     () => createPositionedLatticeRatios(ratios, configuration),
@@ -102,32 +99,11 @@ export function useLatticePositioning(
 
   const setVisualizationType = useCallback((type: "cubic" | "radial"): void => {
     if (type === "cubic") {
-      setConfiguration({
-        visualization: {
-          type: "cubic",
-          includeHigherPrimes: false,
-        },
-        geometry: {
-          type: "cubic",
-          higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
-        },
-      });
-
+      setConfiguration(DEFAULT_CUBIC_POSITIONING_CONFIGURATION);
       return;
     }
 
-    setConfiguration({
-      visualization: {
-        type: "radial",
-        includeLowerOctave: false,
-      },
-      geometry: {
-        type: "radial",
-        includeGeneratorHeight: false,
-        lowerSymmetry: "continuous",
-      },
-    });
+    setConfiguration(DEFAULT_RADIAL_POSITIONING_CONFIGURATION);
   }, []);
 
   const setIncludeLowerOctave = useCallback(

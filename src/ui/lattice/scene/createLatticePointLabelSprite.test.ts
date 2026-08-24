@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createLatticePointLabelSprite } from "./createLatticePointLabelSprite";
 
@@ -41,5 +42,13 @@ describe("createLatticePointLabelSprite", () => {
     createLatticePointLabelSprite("3/2");
 
     expect(fillText).toHaveBeenCalledWith("3/2", 256, 64);
+  });
+
+  it("throws when a canvas rendering context cannot be created", () => {
+    vi.spyOn(HTMLCanvasElement.prototype, "getContext").mockReturnValue(null);
+
+    expect(() => createLatticePointLabelSprite("3/2")).toThrow(
+      "Could not create label canvas context",
+    );
   });
 });

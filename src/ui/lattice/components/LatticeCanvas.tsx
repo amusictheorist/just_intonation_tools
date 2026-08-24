@@ -28,7 +28,7 @@ function LatticeCanvas({
       ref={containerRef}
       aria-label="Interactive ratio-lattice visualizer"
       className="relative h-128 w-full overflow-hidden rounded-lg bg-gray-100 sm:h-152"
-    ></div>
+    />
   );
 }
 

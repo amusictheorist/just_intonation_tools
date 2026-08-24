@@ -15,6 +15,14 @@ type UseLatticeRatiosResult = {
   undo: () => void;
 };
 
+/**
+ * Manages lattice-ratio state and undo history.
+ *
+ * The initial unison ratio is preserved as a non-removable lattice point.
+ *
+ * @returns The current ratios and operations for adding, removing, resetting, and undoing ratio changes.
+ */
+
 export function useLatticeRatios(): UseLatticeRatiosResult {
   const [ratios, setRatios] = useState<readonly LatticeRatio[]>(() =>
     createInitialLatticeRatio(crypto.randomUUID()),
@@ -66,6 +74,15 @@ export function useLatticeRatios(): UseLatticeRatiosResult {
   }, []);
 
   const reset = useCallback((): void => {
+    const [onlyRatio] = ratiosRef.current;
+
+    if (
+      ratiosRef.current.length === 1 &&
+      onlyRatio?.ratio.numerator === 1n &&
+      onlyRatio.ratio.denominator === 1n
+    )
+      return;
+
     const initialRatio = createInitialLatticeRatio(crypto.randomUUID());
 
     pushHistory();

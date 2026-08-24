@@ -4,6 +4,10 @@ import type { CameraSystem } from "./CameraSystem";
 
 type LatticeCameraSystem = Pick<CameraSystem, "camera" | "update" | "dispose">;
 
+/**
+ * Manages the WebGL viewport and animation lifecycle for a lattice scene.
+ */
+
 export class LatticeSceneViewport {
   private readonly container: HTMLElement;
   private readonly renderer: THREE.WebGLRenderer;
@@ -26,10 +30,22 @@ export class LatticeSceneViewport {
     this.resize();
   }
 
+  /**
+   * Renders one frame of the current lattice scene.
+   *
+   * @returns Nothing.
+   */
+
   render(): void {
     this.cameraSystem.update();
     this.renderer.render(this.scene, this.cameraSystem.camera);
   }
+
+  /**
+   * Resizes the renderer and camera to match the viewport container.
+   *
+   * @returns Nothing.
+   */
 
   resize(): void {
     resizeLatticeViewPort(
@@ -39,6 +55,12 @@ export class LatticeSceneViewport {
     );
   }
 
+  /**
+   * Starts the request-animation-frame render loop.
+   *
+   * @returns Nothing.
+   */
+
   start(): void {
     this.animationFrameId = requestAnimationFrame(() => {
       this.render();
@@ -46,12 +68,27 @@ export class LatticeSceneViewport {
     });
   }
 
+  /**
+   * Stops the active animation-frame render loop.
+   *
+   * @returns Nothing.
+   */
+
   stop(): void {
     if (this.animationFrameId === null) return;
 
     cancelAnimationFrame(this.animationFrameId);
     this.animationFrameId = null;
   }
+
+  /**
+   * Stops rendering and disposes the camera system and WebGL renderer.
+   *
+   * The renderer canvas is removed when it is still owned by this viewport's
+   * container.
+   *
+   * @returns Nothing.
+   */
 
   dispose(): void {
     this.stop();

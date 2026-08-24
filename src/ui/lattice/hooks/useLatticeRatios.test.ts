@@ -215,16 +215,13 @@ describe("useLatticeRatios", () => {
   it("does not create an undo step when resetting the initial lattice", () => {
     const { result } = renderHook(() => useLatticeRatios());
 
+    const initialId = result.current.ratios[0]?.id;
+
     act(() => {
       result.current.reset();
     });
 
-    act(() => {
-      result.current.undo();
-    });
-
-    expect(result.current.ratios).toHaveLength(1);
-    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
+    expect(result.current.ratios[0]?.id).toBe(initialId);
   });
 
   it("undoes multiple ratio changes in reverse order", () => {

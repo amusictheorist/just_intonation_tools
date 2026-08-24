@@ -374,6 +374,7 @@ describe("LatticeVisualizer", () => {
       expect.objectContaining({
         configuration,
         onVisualizationTypeChange: setVisualizationType,
+        onHigherPrimeRadiusChange: setHigherPrimeRadius,
         onIncludeHigherPrimesChange: setIncludeHigherPrimes,
         onLocalRotationChange: setLocalRotation,
         onIncludeLowerOctaveChange: setIncludeLowerOctave,
@@ -601,5 +602,77 @@ describe("LatticeVisualizer", () => {
       showConnections: false,
       visiblePrimes: null,
     });
+  });
+
+  it("shows a duplicate-ratio error through the ratio controls", () => {
+    const existingRatio = {
+      id: "ratio-1",
+      rawInput: "3/2",
+      ratio: createTestRatio(3n, 2n),
+    };
+
+    const addRatio = vi.fn(() => ({
+      status: "duplicate" as const,
+      ratios: [existingRatio],
+      existingRatio,
+    }));
+
+    vi.mocked(useLatticeRatios).mockReturnValue({
+      ratios: [existingRatio],
+      addRatio,
+      removeRatio: vi.fn(),
+      undo: vi.fn(),
+      reset: vi.fn(),
+    });
+
+    vi.mocked(useLatticePositioning).mockReturnValue({
+      configuration: {
+        visualization: {
+          type: "cubic",
+          includeHigherPrimes: false,
+        },
+        geometry: {
+          type: "cubic",
+          higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        },
+      },
+      positionedRatios: [],
+      setIncludeHigherPrimes: vi.fn(),
+      setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
+      setVisualizationType: vi.fn(),
+      setIncludeLowerOctave: vi.fn(),
+      setIncludeGeneratorHeight: vi.fn(),
+      setLowerSymmetry: vi.fn(),
+    });
+
+    vi.mocked(useLatticeSceneData).mockReturnValue({
+      scenePoints: [],
+      sceneConnections: [],
+      availableConnectionPrimes: [],
+    });
+
+    render(<LatticeVisualizer />);
+
+    const initialProps = vi.mocked(LatticeRatioControls).mock.calls[0]?.[0];
+
+    if (!initialProps) {
+      throw new Error("Expected LatticeRatioControls to render");
+    }
+
+    act(() => {
+      initialProps.onAdd("6/4");
+    });
+
+    expect(addRatio).toHaveBeenCalledWith("6/4");
+
+    const latestProps = vi.mocked(LatticeRatioControls).mock.lastCall?.[0];
+
+    if (!latestProps) {
+      throw new Error("Expected LatticeRatioControls to rerender");
+    }
+
+    expect(latestProps.inputError).toBe("Ratio 3/2 is already present");
   });
 });

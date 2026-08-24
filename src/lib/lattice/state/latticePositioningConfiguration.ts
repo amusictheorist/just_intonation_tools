@@ -1,3 +1,7 @@
+import {
+  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_HIGHER_PRIME_RADIUS,
+} from "../geometry/latticeGeometryConstants";
 import type { LatticeGeometry } from "./latticeGeometry";
 import type { LatticeVisualization } from "./latticeVisualization";
 
@@ -14,3 +18,29 @@ export type LatticePositioningConfiguration =
       visualization: Extract<LatticeVisualization, { type: "radial" }>;
       geometry: Extract<LatticeGeometry, { type: "radial" }>;
     }>;
+
+export const DEFAULT_CUBIC_POSITIONING_CONFIGURATION: LatticePositioningConfiguration =
+  {
+    visualization: {
+      type: "cubic",
+      includeHigherPrimes: false,
+    },
+    geometry: {
+      type: "cubic",
+      higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+      localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+    },
+  };
+
+export const DEFAULT_RADIAL_POSITIONING_CONFIGURATION: LatticePositioningConfiguration =
+  {
+    visualization: {
+      type: "radial",
+      includeLowerOctave: false,
+    },
+    geometry: {
+      type: "radial",
+      includeGeneratorHeight: true,
+      lowerSymmetry: "continuous",
+    },
+  };

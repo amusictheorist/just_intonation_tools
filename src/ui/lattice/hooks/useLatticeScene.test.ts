@@ -1,4 +1,5 @@
 // @vitest-environment jsdom
+
 import * as THREE from "three";
 import { renderHook } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
@@ -78,6 +79,22 @@ describe("useLatticeScene", () => {
     );
 
     expect(createSceneRuntime).toHaveBeenCalledWith(container, sceneRenderer);
+  });
+
+  it("does not create a scene runtime without a container", () => {
+    const { createSceneRenderer, createSceneRuntime } =
+      createTestDependencies();
+
+    renderHook(() =>
+      useLatticeScene(
+        { current: null },
+        { scenePoints, sceneConnections, higherPrimeColor },
+        { createSceneRenderer, createSceneRuntime },
+      ),
+    );
+
+    expect(createSceneRenderer).not.toHaveBeenCalled();
+    expect(createSceneRuntime).not.toHaveBeenCalled();
   });
 
   it("disposes the scene runtime and renderer on unmount", () => {
@@ -202,6 +219,23 @@ describe("useLatticeScene", () => {
     window.dispatchEvent(new Event("resize"));
 
     expect(sceneRuntime.resize).not.toHaveBeenCalled();
+  });
+
+  it("applies the initial higher-prime colour", () => {
+    const { sceneRenderer, createSceneRenderer, createSceneRuntime } =
+      createTestDependencies();
+
+    renderHook(() =>
+      useLatticeScene(
+        { current: container },
+        { scenePoints, sceneConnections, higherPrimeColor },
+        { createSceneRenderer, createSceneRuntime },
+      ),
+    );
+
+    expect(sceneRenderer.setHigherPrimeColor).toHaveBeenCalledWith(
+      higherPrimeColor,
+    );
   });
 
   it("updates the existing renderer when the higher-prime color changes", () => {
