@@ -1,8 +1,8 @@
-import type { RadialVisualizationVariant } from "../symbolic/createRadialVisualizationVariant";
-import type { PrimeExponents } from "../symbolic/primeExponents";
-import { createPrimeExponents } from "./createPrimeExponents";
+import type { RadialVisualizationVariant } from "../../symbolic/createRadialVisualizationVariant";
+import type { PrimeExponents } from "../../symbolic/primeExponents";
+import { createPrimeExponents } from "../createPrimeExponents";
 import { createRadialConnections } from "./createRadialConnections";
-import type { LatticeConnection } from "./latticeConnection";
+import type { LatticeConnection } from "../latticeConnection";
 
 export type RadialVisualizationConnectionPoint = Readonly<{
   id: string;

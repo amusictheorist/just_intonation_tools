@@ -1,7 +1,7 @@
-import type { CubicCoordinates } from "../symbolic/cubicCoordinates";
+import type { CubicCoordinates } from "../../symbolic/cubicCoordinates";
 import { findCubicConnectionPrime } from "./findCubicConnectionPrime";
 import { isStandardCubicConnectionVisible } from "./isStandardCubicConnectionVisible";
-import type { LatticeConnection } from "./latticeConnection";
+import type { LatticeConnection } from "../latticeConnection";
 
 export type StandardCubicConnectionPoint = Readonly<{
   id: string;

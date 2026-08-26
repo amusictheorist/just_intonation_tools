@@ -1,6 +1,6 @@
-import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
-import { arePrimeExponentPositionsAxisAligned } from "./arePrimeExponentPositionsAxisAligned";
-import { createHigherPrimeExponents } from "./createHigherPrimeExponents";
+import type { ExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import { arePrimeExponentPositionsAxisAligned } from "../arePrimeExponentPositionsAxisAligned";
+import { createHigherPrimeExponents } from "../createHigherPrimeExponents";
 
 export function areExpandedCubicPointsHigherPrimeAxisAligned(
   first: ExpandedCubicAddress,

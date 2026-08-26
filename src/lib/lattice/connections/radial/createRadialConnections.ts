@@ -1,7 +1,7 @@
-import type { PrimeExponents } from "../symbolic/primeExponents";
-import { findDifferingPrime } from "./findDifferingPrime";
-import { isPrimeAxisConnectionVisible } from "./isPrimeAxisConnectionVisible";
-import type { LatticeConnection } from "./latticeConnection";
+import type { PrimeExponents } from "../../symbolic/primeExponents";
+import { findDifferingPrime } from "../findDifferingPrime";
+import { isPrimeAxisConnectionVisible } from "../isPrimeAxisConnectionVisible";
+import type { LatticeConnection } from "../latticeConnection";
 
 export type RadialConnectionPoint = Readonly<{
   id: string;

@@ -1,6 +1,6 @@
 import type { PositionedLatticeRatio } from "../state/createPositionedLatticeRatios";
-import { createCubicVisualizationConnections } from "./createCubicVisualizationConnections";
-import { createRadialVisualizationConnections } from "./createRadialVisualizationConnections";
+import { createCubicVisualizationConnections } from "./cubic/createCubicVisualizationConnections";
+import { createRadialVisualizationConnections } from "./radial/createRadialVisualizationConnections";
 import type { LatticeConnection } from "./latticeConnection";
 
 export function createLatticeConnections(

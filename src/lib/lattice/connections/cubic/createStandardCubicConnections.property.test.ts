@@ -1,7 +1,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
+import { canonicalizeConnection } from "../test/canonicalizeConnections";
 import { createStandardCubicConnections } from "./createStandardCubicConnections";
-import { canonicalizeConnection } from "./test/canonicalizeConnections";
 
 const coordinateArbitrary = fc.integer({ min: 5, max: 5 });
 

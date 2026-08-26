@@ -1,10 +1,10 @@
-import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
-import { createHigherPrimeExponents } from "./createHigherPrimeExponents";
+import type { ExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import { createHigherPrimeExponents } from "../createHigherPrimeExponents";
 import { findCubicConnectionPrime } from "./findCubicConnectionPrime";
-import { findDifferingPrime } from "./findDifferingPrime";
+import { findDifferingPrime } from "../findDifferingPrime";
 import { isExpandedCubicHigherPrimeConnectionVisible } from "./isExpandedCubicHigherPrimeConnectionVisible";
 import { isExpandedCubicLocalConnectionVisible } from "./isExpandedCubicLocalConnectionVisible";
-import type { LatticeConnection } from "./latticeConnection";
+import type { LatticeConnection } from "../latticeConnection";
 
 export type ExpandedCubicConnectionPoint = Readonly<{
   id: string;

@@ -1,10 +1,10 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { primeExponentsArbitrary } from "../symbolic/arbitraries/primeExponentsArbitrary";
-import { createExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
+import { primeExponentsArbitrary } from "../../symbolic/arbitraries/primeExponentsArbitrary";
+import { createExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
 import { createExpandedCubicConnections } from "./createExpandedCubicConnections";
-import { canonicalizeConnection } from "./test/canonicalizeConnections";
-import { createPrimeExponentsKey } from "../symbolic/test/createPrimeExponentsKey";
+import { canonicalizeConnection } from "../test/canonicalizeConnections";
+import { createPrimeExponentsKey } from "../../symbolic/test/createPrimeExponentsKey";
 
 describe("createExpandedCubicConnections properties", () => {
   it("produces the same undirected graph regardless of input order", () => {

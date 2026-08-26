@@ -1,7 +1,7 @@
-import type { CubicVisualizationVariant } from "../symbolic/createCubicVisualizationVariant";
+import type { CubicVisualizationVariant } from "../../symbolic/createCubicVisualizationVariant";
 import { createExpandedCubicConnections } from "./createExpandedCubicConnections";
 import { createStandardCubicConnections } from "./createStandardCubicConnections";
-import type { LatticeConnection } from "./latticeConnection";
+import type { LatticeConnection } from "../latticeConnection";
 
 export type CubicVisualizationConnectionPoint = Readonly<{
   id: string;

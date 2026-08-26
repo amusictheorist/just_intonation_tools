@@ -1,6 +1,6 @@
-import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
-import { createHigherPrimeExponents } from "./createHigherPrimeExponents";
-import { isPrimeAxisConnectionVisible } from "./isPrimeAxisConnectionVisible";
+import type { ExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import { createHigherPrimeExponents } from "../createHigherPrimeExponents";
+import { isPrimeAxisConnectionVisible } from "../isPrimeAxisConnectionVisible";
 
 function hasSameLocalCoordinates(
   first: ExpandedCubicAddress,

@@ -1,4 +1,4 @@
-import type { CubicCoordinates } from "../symbolic/cubicCoordinates";
+import type { CubicCoordinates } from "../../symbolic/cubicCoordinates";
 
 export function findCubicConnectionPrime(
   first: CubicCoordinates,

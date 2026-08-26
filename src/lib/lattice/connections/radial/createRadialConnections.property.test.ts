@@ -1,9 +1,9 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
-import { primeExponentsArbitrary } from "../symbolic/arbitraries/primeExponentsArbitrary";
+import { primeExponentsArbitrary } from "../../symbolic/arbitraries/primeExponentsArbitrary";
+import { canonicalizeConnection } from "../test/canonicalizeConnections";
+import { createPrimeExponentsKey } from "../../symbolic/test/createPrimeExponentsKey";
 import { createRadialConnections } from "./createRadialConnections";
-import { canonicalizeConnection } from "./test/canonicalizeConnections";
-import { createPrimeExponentsKey } from "../symbolic/test/createPrimeExponentsKey";
 
 describe("createRadialConnections properties", () => {
   it("produces the same undirected graph regardless of input order", () => {

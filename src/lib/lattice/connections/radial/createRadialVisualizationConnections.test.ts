@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createRadialVisualizationConnections } from "./createRadialVisualizationConnections";
-import { createTestRatio } from "../../ji/test/ratioTestHelpers";
-import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
+import { createTestRatio } from "../../../ji/test/ratioTestHelpers";
+import { createUnisonRatio } from "../../../ji/ratio/createUnisonRatio";
 
 describe("createRadialVisualizationConnections", () => {
   it("creates connections from standard radial placements", () => {
