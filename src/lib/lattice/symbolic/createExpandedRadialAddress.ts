@@ -1,4 +1,4 @@
-import type { Ratio } from "../../ji/ratio";
+import type { Ratio } from "../../ji/ratio/ratio";
 import type { PrimeFactorStep } from "./createCanonicalPrimeFactorPath";
 import { createRadialAddress } from "./createRadialAddress";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";

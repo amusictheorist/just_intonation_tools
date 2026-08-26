@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { factorableRatioArbitrary } from "../../ji/test/ratioArbitraries";
 import { createExpandedRadialAddress } from "../symbolic/createExpandedRadialAddress";
 import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
-import { invertRatio } from "../../ji/invertRatio";
+import { invertRatio } from "../../ji/ratio/invertRatio";
 
 describe("createExpandedRadialPosition properties", () => {
   it("aligns lower-side ratios with their upper-side inverses", () => {

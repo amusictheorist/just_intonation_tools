@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { normalizeRadialRatio } from "./normalizeRadialRatio";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 
 describe("normalizeRadialRatio", () => {
   it("preserves a ratio already in the upper octave", () => {

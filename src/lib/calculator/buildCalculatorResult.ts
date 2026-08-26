@@ -1,9 +1,9 @@
-import { canonicalizePartialClassSet } from "../ji/canonicalizePartialClassSet";
-import { canonicalizePartialSet } from "../ji/canonicalizePartialSet";
-import { lowInvertPartialClassSet } from "../ji/lowInvertPartialClassSet";
-import { lowInvertPartialSet } from "../ji/lowInvertPartialSet";
-import type { PartialSet } from "../ji/partialSet";
-import { partialSetToPartialClassSet } from "../ji/partialSetToPartialClassSet";
+import { canonicalizePartialClassSet } from "../ji/set/canonicalizePartialClassSet";
+import { canonicalizePartialSet } from "../ji/set/canonicalizePartialSet";
+import { lowInvertPartialClassSet } from "../ji/transform/lowInvertPartialClassSet";
+import { lowInvertPartialSet } from "../ji/transform/lowInvertPartialSet";
+import type { PartialSet } from "../ji/set/partialSet";
+import { partialSetToPartialClassSet } from "../ji/set/partialSetToPartialClassSet";
 import type { CalculatorResult } from "./types";
 
 export function buildCalculatorResult(

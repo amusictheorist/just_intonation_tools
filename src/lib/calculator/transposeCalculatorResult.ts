@@ -1,7 +1,7 @@
-import type { PartialSet } from "../ji/partialSet";
-import { partialSetToPartialClassSet } from "../ji/partialSetToPartialClassSet";
-import type { PositiveInteger } from "../ji/positiveInteger";
-import { transposePartialSet } from "../ji/transposePartialSet";
+import type { PositiveInteger } from "../ji/integer/positiveInteger";
+import type { PartialSet } from "../ji/set/partialSet";
+import { partialSetToPartialClassSet } from "../ji/set/partialSetToPartialClassSet";
+import { transposePartialSet } from "../ji/transform/transposePartialSet";
 import type { TransposedCalculatorResult } from "./types";
 
 export function transposeCalculatorResult(

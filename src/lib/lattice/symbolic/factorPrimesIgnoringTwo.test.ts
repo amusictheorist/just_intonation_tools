@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { createPositiveInteger } from "../../ji/positiveInteger";
-import { createRatio } from "../../ji/ratio";
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createRatio } from "../../ji/ratio/ratio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { createPositiveInteger } from "../../ji/integer/positiveInteger";
 
 const ratio = (numerator: bigint, denominator: bigint) =>
   createRatio(

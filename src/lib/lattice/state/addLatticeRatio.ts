@@ -1,4 +1,4 @@
-import { areRatiosEqual } from "../../ji/areRatiosEqual";
+import { areRatiosEqual } from "../../ji/ratio/areRatiosEqual";
 import type { LatticeRatio } from "./latticeRatio";
 
 export type AddLatticeRatioResult =

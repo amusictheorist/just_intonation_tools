@@ -1,4 +1,4 @@
-import type { Ratio } from "../../ji/ratio";
+import type { Ratio } from "../../ji/ratio/ratio";
 import type { PrimeExponents } from "./primeExponents";
 
 function factorIntegerIgnoringTwo(input: bigint): Map<bigint, number> {

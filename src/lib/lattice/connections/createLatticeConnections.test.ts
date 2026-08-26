@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createLatticeConnections } from "./createLatticeConnections";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 
 describe("createLatticeConnections", () => {
   it("creates connections from cubic positioned ratios", () => {

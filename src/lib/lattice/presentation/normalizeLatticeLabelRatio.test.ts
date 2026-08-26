@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { normalizeLatticeLabelRatio } from "./normalizeLatticeLabelRatio";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 
 describe("normalizeLatticeLabelRatio", () => {
   it("normalizes a ratio above the upper octave into [1, 2)", () => {

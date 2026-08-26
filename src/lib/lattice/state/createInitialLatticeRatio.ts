@@ -1,4 +1,4 @@
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 import { createLatticeRatio } from "./createLatticeRatio";
 import type { LatticeRatio } from "./latticeRatio";
 

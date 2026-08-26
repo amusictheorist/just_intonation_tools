@@ -1,5 +1,5 @@
-import { createPositiveInteger } from "../positiveInteger";
-import { createRatio, type Ratio } from "../ratio";
+import { createPositiveInteger } from "../integer/positiveInteger";
+import { createRatio, type Ratio } from "../ratio/ratio";
 
 export function createTestRatio(numerator: bigint, denominator: bigint): Ratio {
   return createRatio(

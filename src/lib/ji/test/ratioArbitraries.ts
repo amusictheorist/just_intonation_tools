@@ -1,6 +1,6 @@
 import fc from "fast-check";
-import { createRatio } from "../ratio";
-import { createPositiveInteger } from "../positiveInteger";
+import { createRatio } from "../ratio/ratio";
+import { createPositiveInteger } from "../integer/positiveInteger";
 
 export const ratioArbitrary = fc
   .tuple(fc.bigInt({ min: 1n }), fc.bigInt({ min: 1n }))

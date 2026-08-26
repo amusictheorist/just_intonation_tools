@@ -1,8 +1,8 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { createRatio } from "../../ji/ratio";
-import { createPositiveInteger } from "../../ji/positiveInteger";
+import { createRatio } from "../../ji/ratio/ratio";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { createPositiveInteger } from "../../ji/integer/positiveInteger";
 
 describe("factorPrimesIgnoringTwo properties", () => {
   it("never includes 2 as a factor", () => {

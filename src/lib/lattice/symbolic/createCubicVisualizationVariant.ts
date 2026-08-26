@@ -1,4 +1,4 @@
-import type { Ratio } from "../../ji/ratio";
+import type { Ratio } from "../../ji/ratio/ratio";
 import { createCubicPlacement } from "./createCubicPlacement";
 import {
   createExpandedCubicAddress,

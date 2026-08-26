@@ -1,4 +1,4 @@
-import type { Ratio } from "../../ji/ratio";
+import type { Ratio } from "../../ji/ratio/ratio";
 import type { Vector3 } from "../geometry/vector";
 
 export type LatticeScenePoint = Readonly<{

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createRadialAddress } from "./createRadialAddress";
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 
 describe("createRadialAddress", () => {

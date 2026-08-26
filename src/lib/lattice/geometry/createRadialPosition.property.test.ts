@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { primeExponentsArbitrary } from "../symbolic/arbitraries/primeExponentsArbitrary";
 import { createRadialAddress } from "../symbolic/createRadialAddress";
 import { createRadialPosition } from "./createRadialPosition";
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 
 describe("createRadialPosition properties", () => {
   it("uses generator distance only when height is enabled", () => {

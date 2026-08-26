@@ -3,7 +3,7 @@ import { describe, expect, it } from "vitest";
 import { ratioArbitrary } from "../../ji/test/ratioArbitraries";
 import { createLatticeRatio } from "./createLatticeRatio";
 import { addLatticeRatio } from "./addLatticeRatio";
-import { areRatiosEqual } from "../../ji/areRatiosEqual";
+import { areRatiosEqual } from "../../ji/ratio/areRatiosEqual";
 
 describe("addLatticeRatio properties", () => {
   it("does not add a ratio that is already present", () => {

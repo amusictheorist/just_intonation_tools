@@ -2,8 +2,8 @@
 
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { createPartialSet } from "../../../lib/ji/partialSet";
-import { createPartial } from "../../../lib/ji/partial";
+import { createPartialSet } from "../../../lib/ji/set/partialSet";
+import { createPartial } from "../../../lib/ji/partial/partial";
 import { buildCalculatorResult } from "../../../lib/calculator/buildCalculatorResult";
 import IntervalMatrixSection from "./IntervalMatrixSection";
 

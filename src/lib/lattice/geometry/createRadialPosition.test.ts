@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { createRadialPosition } from "./createRadialPosition";
 import { createRadialDirectionVector } from "./createRadialDirectionVector";
 import { createTestRatio } from "../../ji/test/ratioTestHelpers";
-import { createUnisonRatio } from "../../ji/createUnisonRatio";
+import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 import { calculateRadialPrimeAngle } from "./calculateRadialPrimeAngle";
 
 describe("createRadialPosition", () => {

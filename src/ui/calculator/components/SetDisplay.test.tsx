@@ -1,11 +1,11 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
-import { createPartialSet } from "../../../lib/ji/partialSet";
-import { createPartial } from "../../../lib/ji/partial";
+import { createPartialSet } from "../../../lib/ji/set/partialSet";
+import { createPartial } from "../../../lib/ji/partial/partial";
 import SetDisplay from "./SetDisplay";
-import { createPartialClassSet } from "../../../lib/ji/partialClassSet";
-import { createPartialClass } from "../../../lib/ji/partialClass";
+import { createPartialClassSet } from "../../../lib/ji/set/partialClassSet";
+import { createPartialClass } from "../../../lib/ji/partial/partialClass";
 
 describe("SetDisplay", () => {
   it("renders a partial set with curly braces", () => {

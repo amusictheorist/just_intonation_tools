@@ -1,5 +1,5 @@
-import { createPositiveInteger } from "../../ji/positiveInteger";
-import { createRatio, type Ratio } from "../../ji/ratio";
+import { createPositiveInteger } from "../../ji/integer/positiveInteger";
+import { createRatio, type Ratio } from "../../ji/ratio/ratio";
 
 export function normalizeLatticeLabelRatio(ratio: Ratio): Ratio {
   let numerator: bigint = ratio.numerator;

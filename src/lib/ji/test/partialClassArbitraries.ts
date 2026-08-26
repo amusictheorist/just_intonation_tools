@@ -1,5 +1,5 @@
 import fc from "fast-check";
-import { createPartialClass } from "../partialClass";
+import { createPartialClass } from "../partial/partialClass";
 
 export const positiveOddBigIntArbitrary = fc
   .bigInt({ min: 1n })

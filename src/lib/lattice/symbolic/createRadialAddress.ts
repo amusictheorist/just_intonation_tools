@@ -1,4 +1,4 @@
-import type { Ratio } from "../../ji/ratio";
+import type { Ratio } from "../../ji/ratio/ratio";
 import { calculateGeneratorDistance } from "./calculateGeneratorDistance";
 import {
   createCanonicalPrimeFactorPath,

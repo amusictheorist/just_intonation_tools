@@ -9,10 +9,10 @@ import type {
 import { parsePartialSetInput } from "../../lib/calculator/parsePartialSetInput";
 import { buildCalculatorResult } from "../../lib/calculator/buildCalculatorResult";
 import CalculatorResultGroup from "../calculator/components/CalculatorResultGroup";
-import { createPositiveInteger } from "../../lib/ji/positiveInteger";
 import { transposeCalculatorResult } from "../../lib/calculator/transposeCalculatorResult";
 import SetDisplay from "../calculator/components/SetDisplay";
 import IntervalMatrixSection from "../calculator/components/IntervalMatrixSection";
+import { createPositiveInteger } from "../../lib/ji/integer/positiveInteger";
 
 function Calculator() {
   const [userInput, setUserInput] = useState("");

@@ -2,13 +2,13 @@
 
 import { render } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
-import { createPartialSet } from "../../lib/ji/partialSet";
-import { createPartial } from "../../lib/ji/partial";
+import { createPartialSet } from "../../lib/ji/set/partialSet";
+import { createPartial } from "../../lib/ji/partial/partial";
 import IntervalMatrix from "./IntervalMatrix";
-import { partialSetIntervalMatrix } from "../../lib/ji/partialSetIntervalMatrix";
-import { createPartialClassSet } from "../../lib/ji/partialClassSet";
-import { createPartialClass } from "../../lib/ji/partialClass";
-import { partialClassSetIntervalMatrix } from "../../lib/ji/partialClassSetIntervalMatrix";
+import { partialSetIntervalMatrix } from "../../lib/ji/interval/partialSetIntervalMatrix";
+import { createPartialClassSet } from "../../lib/ji/set/partialClassSet";
+import { createPartialClass } from "../../lib/ji/partial/partialClass";
+import { partialClassSetIntervalMatrix } from "../../lib/ji/interval/partialClassSetIntervalMatrix";
 
 describe("IntervalMatrix", () => {
   it("renders partial-set headers and inverval ratios", () => {

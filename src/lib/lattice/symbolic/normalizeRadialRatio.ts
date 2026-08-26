@@ -1,5 +1,5 @@
-import { createPositiveInteger } from "../../ji/positiveInteger";
-import { createRatio, type Ratio } from "../../ji/ratio";
+import { createPositiveInteger } from "../../ji/integer/positiveInteger";
+import { createRatio, type Ratio } from "../../ji/ratio/ratio";
 
 /**
  * Normalizes a ratio into the upper octave [1, 2) for standard radial placement.
