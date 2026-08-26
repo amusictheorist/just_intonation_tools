@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import fc from "fast-check";
 import { primeExponentsArbitrary } from "../../symbolic/arbitraries/primeExponentsArbitrary";
-import { createExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import { createExpandedCubicAddress } from "../../symbolic/cubic/createExpandedCubicAddress";
 import { createExpandedCubicConnections } from "./createExpandedCubicConnections";
 import { canonicalizeConnection } from "../test/canonicalizeConnections";
 import { createPrimeExponentsKey } from "../../symbolic/test/createPrimeExponentsKey";

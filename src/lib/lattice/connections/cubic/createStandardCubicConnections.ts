@@ -1,4 +1,4 @@
-import type { CubicCoordinates } from "../../symbolic/cubicCoordinates";
+import type { CubicCoordinates } from "../../symbolic/cubic/cubicCoordinates";
 import { findCubicConnectionPrime } from "./findCubicConnectionPrime";
 import { isStandardCubicConnectionVisible } from "./isStandardCubicConnectionVisible";
 import type { LatticeConnection } from "../latticeConnection";

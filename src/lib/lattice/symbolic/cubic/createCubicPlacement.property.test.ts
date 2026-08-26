@@ -1,10 +1,10 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { primeExponentsArbitrary } from "./arbitraries/primeExponentsArbitrary";
-import { createRatio } from "../../ji/ratio/ratio";
+import { primeExponentsArbitrary } from "../arbitraries/primeExponentsArbitrary";
+import { createRatio } from "../../../ji/ratio/ratio";
+import type { PrimeExponents } from "../primeExponents";
+import { createPositiveInteger } from "../../../ji/integer/positiveInteger";
 import { createCubicPlacement } from "./createCubicPlacement";
-import type { PrimeExponents } from "./primeExponents";
-import { createPositiveInteger } from "../../ji/integer/positiveInteger";
 
 describe("createCubicPlacement properties", () => {
   it("maps 3-5-7 prime exponents to cubic coordinates", () => {

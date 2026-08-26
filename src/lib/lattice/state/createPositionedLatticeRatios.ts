@@ -3,8 +3,8 @@ import { createLatticeVisualizationPosition } from "../geometry/createLatticeVis
 import type { LatticeRatio } from "./latticeRatio";
 import type { LatticePositioningConfiguration } from "./latticePositioningConfiguration";
 import type { LatticeVisualizationPlacement } from "../symbolic/createLatticeVisualizationPlacement";
-import { createCubicVisualizationVariant } from "../symbolic/createCubicVisualizationVariant";
-import { createRadialVisualizationVariant } from "../symbolic/createRadialVisualizationVariant";
+import { createCubicVisualizationVariant } from "../symbolic/cubic/createCubicVisualizationVariant";
+import { createRadialVisualizationVariant } from "../symbolic/radial/createRadialVisualizationVariant";
 
 export type PositionedLatticeRatio = Readonly<{
   latticeRatio: LatticeRatio;

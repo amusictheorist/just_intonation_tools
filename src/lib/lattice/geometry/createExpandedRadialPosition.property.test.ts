@@ -1,7 +1,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { factorableRatioArbitrary } from "../../ji/test/ratioArbitraries";
-import { createExpandedRadialAddress } from "../symbolic/createExpandedRadialAddress";
+import { createExpandedRadialAddress } from "../symbolic/radial/createExpandedRadialAddress";
 import { createExpandedRadialPosition } from "./createExpandedRadialPosition";
 import { invertRatio } from "../../ji/ratio/invertRatio";
 

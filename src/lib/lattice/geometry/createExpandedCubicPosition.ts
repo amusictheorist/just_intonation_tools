@@ -1,5 +1,5 @@
 import type { CubicLocalRotation } from "../state/latticeGeometry";
-import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
+import type { ExpandedCubicAddress } from "../symbolic/cubic/createExpandedCubicAddress";
 import { createAnchorPositionFromPrimePath } from "./createAnchorPositionFromPrimePath";
 import type { PrimeAnchorVectorResolver } from "./createAnchorPositionsFromPrimePath";
 import type { Vector3 } from "./vector";

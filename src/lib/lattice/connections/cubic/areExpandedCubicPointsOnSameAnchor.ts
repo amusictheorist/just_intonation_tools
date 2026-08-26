@@ -1,4 +1,4 @@
-import type { ExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import type { ExpandedCubicAddress } from "../../symbolic/cubic/createExpandedCubicAddress";
 
 export function areExpandedCubicPointsOnSameAnchor(
   first: ExpandedCubicAddress,

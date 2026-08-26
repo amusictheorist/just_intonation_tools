@@ -1,5 +1,5 @@
 import type { LowerRadialSymmetry } from "../state/latticeGeometry";
-import type { ExpandedRadialAddress } from "../symbolic/createExpandedRadialAddress";
+import type { ExpandedRadialAddress } from "../symbolic/radial/createExpandedRadialAddress";
 import { type Vector3 } from "./vector";
 import { createRadialPosition } from "./createRadialPosition";
 

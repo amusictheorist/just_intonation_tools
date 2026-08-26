@@ -1,4 +1,4 @@
-import type { ExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import type { ExpandedCubicAddress } from "../../symbolic/cubic/createExpandedCubicAddress";
 import { createHigherPrimeExponents } from "../createHigherPrimeExponents";
 import { findCubicConnectionPrime } from "./findCubicConnectionPrime";
 import { findDifferingPrime } from "../findDifferingPrime";

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { normalizeExpandedRadialRatio } from "./normalizeExpandedRadialRatio";
-import { createTestRatio } from "../../ji/test/ratioTestHelpers";
+import { createTestRatio } from "../../../ji/test/ratioTestHelpers";
 
 describe("normalizeExpandedRadialRatio", () => {
   it("leaves unison unchanged", () => {

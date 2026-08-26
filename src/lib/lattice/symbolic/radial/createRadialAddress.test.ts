@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { createRadialAddress } from "./createRadialAddress";
-import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
-import { createTestRatio } from "../../ji/test/ratioTestHelpers";
+import { createUnisonRatio } from "../../../ji/ratio/createUnisonRatio";
+import { createTestRatio } from "../../../ji/test/ratioTestHelpers";
 
 describe("createRadialAddress", () => {
   it("places unison at zero generator distance with an empty path", () => {

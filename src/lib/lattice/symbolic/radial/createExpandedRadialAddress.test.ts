@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { createExpandedRadialAddress } from "./createExpandedRadialAddress";
-import { createTestRatio } from "../../ji/test/ratioTestHelpers";
+import { createTestRatio } from "../../../ji/test/ratioTestHelpers";
 
 describe("createExpandedRadialAddress", () => {
   it("places unison on the upper side with an empty path", () => {

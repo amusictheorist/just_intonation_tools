@@ -1,12 +1,12 @@
 import {
   createCanonicalPrimeFactorPath,
   type PrimeFactorStep,
-} from "./createCanonicalPrimeFactorPath";
+} from "../createCanonicalPrimeFactorPath";
 import {
   extractCubicCoordinates,
   type CubicCoordinates,
 } from "./cubicCoordinates";
-import type { PrimeExponents } from "./primeExponents";
+import type { PrimeExponents } from "../primeExponents";
 
 /**
  * Represents a symbolic location in the expanded cubic lattice.

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import type { ExpandedCubicAddress } from "../symbolic/createExpandedCubicAddress";
+import type { ExpandedCubicAddress } from "../symbolic/cubic/createExpandedCubicAddress";
 import { createExpandedCubicPosition } from "./createExpandedCubicPosition";
 import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 import { DEFAULT_CUBIC_LOCAL_ROTATION } from "./latticeGeometryConstants";

@@ -1,9 +1,9 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { primeExponentsArbitrary } from "./arbitraries/primeExponentsArbitrary";
+import { primeExponentsArbitrary } from "../arbitraries/primeExponentsArbitrary";
+import { createCanonicalPrimeFactorPath } from "../createCanonicalPrimeFactorPath";
+import { createUnisonRatio } from "../../../ji/ratio/createUnisonRatio";
 import { createRadialAddress } from "./createRadialAddress";
-import { createCanonicalPrimeFactorPath } from "./createCanonicalPrimeFactorPath";
-import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 
 describe("createRadialAddress properties", () => {
   const normalizedRatio = createUnisonRatio();

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { createTestRatio } from "../../../ji/test/ratioTestHelpers";
 import { createCubicPlacement } from "./createCubicPlacement";
-import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 
 describe("createCubicPlacement", () => {
   it("creates standard cubic coordinates for a 7-limit ratio", () => {

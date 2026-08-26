@@ -1,6 +1,6 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { primeExponentsArbitrary } from "./arbitraries/primeExponentsArbitrary";
+import { primeExponentsArbitrary } from "../arbitraries/primeExponentsArbitrary";
 import { createExpandedCubicAddress } from "./createExpandedCubicAddress";
 
 describe("createExpandedCubicAddress properties", () => {

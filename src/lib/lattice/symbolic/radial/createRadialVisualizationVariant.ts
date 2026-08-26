@@ -1,10 +1,10 @@
-import type { Ratio } from "../../ji/ratio/ratio";
+import type { Ratio } from "../../../ji/ratio/ratio";
 import {
   createExpandedRadialAddress,
   type ExpandedRadialAddress,
 } from "./createExpandedRadialAddress";
 import { createRadialAddress, type RadialAddress } from "./createRadialAddress";
-import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { factorPrimesIgnoringTwo } from "../factorPrimesIgnoringTwo";
 import { normalizeRadialRatio } from "./normalizeRadialRatio";
 
 export type RadialVisualizationVariant =

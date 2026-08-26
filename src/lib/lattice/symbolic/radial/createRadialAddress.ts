@@ -1,10 +1,10 @@
-import type { Ratio } from "../../ji/ratio/ratio";
-import { calculateGeneratorDistance } from "./calculateGeneratorDistance";
+import type { Ratio } from "../../../ji/ratio/ratio";
+import { calculateGeneratorDistance } from "../calculateGeneratorDistance";
 import {
   createCanonicalPrimeFactorPath,
   type PrimeFactorStep,
-} from "./createCanonicalPrimeFactorPath";
-import type { PrimeExponents } from "./primeExponents";
+} from "../createCanonicalPrimeFactorPath";
+import type { PrimeExponents } from "../primeExponents";
 
 /**
  * Represents the symbolic prime-factor structure used by radial placement.

@@ -1,4 +1,4 @@
-import type { CubicCoordinates } from "../../symbolic/cubicCoordinates";
+import type { CubicCoordinates } from "../../symbolic/cubic/cubicCoordinates";
 
 export function areStandardCubicPointsAxisAligned(
   first: CubicCoordinates,

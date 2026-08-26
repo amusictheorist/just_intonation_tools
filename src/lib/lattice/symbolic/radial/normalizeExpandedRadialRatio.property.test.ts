@@ -3,9 +3,9 @@ import { describe, expect, it } from "vitest";
 import {
   factorableRatioArbitrary,
   ratioArbitrary,
-} from "../../ji/test/ratioArbitraries";
+} from "../../../ji/test/ratioArbitraries";
 import { normalizeExpandedRadialRatio } from "./normalizeExpandedRadialRatio";
-import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { factorPrimesIgnoringTwo } from "../factorPrimesIgnoringTwo";
 
 describe("normalizeExpandedRadialRatio properties", () => {
   it("normalizes ratios at or above unison into [1, 2)", () => {

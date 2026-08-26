@@ -1,4 +1,4 @@
-import type { RadialVisualizationVariant } from "../../symbolic/createRadialVisualizationVariant";
+import type { RadialVisualizationVariant } from "../../symbolic/radial/createRadialVisualizationVariant";
 import type { PrimeExponents } from "../../symbolic/primeExponents";
 import { createPrimeExponents } from "../createPrimeExponents";
 import { createRadialConnections } from "./createRadialConnections";

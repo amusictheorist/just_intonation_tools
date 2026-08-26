@@ -1,6 +1,3 @@
-import { createPositiveInteger } from "../../ji/integer/positiveInteger";
-import { createRatio, type Ratio } from "../../ji/ratio/ratio";
-
 /**
  * Normalizes a ratio into the upper octave [1, 2) for standard radial placement.
  *
@@ -9,6 +6,9 @@ import { createRatio, type Ratio } from "../../ji/ratio/ratio";
  * @param ratio A validated exact ratio.
  * @returns The octave-normalized ratio in [1, 2).
  */
+
+import { createPositiveInteger } from "../../../ji/integer/positiveInteger";
+import { createRatio, type Ratio } from "../../../ji/ratio/ratio";
 
 export function normalizeRadialRatio(ratio: Ratio): Ratio {
   let numerator: bigint = ratio.numerator;

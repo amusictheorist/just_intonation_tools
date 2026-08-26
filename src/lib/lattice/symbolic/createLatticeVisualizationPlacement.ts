@@ -3,11 +3,11 @@ import type { LatticeVisualization } from "../state/latticeVisualization";
 import {
   createCubicVisualizationVariant,
   type CubicVisualizationVariant,
-} from "./createCubicVisualizationVariant";
+} from "./cubic/createCubicVisualizationVariant";
 import {
   createRadialVisualizationVariant,
   type RadialVisualizationVariant,
-} from "./createRadialVisualizationVariant";
+} from "./radial/createRadialVisualizationVariant";
 
 /**
  * Symbolic placement for one ratio within the selected visualization family.

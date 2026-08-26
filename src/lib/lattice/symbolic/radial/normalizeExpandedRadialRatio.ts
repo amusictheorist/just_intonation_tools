@@ -1,6 +1,3 @@
-import { createPositiveInteger } from "../../ji/integer/positiveInteger";
-import { createRatio, type Ratio } from "../../ji/ratio/ratio";
-
 /**
  * Normalizes a ratio for expanded radial placement while preserving which side of unison the original ratio occupies.
  *
@@ -14,6 +11,9 @@ import { createRatio, type Ratio } from "../../ji/ratio/ratio";
  *
  * @see `docs/subsystems/lattice/PLACEMENT.md`
  */
+
+import { createPositiveInteger } from "../../../ji/integer/positiveInteger";
+import { createRatio, type Ratio } from "../../../ji/ratio/ratio";
 
 export function normalizeExpandedRadialRatio(ratio: Ratio): Ratio {
   let numerator: bigint = ratio.numerator;

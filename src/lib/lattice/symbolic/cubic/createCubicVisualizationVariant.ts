@@ -1,11 +1,11 @@
-import type { Ratio } from "../../ji/ratio/ratio";
+import type { Ratio } from "../../../ji/ratio/ratio";
 import { createCubicPlacement } from "./createCubicPlacement";
 import {
   createExpandedCubicAddress,
   type ExpandedCubicAddress,
 } from "./createExpandedCubicAddress";
 import type { CubicCoordinates } from "./cubicCoordinates";
-import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { factorPrimesIgnoringTwo } from "../factorPrimesIgnoringTwo";
 
 export type CubicVisualizationVariant =
   | Readonly<{

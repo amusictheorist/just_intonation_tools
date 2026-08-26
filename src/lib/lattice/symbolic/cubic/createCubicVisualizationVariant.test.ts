@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { createTestRatio } from "../../ji/test/ratioTestHelpers";
+import { createTestRatio } from "../../../ji/test/ratioTestHelpers";
 import { createCubicVisualizationVariant } from "./createCubicVisualizationVariant";
 
 describe("createCubicVisualizationVariant", () => {

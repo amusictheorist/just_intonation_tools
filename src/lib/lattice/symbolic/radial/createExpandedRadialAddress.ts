@@ -1,7 +1,7 @@
-import type { Ratio } from "../../ji/ratio/ratio";
-import type { PrimeFactorStep } from "./createCanonicalPrimeFactorPath";
+import type { Ratio } from "../../../ji/ratio/ratio";
+import type { PrimeFactorStep } from "../createCanonicalPrimeFactorPath";
 import { createRadialAddress } from "./createRadialAddress";
-import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { factorPrimesIgnoringTwo } from "../factorPrimesIgnoringTwo";
 import { normalizeExpandedRadialRatio } from "./normalizeExpandedRadialRatio";
 
 /**

@@ -4,8 +4,8 @@ import {
   factorableRatioArbitrary,
   ratioArbitrary,
 } from "../../ji/test/ratioArbitraries";
-import { normalizeRadialRatio } from "./normalizeRadialRatio";
 import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
+import { normalizeRadialRatio } from "./radial/normalizeRadialRatio";
 
 describe("normalizeRadialRatio properties", () => {
   it("normalizes every ratio into [1, 2)", () => {

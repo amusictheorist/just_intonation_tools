@@ -3,7 +3,7 @@ import {
   createStandardCubicCoordinates,
   extractCubicCoordinates,
 } from "./cubicCoordinates";
-import { LATTICE_ORIGIN } from "../geometry/latticeGeometryConstants";
+import { LATTICE_ORIGIN } from "../../geometry/latticeGeometryConstants";
 
 describe("createStandardCubicCoordinates", () => {
   it("places unison at the origin", () => {

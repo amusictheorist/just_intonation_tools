@@ -1,4 +1,4 @@
-import type { ExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import type { ExpandedCubicAddress } from "../../symbolic/cubic/createExpandedCubicAddress";
 import { arePrimeExponentPositionsAxisAligned } from "../arePrimeExponentPositionsAxisAligned";
 import { createHigherPrimeExponents } from "../createHigherPrimeExponents";
 

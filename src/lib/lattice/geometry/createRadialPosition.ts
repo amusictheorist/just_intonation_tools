@@ -1,4 +1,4 @@
-import type { RadialAddress } from "../symbolic/createRadialAddress";
+import type { RadialAddress } from "../symbolic/radial/createRadialAddress";
 import { calculateRadialPrimeAngle } from "./calculateRadialPrimeAngle";
 import { createRadialDirectionVector } from "./createRadialDirectionVector";
 import type { Vector3 } from "./vector";

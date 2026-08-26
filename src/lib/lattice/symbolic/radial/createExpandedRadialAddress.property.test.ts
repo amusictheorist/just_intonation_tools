@@ -1,10 +1,10 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
-import { factorableRatioArbitrary } from "../../ji/test/ratioArbitraries";
+import { factorableRatioArbitrary } from "../../../ji/test/ratioArbitraries";
+import { factorPrimesIgnoringTwo } from "../factorPrimesIgnoringTwo";
+import { createCanonicalPrimeFactorPath } from "../createCanonicalPrimeFactorPath";
 import { createExpandedRadialAddress } from "./createExpandedRadialAddress";
 import { normalizeExpandedRadialRatio } from "./normalizeExpandedRadialRatio";
-import { factorPrimesIgnoringTwo } from "./factorPrimesIgnoringTwo";
-import { createCanonicalPrimeFactorPath } from "./createCanonicalPrimeFactorPath";
 
 describe("createExpandedRadialAddress properties", () => {
   it("uses side-preserving expanded-radial normalization", () => {

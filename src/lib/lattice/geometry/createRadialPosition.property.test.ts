@@ -1,7 +1,7 @@
 import fc from "fast-check";
 import { describe, expect, it } from "vitest";
 import { primeExponentsArbitrary } from "../symbolic/arbitraries/primeExponentsArbitrary";
-import { createRadialAddress } from "../symbolic/createRadialAddress";
+import { createRadialAddress } from "../symbolic/radial/createRadialAddress";
 import { createRadialPosition } from "./createRadialPosition";
 import { createUnisonRatio } from "../../ji/ratio/createUnisonRatio";
 

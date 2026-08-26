@@ -1,4 +1,4 @@
-import type { ExpandedCubicAddress } from "../../symbolic/createExpandedCubicAddress";
+import type { ExpandedCubicAddress } from "../../symbolic/cubic/createExpandedCubicAddress";
 import { areExpandedCubicPointsOnSameAnchor } from "./areExpandedCubicPointsOnSameAnchor";
 import { isStandardCubicConnectionVisible } from "./isStandardCubicConnectionVisible";
 
