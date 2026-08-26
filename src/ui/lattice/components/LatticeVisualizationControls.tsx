@@ -5,11 +5,14 @@ import type {
 } from "../../../lib/lattice/state/latticeGeometry";
 import type { LatticePositioningConfiguration } from "../../../lib/lattice/state/latticePositioningConfiguration";
 import { DEFAULT_CUBIC_LOCAL_ROTATION } from "../../../lib/lattice/geometry/latticeGeometryConstants";
+import Collapsible from "./Collapsible";
 
 type LatticeVisualizationControlsProps = {
   configuration: LatticePositioningConfiguration;
   onVisualizationTypeChange: (type: "cubic" | "radial") => void;
   onIncludeHigherPrimesChange: (include: boolean) => void;
+  higherPrimeColor: string;
+  onHigherPrimeColorChange: (color: string) => void;
   onHigherPrimeRadiusChange: (radius: number) => void;
   onLocalRotationChange: (rotation: CubicLocalRotation) => void;
   onIncludeLowerOctaveChange: (include: boolean) => void;
@@ -56,6 +59,8 @@ function LatticeVisualizationControls({
   onVisualizationTypeChange,
   onIncludeHigherPrimesChange,
   onHigherPrimeRadiusChange,
+  higherPrimeColor,
+  onHigherPrimeColorChange,
   onLocalRotationChange,
   onIncludeLowerOctaveChange,
   onIncludeGeneratorHeightChange,
@@ -146,214 +151,311 @@ function LatticeVisualizationControls({
   }, [configuredRotationX, configuredRotationY, configuredRotationZ]);
 
   return (
-    <div>
-      <fieldset>
-        <legend>Visualization</legend>
+    <div className="grid gap-2">
+      <div className="flex flex-wrap items-start gap-3">
+        <fieldset className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+          <legend className="px-1 font-medium text-gray-700">
+            Visualization
+          </legend>
 
-        <label>
-          <input
-            type="radio"
-            name="visualization-type"
-            checked={configuration.visualization.type === "cubic"}
-            onChange={() => onVisualizationTypeChange("cubic")}
-          />
-          Cubic
-        </label>
-
-        <label>
-          <input
-            type="radio"
-            name="visualization-type"
-            checked={configuration.visualization.type === "radial"}
-            onChange={() => onVisualizationTypeChange("radial")}
-          />
-          Radial
-        </label>
-      </fieldset>
-
-      {isCubic && (
-        <label>
-          <input
-            type="checkbox"
-            checked={configuration.visualization.includeHigherPrimes}
-            onChange={(event) =>
-              onIncludeHigherPrimesChange(event.target.checked)
-            }
-          />
-          Include higher primes
-        </label>
-      )}
-
-      {showHigherPrimeControls && (
-        <div>
-          <label>
-            Higher-prime radius:{" "}
-            {configuration.geometry.higherPrimeRadius.toFixed(1)}
-            <input
-              type="range"
-              min="0.5"
-              max="3"
-              step="0.1"
-              value={configuration.geometry.higherPrimeRadius}
-              onChange={(event) =>
-                onHigherPrimeRadiusChange(Number(event.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Rotate X: {configuration.geometry.localRotation.x.toFixed(0)}°
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={rotationControls.x}
-              onChange={(event) =>
-                updateRotationControl("x", Number(event.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Rotate Y: {configuration.geometry.localRotation.y.toFixed(0)}°
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={rotationControls.y}
-              onChange={(event) =>
-                updateRotationControl("y", Number(event.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Rotate Z: {configuration.geometry.localRotation.z.toFixed(0)}°
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={rotationControls.z}
-              onChange={(event) =>
-                updateRotationControl("z", Number(event.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Master rotation: {rotationControls.master.toFixed(0)}°
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={rotationControls.master}
-              onChange={(event) =>
-                updateRotationControl("master", Number(event.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Rotate XY: {rotationControls.xy.toFixed(0)}°
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={rotationControls.xy}
-              onChange={(event) =>
-                updateRotationControl("xy", Number(event.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Rotate YZ: {rotationControls.yz.toFixed(0)}°
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={rotationControls.yz}
-              onChange={(event) =>
-                updateRotationControl("yz", Number(event.target.value))
-              }
-            />
-          </label>
-
-          <label>
-            Rotate XZ: {rotationControls.xz.toFixed(0)}°
-            <input
-              type="range"
-              min="-180"
-              max="180"
-              step="1"
-              value={rotationControls.xz}
-              onChange={(event) =>
-                updateRotationControl("xz", Number(event.target.value))
-              }
-            />
-          </label>
-
-          <button type="button" onClick={resetRotationControls}>
-            Reset rotation
-          </button>
-        </div>
-      )}
-
-      {!isCubic && configuration.geometry.type === "radial" && (
-        <>
-          <label>
-            <input
-              type="checkbox"
-              checked={configuration.visualization.includeLowerOctave}
-              onChange={(event) =>
-                onIncludeLowerOctaveChange(event.target.checked)
-              }
-            />
-            Include lower octave
-          </label>
-
-          <label>
-            <input
-              type="checkbox"
-              checked={configuration.geometry.includeGeneratorHeight}
-              onChange={(event) =>
-                onIncludeGeneratorHeightChange(event.target.checked)
-              }
-            />
-            Include generator height
-          </label>
-
-          <fieldset>
-            <legend>Lower-side symmetry</legend>
-
-            <label>
+          <div className="flex items-center gap-2">
+            <label className="flex items-center gap-1">
               <input
                 type="radio"
-                name="lower-symmetry"
-                checked={configuration.geometry.lowerSymmetry === "continuous"}
-                onChange={() => onLowerSymmetryChange("continuous")}
+                name="visualization-type"
+                checked={configuration.visualization.type === "cubic"}
+                onChange={() => onVisualizationTypeChange("cubic")}
               />
-              Continuous
+              Cubic
             </label>
 
-            <label>
+            <label className="flex items-center gap-1">
               <input
                 type="radio"
-                name="lower-symmetry"
-                checked={configuration.geometry.lowerSymmetry === "aligned"}
-                onChange={() => onLowerSymmetryChange("aligned")}
+                name="visualization-type"
+                checked={configuration.visualization.type === "radial"}
+                onChange={() => onVisualizationTypeChange("radial")}
               />
-              Aligned
+              Radial
             </label>
+          </div>
+        </fieldset>
+
+        {isCubic && (
+          <fieldset className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+            <legend className="px-1 font-medium text-gray-700">
+              Higher primes
+            </legend>
+            <div className="flex flex-wrap items-center gap-3">
+              <label className="flex items-center gap-1">
+                <input
+                  type="checkbox"
+                  checked={configuration.visualization.includeHigherPrimes}
+                  onChange={(event) =>
+                    onIncludeHigherPrimesChange(event.target.checked)
+                  }
+                />
+                Include
+              </label>
+
+              {configuration.visualization.includeHigherPrimes && (
+                <label className="flex items-center gap-2">
+                  <span>Color</span>
+                  <input
+                    type="color"
+                    value={higherPrimeColor}
+                    onChange={(event) =>
+                      onHigherPrimeColorChange(event.target.value)
+                    }
+                  />
+                </label>
+              )}
+            </div>
           </fieldset>
-        </>
-      )}
+        )}
+
+        {showHigherPrimeControls && (
+          <Collapsible
+            title="Placement"
+            defaultOpen={false}
+            animated={false}
+            className="max-w-3xl rounded-md border border-gray-300 bg-white px-3"
+            titleClassName="text-sm font-medium text-gray-700"
+          >
+            <div className="grid w-fit gap-x-5 gap-y-2 pt-1 sm:grid-cols-2 xl:grid-cols-4">
+              <label className="flex items-center gap-2 text-sm">
+                <span aria-hidden="true" className="whitespace-nowrap">
+                  Radius {configuration.geometry.higherPrimeRadius.toFixed(1)}
+                </span>
+
+                <input
+                  aria-label="Higher-prime radius"
+                  className="w-28"
+                  type="range"
+                  min="0.5"
+                  max="3"
+                  step="0.1"
+                  value={configuration.geometry.higherPrimeRadius}
+                  onChange={(event) =>
+                    onHigherPrimeRadiusChange(Number(event.target.value))
+                  }
+                />
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <span className="whitespace-nowrap">
+                  X {configuration.geometry.localRotation.x.toFixed(0)}°
+                </span>
+
+                <input
+                  aria-label="Rotate X"
+                  className="w-28"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationControls.x}
+                  onChange={(event) =>
+                    updateRotationControl("x", Number(event.target.value))
+                  }
+                />
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <span className="whitespace-nowrap">
+                  Y {configuration.geometry.localRotation.y.toFixed(0)}°
+                </span>
+
+                <input
+                  aria-label="Rotate Y"
+                  className="w-28"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationControls.y}
+                  onChange={(event) =>
+                    updateRotationControl("y", Number(event.target.value))
+                  }
+                />
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <span className="whitespace-nowrap">
+                  Z {configuration.geometry.localRotation.z.toFixed(0)}°
+                </span>
+
+                <input
+                  aria-label="Rotate Z"
+                  className="w-28"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationControls.z}
+                  onChange={(event) =>
+                    updateRotationControl("z", Number(event.target.value))
+                  }
+                />
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <span className="whitespace-nowrap">
+                  Master {rotationControls.master.toFixed(0)}°
+                </span>
+
+                <input
+                  aria-label="Master rotation"
+                  className="w-28"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationControls.master}
+                  onChange={(event) =>
+                    updateRotationControl("master", Number(event.target.value))
+                  }
+                />
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <span className="whitespace-nowrap">
+                  XY {rotationControls.xy.toFixed(0)}°
+                </span>
+
+                <input
+                  aria-label="Rotate XY"
+                  className="w-28"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationControls.xy}
+                  onChange={(event) =>
+                    updateRotationControl("xy", Number(event.target.value))
+                  }
+                />
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <span className="whitespace-nowrap">
+                  YZ {rotationControls.yz.toFixed(0)}°
+                </span>
+
+                <input
+                  aria-label="Rotate YZ"
+                  className="w-28"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationControls.yz}
+                  onChange={(event) =>
+                    updateRotationControl("yz", Number(event.target.value))
+                  }
+                />
+              </label>
+
+              <label className="flex items-center gap-2 text-sm">
+                <span className="whitespace-nowrap">
+                  XZ {rotationControls.xz.toFixed(0)}°
+                </span>
+
+                <input
+                  aria-label="Rotate XZ"
+                  className="w-28"
+                  type="range"
+                  min="-180"
+                  max="180"
+                  step="1"
+                  value={rotationControls.xz}
+                  onChange={(event) =>
+                    updateRotationControl("xz", Number(event.target.value))
+                  }
+                />
+              </label>
+            </div>
+
+            <div className="mt-2 flex justify-end">
+              <button
+                type="button"
+                onClick={resetRotationControls}
+                className="rounded-md border border-gray-300 px-2.5 py-1 text-xs font-medium text-gray-700"
+              >
+                Reset rotation
+              </button>
+            </div>
+          </Collapsible>
+        )}
+
+        {!isCubic && configuration.geometry.type === "radial" && (
+          <>
+            <fieldset className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+              <legend className="px-1 font-medium text-gray-700">
+                Radial options
+              </legend>
+
+              <div className="flex flex-wrap items-center gap-3">
+                <label className="flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    checked={configuration.visualization.includeLowerOctave}
+                    onChange={(event) =>
+                      onIncludeLowerOctaveChange(event.target.checked)
+                    }
+                  />
+                  Lower octave
+                </label>
+
+                <label className="flex items-center gap-1">
+                  <input
+                    type="checkbox"
+                    checked={configuration.geometry.includeGeneratorHeight}
+                    onChange={(event) =>
+                      onIncludeGeneratorHeightChange(event.target.checked)
+                    }
+                  />
+                  Generator height
+                </label>
+              </div>
+            </fieldset>
+
+            {configuration.visualization.includeLowerOctave && (
+              <fieldset className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+                <legend className="px-1 font-medium text-gray-700">
+                  Lower-side symmetry
+                </legend>
+
+                <div className="flex items-center gap-3">
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="lower-symmetry"
+                      checked={
+                        configuration.geometry.lowerSymmetry === "continuous"
+                      }
+                      onChange={() => onLowerSymmetryChange("continuous")}
+                    />
+                    Continuous
+                  </label>
+
+                  <label className="flex items-center gap-1">
+                    <input
+                      type="radio"
+                      name="lower-symmetry"
+                      checked={
+                        configuration.geometry.lowerSymmetry === "aligned"
+                      }
+                      onChange={() => onLowerSymmetryChange("aligned")}
+                    />
+                    Aligned
+                  </label>
+                </div>
+              </fieldset>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

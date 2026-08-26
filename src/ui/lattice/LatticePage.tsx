@@ -11,13 +11,13 @@ function LatticePage() {
 
   return (
     <>
-      <PageLayout width="full">
+      <PageLayout width="full" fillHeight>
         <PageHeader
           title="Ratio Lattice Visualizer"
           description="Build and explore just-intonation relationships in an interactive three-dimensional lattice."
         />
 
-        <ContentCard className="p-3 sm:p-4">
+        <ContentCard className="flex min-h-0 flex-1 flex-col p-3 sm:p-4">
           <LatticeVisualizer />
         </ContentCard>
       </PageLayout>

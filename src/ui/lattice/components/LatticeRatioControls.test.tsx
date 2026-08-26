@@ -21,7 +21,7 @@ describe("LatticeRatioControls", () => {
     const input = screen.getByLabelText("Ratio");
 
     fireEvent.change(input, { target: { value: "3/2" } });
-    fireEvent.click(screen.getByRole("button", { name: "Add ratio" }));
+    fireEvent.click(screen.getByRole("button", { name: "Add" }));
 
     expect(onAdd).toHaveBeenCalledWith("3/2");
   });
@@ -76,7 +76,7 @@ describe("LatticeRatioControls", () => {
     const input = screen.getByRole("textbox", { name: "Ratio" });
 
     await user.type(input, "3/2");
-    await user.click(screen.getByRole("button", { name: "Add ratio" }));
+    await user.click(screen.getByRole("button", { name: "Add" }));
 
     expect(onAdd).toHaveBeenCalledWith("3/2");
     expect(input).toHaveValue("");
@@ -98,7 +98,7 @@ describe("LatticeRatioControls", () => {
     const input = screen.getByRole("textbox", { name: "Ratio" });
 
     await user.type(input, "6/4");
-    await user.click(screen.getByRole("button", { name: "Add ratio" }));
+    await user.click(screen.getByRole("button", { name: "Add" }));
 
     expect(onAdd).toHaveBeenCalledWith("6/4");
     expect(input).toHaveValue("6/4");

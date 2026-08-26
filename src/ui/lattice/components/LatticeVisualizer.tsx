@@ -68,41 +68,47 @@ function LatticeVisualizer() {
   }
 
   return (
-    <>
-      <LatticeRatioControls
-        onAdd={handleAdd}
-        onUndo={undo}
-        onReset={reset}
-        inputError={inputError}
-      />
+    <div className="flex min-h-0 flex-1 flex-col gap-2">
+      <div className="shrink-0 rounded-lg border border-gray-200 bg-gray-100 p-2">
+        <div className="grid gap-3 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-start">
+          <LatticeRatioControls
+            onAdd={handleAdd}
+            onUndo={undo}
+            onReset={reset}
+            inputError={inputError}
+          />
 
-      <LatticeVisualizationControls
-        configuration={configuration}
-        onVisualizationTypeChange={setVisualizationType}
-        onIncludeHigherPrimesChange={setIncludeHigherPrimes}
-        onHigherPrimeRadiusChange={setHigherPrimeRadius}
-        onLocalRotationChange={setLocalRotation}
-        onIncludeLowerOctaveChange={setIncludeLowerOctave}
-        onIncludeGeneratorHeightChange={setIncludeGeneratorHeight}
-        onLowerSymmetryChange={setLowerSymmetry}
-      />
+          <LatticeVisualizationControls
+            configuration={configuration}
+            onVisualizationTypeChange={setVisualizationType}
+            onIncludeHigherPrimesChange={setIncludeHigherPrimes}
+            onHigherPrimeRadiusChange={setHigherPrimeRadius}
+            higherPrimeColor={higherPrimeColor}
+            onHigherPrimeColorChange={setHigherPrimeColor}
+            onLocalRotationChange={setLocalRotation}
+            onIncludeLowerOctaveChange={setIncludeLowerOctave}
+            onIncludeGeneratorHeightChange={setIncludeGeneratorHeight}
+            onLowerSymmetryChange={setLowerSymmetry}
+          />
 
-      <LatticeAppearanceControls
-        higherPrimeColor={higherPrimeColor}
-        onHigherPrimeColorChange={setHigherPrimeColor}
-        showConnections={showConnections}
-        onShowConnectionsChange={setShowConnections}
-        availableConnectionPrimes={availableConnectionPrimes}
-        visibleConnectionPrimes={visibleConnectionPrimes}
-        onConnectionPrimeVisibilityChange={toggleConnectionPrime}
-      />
+          <div className="lg:justify-self-end">
+            <LatticeAppearanceControls
+              showConnections={showConnections}
+              onShowConnectionsChange={setShowConnections}
+              availableConnectionPrimes={availableConnectionPrimes}
+              visibleConnectionPrimes={visibleConnectionPrimes}
+              onConnectionPrimeVisibilityChange={toggleConnectionPrime}
+            />
+          </div>
+        </div>
+      </div>
 
       <LatticeCanvas
         scenePoints={scenePoints}
         sceneConnections={sceneConnections}
         higherPrimeColor={higherPrimeColor}
       />
-    </>
+    </div>
   );
 }
 

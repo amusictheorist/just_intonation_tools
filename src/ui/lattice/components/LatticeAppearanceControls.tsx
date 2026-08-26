@@ -1,6 +1,4 @@
 type LatticeAppearanceControlsProps = {
-  higherPrimeColor: string;
-  onHigherPrimeColorChange: (color: string) => void;
   showConnections: boolean;
   onShowConnectionsChange: (show: boolean) => void;
   availableConnectionPrimes: readonly bigint[];
@@ -9,8 +7,6 @@ type LatticeAppearanceControlsProps = {
 };
 
 function LatticeAppearanceControls({
-  higherPrimeColor,
-  onHigherPrimeColorChange,
   showConnections,
   onShowConnectionsChange,
   availableConnectionPrimes,
@@ -18,42 +14,37 @@ function LatticeAppearanceControls({
   onConnectionPrimeVisibilityChange,
 }: LatticeAppearanceControlsProps) {
   return (
-    <div>
-      <label>
-        <input
-          type="checkbox"
-          checked={showConnections}
-          onChange={(event) => onShowConnectionsChange(event.target.checked)}
-        />
-        Show connections
-      </label>
+    <fieldset className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+      <legend className="px-1 font-medium text-gray-700">Connections</legend>
 
-      {showConnections &&
-        availableConnectionPrimes.map((prime) => (
-          <label key={prime.toString()}>
-            <input
-              type="checkbox"
-              checked={
-                visibleConnectionPrimes === null ||
-                visibleConnectionPrimes.has(prime)
-              }
-              onChange={(event) =>
-                onConnectionPrimeVisibilityChange(prime, event.target.checked)
-              }
-            />
-            {prime.toString()}
-          </label>
-        ))}
+      <div className="flex flex-wrap items-center gap-2">
+        <label className="flex items-center gap-1">
+          <input
+            type="checkbox"
+            checked={showConnections}
+            onChange={(event) => onShowConnectionsChange(event.target.checked)}
+          />
+          Show
+        </label>
 
-      <label>
-        Higher-prime color
-        <input
-          type="color"
-          value={higherPrimeColor}
-          onChange={(event) => onHigherPrimeColorChange(event.target.value)}
-        />
-      </label>
-    </div>
+        {showConnections &&
+          availableConnectionPrimes.map((prime) => (
+            <label key={prime.toString()} className="flex items-center gap-1">
+              <input
+                type="checkbox"
+                checked={
+                  visibleConnectionPrimes === null ||
+                  visibleConnectionPrimes.has(prime)
+                }
+                onChange={(event) =>
+                  onConnectionPrimeVisibilityChange(prime, event.target.checked)
+                }
+              />
+              {prime.toString()}
+            </label>
+          ))}
+      </div>
+    </fieldset>
   );
 }
 
