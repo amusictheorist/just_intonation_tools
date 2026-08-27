@@ -88,10 +88,12 @@ describe("LatticeVisualizer", () => {
 
     const sceneConnections: readonly LatticeSceneConnection[] = [];
 
+    const removeRatio = vi.fn();
+
     vi.mocked(useLatticeRatios).mockReturnValue({
       ratios: [ratio],
       addRatio: vi.fn(),
-      removeRatio: vi.fn(),
+      removeRatio,
       reset: vi.fn(),
       undo: vi.fn(),
     });
@@ -137,6 +139,7 @@ describe("LatticeVisualizer", () => {
         scenePoints,
         sceneConnections,
         higherPrimeColor: DEFAULT_HIGHER_PRIME_POINT_COLOR,
+        onPointRemove: removeRatio,
       }),
       undefined,
     );
@@ -623,5 +626,59 @@ describe("LatticeVisualizer", () => {
       }),
       undefined,
     );
+  });
+
+  it("removes a ratio through the canvas point-removal callback", () => {
+    const removeRatio = vi.fn();
+
+    vi.mocked(useLatticeRatios).mockReturnValue({
+      ratios: [],
+      addRatio: vi.fn(),
+      removeRatio,
+      undo: vi.fn(),
+      reset: vi.fn(),
+    });
+
+    vi.mocked(useLatticePositioning).mockReturnValue({
+      configuration: {
+        visualization: {
+          type: "cubic",
+          includeHigherPrimes: false,
+        },
+        geometry: {
+          type: "cubic",
+          higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
+          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        },
+      },
+      positionedRatios: [],
+      setIncludeHigherPrimes: vi.fn(),
+      setHigherPrimeRadius: vi.fn(),
+      setLocalRotation: vi.fn(),
+      setVisualizationType: vi.fn(),
+      setIncludeLowerOctave: vi.fn(),
+      setIncludeGeneratorHeight: vi.fn(),
+      setLowerSymmetry: vi.fn(),
+    });
+
+    vi.mocked(useLatticeSceneData).mockReturnValue({
+      scenePoints: [],
+      sceneConnections: [],
+      availableConnectionPrimes: [],
+    });
+
+    render(<LatticeVisualizer />);
+
+    const canvasProps = vi.mocked(LatticeCanvas).mock.lastCall?.[0];
+
+    if (!canvasProps) {
+      throw new Error("Expected LatticeCanvas to render");
+    }
+
+    act(() => {
+      canvasProps.onPointRemove("ratio-1");
+    });
+
+    expect(removeRatio).toHaveBeenCalledWith("ratio-1");
   });
 });

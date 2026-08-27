@@ -5,16 +5,19 @@ import type { LatticeScenePoint } from "../../../lib/lattice/presentation/lattic
 import { createLatticeSceneRuntime } from "../scene/createLatticeSceneRuntime";
 import { LatticeSceneRenderer } from "../scene/LatticeSceneRenderer";
 import type { LatticeSceneViewport } from "../scene/LatticeSceneViewport";
+import type { LatticePointHover } from "../scene/latticePointHover";
 
 type UseLatticeSceneOptions = {
   scenePoints: readonly LatticeScenePoint[];
   sceneConnections: readonly LatticeSceneConnection[];
   higherPrimeColor: THREE.ColorRepresentation;
+  onPointHover: (hover: LatticePointHover) => void;
+  onPointRemove: (pointId: string) => void;
 };
 
 type LatticeSceneRendererHandle = Pick<
   LatticeSceneRenderer,
-  "scene" | "setScene" | "setHigherPrimeColor" | "dispose"
+  "scene" | "setScene" | "setHigherPrimeColor" | "dispose" | "pointMeshes"
 >;
 
 type LatticeSceneRuntimeHandle = Pick<
@@ -30,6 +33,10 @@ type UseLatticeSceneDependencies = {
   createSceneRuntime: (
     container: HTMLElement,
     sceneRenderer: LatticeSceneRendererHandle,
+    interactionOptions: {
+      onPointHover: (hover: LatticePointHover) => void;
+      onPointRemove: (pointId: string) => void;
+    },
   ) => LatticeSceneRuntimeHandle;
 };
 
@@ -38,8 +45,12 @@ const defaultDependencies: UseLatticeSceneDependencies = {
     return new LatticeSceneRenderer(scenePoints, sceneConnections);
   },
 
-  createSceneRuntime(container, sceneRenderer) {
-    return createLatticeSceneRuntime(container, sceneRenderer);
+  createSceneRuntime(container, sceneRenderer, interactionOptions) {
+    return createLatticeSceneRuntime(
+      container,
+      sceneRenderer,
+      interactionOptions,
+    );
   },
 };
 
@@ -54,13 +65,26 @@ const defaultDependencies: UseLatticeSceneDependencies = {
 
 export function useLatticeScene(
   containerRef: RefObject<HTMLDivElement | null>,
-  { scenePoints, sceneConnections, higherPrimeColor }: UseLatticeSceneOptions,
+  {
+    scenePoints,
+    sceneConnections,
+    higherPrimeColor,
+    onPointHover,
+    onPointRemove,
+  }: UseLatticeSceneOptions,
   dependencies: UseLatticeSceneDependencies = defaultDependencies,
 ): void {
   const { createSceneRenderer, createSceneRuntime } = dependencies;
 
   const sceneRendererRef = useRef<LatticeSceneRendererHandle | null>(null);
   const sceneRuntimeRef = useRef<LatticeSceneRuntimeHandle | null>(null);
+  const onPointHoverRef = useRef(onPointHover);
+  const onPointRemoveRef = useRef(onPointRemove);
+
+  useEffect(() => {
+    onPointHoverRef.current = onPointHover;
+    onPointRemoveRef.current = onPointRemove;
+  }, [onPointHover, onPointRemove]);
 
   useEffect(() => {
     const container = containerRef.current;
@@ -69,7 +93,18 @@ export function useLatticeScene(
 
     const sceneRenderer = createSceneRenderer([], []);
 
-    const sceneRuntime = createSceneRuntime(container, sceneRenderer);
+    function handlePointHover(hover: LatticePointHover): void {
+      onPointHoverRef.current(hover);
+    }
+
+    function handlePointRemove(pointId: string): void {
+      onPointRemoveRef.current(pointId);
+    }
+
+    const sceneRuntime = createSceneRuntime(container, sceneRenderer, {
+      onPointHover: handlePointHover,
+      onPointRemove: handlePointRemove,
+    });
 
     sceneRendererRef.current = sceneRenderer;
     sceneRuntimeRef.current = sceneRuntime;

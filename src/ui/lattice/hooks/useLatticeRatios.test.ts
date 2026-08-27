@@ -298,4 +298,29 @@ describe("useLatticeRatios", () => {
     expect(result.current.ratios).toHaveLength(1);
     expect(result.current.ratios[0]?.rawInput).toBe("1/1");
   });
+
+  it("does not create an undo step when removing the unison ratio", () => {
+    const { result } = renderHook(() => useLatticeRatios());
+
+    act(() => {
+      result.current.addRatio("3/2");
+    });
+
+    const unison = result.current.ratios.find(
+      (ratio) => ratio.rawInput === "1/1",
+    );
+
+    expect(unison).toBeDefined();
+
+    act(() => {
+      result.current.removeRatio(unison!.id);
+    });
+
+    act(() => {
+      result.current.undo();
+    });
+
+    expect(result.current.ratios).toHaveLength(1);
+    expect(result.current.ratios[0]?.rawInput).toBe("1/1");
+  });
 });

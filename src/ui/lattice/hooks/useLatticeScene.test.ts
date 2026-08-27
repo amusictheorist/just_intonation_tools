@@ -7,11 +7,13 @@ import type { LatticeSceneConnection } from "../../../lib/lattice/presentation/l
 import type { LatticeScenePoint } from "../../../lib/lattice/presentation/latticeScenePoint";
 import { useLatticeScene } from "./useLatticeScene";
 import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
+import type { LatticePointHover } from "../scene/latticePointHover";
 
 type HookProps = {
   scenePoints: readonly LatticeScenePoint[];
   sceneConnections: readonly LatticeSceneConnection[];
   higherPrimeColor: THREE.ColorRepresentation;
+  onPointHover: (hover: LatticePointHover) => void;
 };
 
 const container = {} as HTMLDivElement;
@@ -34,9 +36,13 @@ const sceneConnections: readonly LatticeSceneConnection[] = [];
 
 const higherPrimeColor: THREE.ColorRepresentation = "#00008b";
 
+const onPointHover = vi.fn();
+const onPointRemove = vi.fn();
+
 function createTestDependencies() {
   const sceneRenderer = {
     scene: new THREE.Scene(),
+    pointMeshes: [] as readonly THREE.Mesh[],
     setScene: vi.fn(),
     setHigherPrimeColor: vi.fn(),
     dispose: vi.fn(),
@@ -66,7 +72,13 @@ describe("useLatticeScene", () => {
     renderHook(() =>
       useLatticeScene(
         { current: container },
-        { scenePoints, sceneConnections, higherPrimeColor },
+        {
+          scenePoints,
+          sceneConnections,
+          higherPrimeColor,
+          onPointHover,
+          onPointRemove,
+        },
         { createSceneRenderer, createSceneRuntime },
       ),
     );
@@ -78,7 +90,13 @@ describe("useLatticeScene", () => {
       sceneConnections,
     );
 
-    expect(createSceneRuntime).toHaveBeenCalledWith(container, sceneRenderer);
+    expect(createSceneRuntime).toHaveBeenCalledWith(
+      container,
+      sceneRenderer,
+      expect.objectContaining({
+        onPointHover: expect.any(Function),
+      }),
+    );
   });
 
   it("does not create a scene runtime without a container", () => {
@@ -88,7 +106,13 @@ describe("useLatticeScene", () => {
     renderHook(() =>
       useLatticeScene(
         { current: null },
-        { scenePoints, sceneConnections, higherPrimeColor },
+        {
+          scenePoints,
+          sceneConnections,
+          higherPrimeColor,
+          onPointHover,
+          onPointRemove,
+        },
         { createSceneRenderer, createSceneRuntime },
       ),
     );
@@ -108,7 +132,13 @@ describe("useLatticeScene", () => {
     const { unmount } = renderHook(() =>
       useLatticeScene(
         { current: container },
-        { scenePoints, sceneConnections, higherPrimeColor },
+        {
+          scenePoints,
+          sceneConnections,
+          higherPrimeColor,
+          onPointHover,
+          onPointRemove,
+        },
         { createSceneRenderer, createSceneRuntime },
       ),
     );
@@ -149,10 +179,21 @@ describe("useLatticeScene", () => {
     ] satisfies readonly LatticeSceneConnection[];
 
     const { rerender } = renderHook(
-      ({ scenePoints, sceneConnections }: HookProps) =>
+      ({
+        scenePoints,
+        sceneConnections,
+        higherPrimeColor,
+        onPointHover,
+      }: HookProps) =>
         useLatticeScene(
           containerRef,
-          { scenePoints, sceneConnections, higherPrimeColor },
+          {
+            scenePoints,
+            sceneConnections,
+            higherPrimeColor,
+            onPointHover,
+            onPointRemove,
+          },
           { createSceneRenderer, createSceneRuntime },
         ),
       {
@@ -160,6 +201,7 @@ describe("useLatticeScene", () => {
           scenePoints,
           sceneConnections,
           higherPrimeColor,
+          onPointHover,
         },
       },
     );
@@ -168,6 +210,7 @@ describe("useLatticeScene", () => {
       scenePoints: nextScenePoints,
       sceneConnections: nextSceneConnections,
       higherPrimeColor,
+      onPointHover,
     });
 
     expect(createSceneRenderer).toHaveBeenCalledOnce();
@@ -188,7 +231,13 @@ describe("useLatticeScene", () => {
     const { unmount } = renderHook(() =>
       useLatticeScene(
         containerRef,
-        { scenePoints, sceneConnections, higherPrimeColor },
+        {
+          scenePoints,
+          sceneConnections,
+          higherPrimeColor,
+          onPointHover,
+          onPointRemove,
+        },
         { createSceneRenderer, createSceneRuntime },
       ),
     );
@@ -209,7 +258,13 @@ describe("useLatticeScene", () => {
     const { unmount } = renderHook(() =>
       useLatticeScene(
         containerRef,
-        { scenePoints, sceneConnections, higherPrimeColor },
+        {
+          scenePoints,
+          sceneConnections,
+          higherPrimeColor,
+          onPointHover,
+          onPointRemove,
+        },
         { createSceneRenderer, createSceneRuntime },
       ),
     );
@@ -228,7 +283,13 @@ describe("useLatticeScene", () => {
     renderHook(() =>
       useLatticeScene(
         { current: container },
-        { scenePoints, sceneConnections, higherPrimeColor },
+        {
+          scenePoints,
+          sceneConnections,
+          higherPrimeColor,
+          onPointHover,
+          onPointRemove,
+        },
         { createSceneRenderer, createSceneRuntime },
       ),
     );
@@ -245,10 +306,21 @@ describe("useLatticeScene", () => {
     const containerRef = { current: container };
 
     const { rerender } = renderHook(
-      ({ scenePoints, sceneConnections, higherPrimeColor }: HookProps) =>
+      ({
+        scenePoints,
+        sceneConnections,
+        higherPrimeColor,
+        onPointHover,
+      }: HookProps) =>
         useLatticeScene(
           containerRef,
-          { scenePoints, sceneConnections, higherPrimeColor },
+          {
+            scenePoints,
+            sceneConnections,
+            higherPrimeColor,
+            onPointHover,
+            onPointRemove,
+          },
           { createSceneRenderer, createSceneRuntime },
         ),
       {
@@ -256,17 +328,50 @@ describe("useLatticeScene", () => {
           scenePoints,
           sceneConnections,
           higherPrimeColor: "#00008b",
+          onPointHover,
         },
       },
     );
 
-    rerender({ scenePoints, sceneConnections, higherPrimeColor: "purple" });
+    rerender({
+      scenePoints,
+      sceneConnections,
+      higherPrimeColor: "purple",
+      onPointHover,
+    });
 
     expect(createSceneRenderer).toHaveBeenCalledOnce();
     expect(createSceneRuntime).toHaveBeenCalledOnce();
 
     expect(sceneRenderer.setHigherPrimeColor).toHaveBeenLastCalledWith(
       "purple",
+    );
+  });
+
+  it("passes the point-hover callback to the scene runtime", () => {
+    const { sceneRenderer, createSceneRenderer, createSceneRuntime } =
+      createTestDependencies();
+
+    renderHook(() =>
+      useLatticeScene(
+        { current: container },
+        {
+          scenePoints,
+          sceneConnections,
+          higherPrimeColor,
+          onPointHover,
+          onPointRemove,
+        },
+        { createSceneRenderer, createSceneRuntime },
+      ),
+    );
+
+    expect(createSceneRuntime).toHaveBeenCalledWith(
+      container,
+      sceneRenderer,
+      expect.objectContaining({
+        onPointHover: expect.any(Function),
+      }),
     );
   });
 });

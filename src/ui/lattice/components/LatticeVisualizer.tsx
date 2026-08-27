@@ -9,7 +9,7 @@ import LatticeVisualizationControls from "./LatticeVisualizationControls";
 import LatticeAppearanceControls from "./LatticeAppearanceControls";
 
 function LatticeVisualizer() {
-  const { ratios, addRatio, undo, reset } = useLatticeRatios();
+  const { ratios, addRatio, removeRatio, undo, reset } = useLatticeRatios();
   const {
     positionedRatios,
     configuration,
@@ -107,6 +107,7 @@ function LatticeVisualizer() {
         scenePoints={scenePoints}
         sceneConnections={sceneConnections}
         higherPrimeColor={higherPrimeColor}
+        onPointRemove={removeRatio}
       />
     </div>
   );

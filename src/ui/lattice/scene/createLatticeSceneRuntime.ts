@@ -2,8 +2,14 @@ import * as THREE from "three";
 import { CameraSystem } from "./CameraSystem";
 import { LatticeSceneViewport } from "./LatticeSceneViewport";
 import type { LatticeSceneRenderer } from "./LatticeSceneRenderer";
+import type { LatticePointHover } from "./latticePointHover";
 
-type LatticeSceneSource = Pick<LatticeSceneRenderer, "scene">;
+type LatticeSceneSource = Pick<LatticeSceneRenderer, "scene" | "pointMeshes">;
+
+type LatticeSceneRuntimeInteractionOptions = Readonly<{
+  onPointHover?: (hover: LatticePointHover) => void;
+  onPointRemove?: (pointId: string) => void;
+}>;
 
 type LatticeSceneRuntimeDependencies = {
   createWebGLRenderer: () => THREE.WebGLRenderer;
@@ -13,6 +19,11 @@ type LatticeSceneRuntimeDependencies = {
     renderer: THREE.WebGLRenderer,
     scene: THREE.Scene,
     cameraSystem: CameraSystem,
+    interactionOptions: {
+      getPointMeshes: () => readonly THREE.Mesh[];
+      onPointHover?: (hover: LatticePointHover) => void;
+      onPointRemove?: (pointId: string) => void;
+    },
   ) => LatticeSceneViewport;
 };
 
@@ -25,8 +36,14 @@ const defaultDependencies: LatticeSceneRuntimeDependencies = {
     return new CameraSystem(domElement);
   },
 
-  createViewport(container, renderer, scene, cameraSystem) {
-    return new LatticeSceneViewport(container, renderer, scene, cameraSystem);
+  createViewport(container, renderer, scene, cameraSystem, interactionOptions) {
+    return new LatticeSceneViewport(
+      container,
+      renderer,
+      scene,
+      cameraSystem,
+      interactionOptions,
+    );
   },
 };
 
@@ -44,6 +61,7 @@ const defaultDependencies: LatticeSceneRuntimeDependencies = {
 export function createLatticeSceneRuntime(
   container: HTMLElement,
   sceneRenderer: LatticeSceneSource,
+  interactionOptions: LatticeSceneRuntimeInteractionOptions = {},
   dependencies: LatticeSceneRuntimeDependencies = defaultDependencies,
 ): LatticeSceneViewport {
   const renderer = dependencies.createWebGLRenderer();
@@ -57,6 +75,11 @@ export function createLatticeSceneRuntime(
     renderer,
     sceneRenderer.scene,
     cameraSystem,
+    {
+      getPointMeshes: () => sceneRenderer.pointMeshes,
+      onPointHover: interactionOptions.onPointHover,
+      onPointRemove: interactionOptions.onPointRemove,
+    },
   );
 
   viewport.start();

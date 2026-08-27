@@ -1,6 +1,10 @@
+// @vitest-environment jsdom
+
 import * as THREE from "three";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { LatticeSceneViewport } from "./LatticeSceneViewport";
+import type { LatticePointHover } from "./latticePointHover";
+import type { PointerCoordinates } from "./findLatticePointAtPointer";
 
 function createTestContainer(
   overrides: Partial<HTMLElement> = {},
@@ -17,7 +21,14 @@ function createTestContainer(
 function createTestCanvas(
   parentElement: HTMLElement | null = null,
 ): HTMLCanvasElement {
-  return { parentElement } as unknown as HTMLCanvasElement;
+  const canvas = document.createElement("canvas");
+
+  Object.defineProperty(canvas, "parentElement", {
+    value: parentElement,
+    configurable: true,
+  });
+
+  return canvas;
 }
 
 function createTestRenderer(canvas: HTMLCanvasElement): THREE.WebGLRenderer {
@@ -40,6 +51,15 @@ function createTestCameraSystem(camera: THREE.PerspectiveCamera) {
 function createViewportFixture(options?: {
   container?: HTMLElement;
   canvas?: HTMLCanvasElement;
+  pointMeshes?: readonly THREE.Mesh[];
+  onPointHover?: (hover: LatticePointHover) => void;
+  onPointRemove?: (pointId: string) => void;
+  findPointAtPointer?: (
+    event: PointerCoordinates,
+    canvas: HTMLCanvasElement,
+    camera: THREE.Camera,
+    pointMeshes: readonly THREE.Mesh[],
+  ) => string | null;
 }) {
   const container = options?.container ?? createTestContainer();
   const canvas = options?.canvas ?? createTestCanvas();
@@ -48,11 +68,19 @@ function createViewportFixture(options?: {
   const camera = new THREE.PerspectiveCamera();
   const cameraSystem = createTestCameraSystem(camera);
 
+  const pointMeshes = options?.pointMeshes ?? [];
+
   const viewport = new LatticeSceneViewport(
     container,
     renderer,
     scene,
     cameraSystem,
+    {
+      getPointMeshes: () => pointMeshes,
+      onPointHover: options?.onPointHover,
+      onPointRemove: options?.onPointRemove,
+      findPointAtPointer: options?.findPointAtPointer,
+    },
   );
 
   return { container, canvas, renderer, scene, camera, cameraSystem, viewport };
@@ -218,5 +246,159 @@ describe("LatticeSceneViewport", () => {
     viewport.dispose();
 
     expect(cancelAnimationFrame).toHaveBeenCalledWith(42);
+  });
+
+  it("reports the lattice point under the pointer", () => {
+    const mesh = new THREE.Mesh();
+    const onPointHover = vi.fn();
+    const findPointAtPointer = vi.fn(() => "ratio-1");
+
+    const { canvas, camera } = createViewportFixture({
+      pointMeshes: [mesh],
+      onPointHover,
+      findPointAtPointer,
+    });
+
+    const event = new PointerEvent("pointermove", {
+      clientX: 25,
+      clientY: 50,
+    });
+
+    canvas.dispatchEvent(event);
+
+    expect(findPointAtPointer).toHaveBeenCalledWith(event, canvas, camera, [
+      mesh,
+    ]);
+
+    expect(onPointHover).toHaveBeenCalledWith({
+      pointId: "ratio-1",
+      clientX: 25,
+      clientY: 50,
+    });
+  });
+
+  it("removes the pointer listener when disposed", () => {
+    const canvas = createTestCanvas();
+    const removeEventListener = vi.spyOn(canvas, "removeEventListener");
+
+    const { viewport } = createViewportFixture({ canvas });
+
+    viewport.dispose();
+
+    expect(removeEventListener).toHaveBeenCalledWith(
+      "pointermove",
+      expect.any(Function),
+    );
+  });
+
+  it("does not report hovered points after disposal", () => {
+    const onPointHover = vi.fn();
+    const findPointAtPointer = vi.fn(() => "ratio-1");
+
+    const { canvas, viewport } = createViewportFixture({
+      onPointHover,
+      findPointAtPointer,
+    });
+
+    viewport.dispose();
+
+    canvas.dispatchEvent(
+      new PointerEvent("pointermove", {
+        clientX: 25,
+        clientY: 50,
+      }),
+    );
+
+    expect(findPointAtPointer).not.toHaveBeenCalled();
+    expect(onPointHover).not.toHaveBeenCalled();
+  });
+
+  it("reports no hovered point when the pointer is not over a lattice point", () => {
+    const onPointHover = vi.fn();
+    const findPointAtPointer = vi.fn(() => null);
+
+    const { canvas } = createViewportFixture({
+      onPointHover,
+      findPointAtPointer,
+    });
+
+    canvas.dispatchEvent(
+      new PointerEvent("pointermove", {
+        clientX: 25,
+        clientY: 50,
+      }),
+    );
+
+    expect(onPointHover).toHaveBeenCalledWith(null);
+  });
+
+  it("reports a lattice point for removal on control-click", () => {
+    const mesh = new THREE.Mesh();
+    const onPointRemove = vi.fn();
+    const findPointAtPointer = vi.fn(() => "ratio-1");
+
+    const { canvas, camera } = createViewportFixture({
+      pointMeshes: [mesh],
+      onPointRemove,
+      findPointAtPointer,
+    });
+
+    const event = new PointerEvent("click", {
+      clientX: 25,
+      clientY: 50,
+      ctrlKey: true,
+    });
+
+    canvas.dispatchEvent(event);
+
+    expect(findPointAtPointer).toHaveBeenCalledWith(event, canvas, camera, [
+      mesh,
+    ]);
+    expect(onPointRemove).toHaveBeenCalledWith("ratio-1");
+  });
+
+  it("reports a lattice point for removal on command-click", () => {
+    const mesh = new THREE.Mesh();
+    const onPointRemove = vi.fn();
+    const findPointAtPointer = vi.fn(() => "ratio-1");
+
+    const { canvas, camera } = createViewportFixture({
+      pointMeshes: [mesh],
+      onPointRemove,
+      findPointAtPointer,
+    });
+
+    const event = new PointerEvent("click", {
+      clientX: 25,
+      clientY: 50,
+      metaKey: true,
+    });
+
+    canvas.dispatchEvent(event);
+
+    expect(findPointAtPointer).toHaveBeenCalledWith(event, canvas, camera, [
+      mesh,
+    ]);
+    expect(onPointRemove).toHaveBeenCalledWith("ratio-1");
+  });
+
+  it("does not remove a lattice point on an unmodified click", () => {
+    const onPointRemove = vi.fn();
+    const findPointAtPointer = vi.fn(() => "ratio-1");
+
+    const { canvas } = createViewportFixture({
+      onPointRemove,
+      findPointAtPointer,
+    });
+
+    canvas.dispatchEvent(
+      new PointerEvent("click", {
+        clientX: 25,
+        clientY: 50,
+      }),
+    );
+
+    expect(findPointAtPointer).not.toHaveBeenCalled();
+    expect(onPointRemove).not.toHaveBeenCalled();
   });
 });
