@@ -1,4 +1,4 @@
-import type { CubicLocalRotation } from "../state/latticeGeometry";
+import type { CubicRotation } from "../state/latticeGeometry";
 import type { Vector3 } from "./vector";
 
 function degreesToRadians(degrees: number): number {
@@ -17,7 +17,7 @@ function degreesToRadians(degrees: number): number {
 
 export function rotateVector(
   vector: Vector3,
-  rotation: CubicLocalRotation,
+  rotation: CubicRotation,
 ): Vector3 {
   const xRadians = degreesToRadians(rotation.x);
   const yRadians = degreesToRadians(rotation.y);

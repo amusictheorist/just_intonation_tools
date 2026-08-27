@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import type {
-  CubicLocalRotation,
+  CubicRotation,
   LowerRadialSymmetry,
 } from "../../../lib/lattice/state/latticeGeometry";
 import type { LatticePositioningConfiguration } from "../../../lib/lattice/state/latticePositioningConfiguration";
-import { DEFAULT_CUBIC_LOCAL_ROTATION } from "../../../lib/lattice/geometry/latticeGeometryConstants";
+import { DEFAULT_CUBIC_ROTATION } from "../../../lib/lattice/geometry/latticeGeometryConstants";
 import Collapsible from "./Collapsible";
 
 type LatticeVisualizationControlsProps = {
@@ -14,7 +14,7 @@ type LatticeVisualizationControlsProps = {
   higherPrimeColor: string;
   onHigherPrimeColorChange: (color: string) => void;
   onHigherPrimeRadiusChange: (radius: number) => void;
-  onLocalRotationChange: (rotation: CubicLocalRotation) => void;
+  onHigherPrimeRotationChange: (rotation: CubicRotation) => void;
   onIncludeLowerOctaveChange: (include: boolean) => void;
   onIncludeGeneratorHeightChange: (include: boolean) => void;
   onLowerSymmetryChange: (symmetry: LowerRadialSymmetry) => void;
@@ -24,20 +24,20 @@ type RotationControlsState = Readonly<{
   x: number;
   y: number;
   z: number;
-  master: number;
+  xyz: number;
   xy: number;
   yz: number;
   xz: number;
 }>;
 
 function createRotationControls(
-  localRotation: CubicLocalRotation,
+  higherPrimeRotation: CubicRotation,
 ): RotationControlsState {
   return {
-    x: localRotation.x,
-    y: localRotation.y,
-    z: localRotation.z,
-    master: 0,
+    x: higherPrimeRotation.x,
+    y: higherPrimeRotation.y,
+    z: higherPrimeRotation.z,
+    xyz: 0,
     xy: 0,
     yz: 0,
     xz: 0,
@@ -46,11 +46,11 @@ function createRotationControls(
 
 function createCombinedRotation(
   controls: RotationControlsState,
-): CubicLocalRotation {
+): CubicRotation {
   return {
-    x: controls.x + controls.master + controls.xy + controls.xz,
-    y: controls.y + controls.master + controls.xy + controls.yz,
-    z: controls.z + controls.master + controls.yz + controls.xz,
+    x: controls.x + controls.xyz + controls.xy + controls.xz,
+    y: controls.y + controls.xyz + controls.xy + controls.yz,
+    z: controls.z + controls.xyz + controls.yz + controls.xz,
   };
 }
 
@@ -61,21 +61,21 @@ function LatticeVisualizationControls({
   onHigherPrimeRadiusChange,
   higherPrimeColor,
   onHigherPrimeColorChange,
-  onLocalRotationChange,
+  onHigherPrimeRotationChange,
   onIncludeLowerOctaveChange,
   onIncludeGeneratorHeightChange,
   onLowerSymmetryChange,
 }: LatticeVisualizationControlsProps) {
-  const pendingLocalRotation = useRef<CubicLocalRotation | null>(null);
+  const pendingHigherPrimeRotation = useRef<CubicRotation | null>(null);
 
-  const initialLocalRotation =
+  const initialHigherPrimeRotation =
     configuration.geometry.type === "cubic"
-      ? configuration.geometry.localRotation
-      : DEFAULT_CUBIC_LOCAL_ROTATION;
+      ? configuration.geometry.higherPrimeRotation
+      : DEFAULT_CUBIC_ROTATION;
 
   const [rotationControls, setRotationControls] =
     useState<RotationControlsState>(() =>
-      createRotationControls(initialLocalRotation),
+      createRotationControls(initialHigherPrimeRotation),
     );
 
   const isCubic = configuration.visualization.type === "cubic";
@@ -97,22 +97,22 @@ function LatticeVisualizationControls({
     const nextRotation = createCombinedRotation(nextControls);
 
     setRotationControls(nextControls);
-    pendingLocalRotation.current = nextRotation;
-    onLocalRotationChange(nextRotation);
+    pendingHigherPrimeRotation.current = nextRotation;
+    onHigherPrimeRotationChange(nextRotation);
   }
 
   function resetRotationControls(): void {
-    const resetControls = createRotationControls(DEFAULT_CUBIC_LOCAL_ROTATION);
+    const resetControls = createRotationControls(DEFAULT_CUBIC_ROTATION);
     const resetRotation = createCombinedRotation(resetControls);
 
     setRotationControls(resetControls);
-    pendingLocalRotation.current = resetRotation;
-    onLocalRotationChange(resetRotation);
+    pendingHigherPrimeRotation.current = resetRotation;
+    onHigherPrimeRotationChange(resetRotation);
   }
 
   const configuredRotation =
     configuration.geometry.type === "cubic"
-      ? configuration.geometry.localRotation
+      ? configuration.geometry.higherPrimeRotation
       : null;
 
   const configuredRotationX = configuredRotation?.x ?? null;
@@ -127,7 +127,7 @@ function LatticeVisualizationControls({
     )
       return;
 
-    const pendingRotation = pendingLocalRotation.current;
+    const pendingRotation = pendingHigherPrimeRotation.current;
 
     if (
       pendingRotation &&
@@ -135,11 +135,11 @@ function LatticeVisualizationControls({
       pendingRotation.y === configuredRotationY &&
       pendingRotation.z === configuredRotationZ
     ) {
-      pendingLocalRotation.current = null;
+      pendingHigherPrimeRotation.current = null;
       return;
     }
 
-    pendingLocalRotation.current = null;
+    pendingHigherPrimeRotation.current = null;
 
     setRotationControls(
       createRotationControls({
@@ -244,7 +244,7 @@ function LatticeVisualizationControls({
 
               <label className="flex items-center gap-2 text-sm">
                 <span className="whitespace-nowrap">
-                  X {configuration.geometry.localRotation.x.toFixed(0)}°
+                  X {configuration.geometry.higherPrimeRotation.x.toFixed(0)}°
                 </span>
 
                 <input
@@ -263,7 +263,7 @@ function LatticeVisualizationControls({
 
               <label className="flex items-center gap-2 text-sm">
                 <span className="whitespace-nowrap">
-                  Y {configuration.geometry.localRotation.y.toFixed(0)}°
+                  Y {configuration.geometry.higherPrimeRotation.y.toFixed(0)}°
                 </span>
 
                 <input
@@ -282,7 +282,7 @@ function LatticeVisualizationControls({
 
               <label className="flex items-center gap-2 text-sm">
                 <span className="whitespace-nowrap">
-                  Z {configuration.geometry.localRotation.z.toFixed(0)}°
+                  Z {configuration.geometry.higherPrimeRotation.z.toFixed(0)}°
                 </span>
 
                 <input
@@ -301,19 +301,19 @@ function LatticeVisualizationControls({
 
               <label className="flex items-center gap-2 text-sm">
                 <span className="whitespace-nowrap">
-                  Master {rotationControls.master.toFixed(0)}°
+                  XYZ {rotationControls.xyz.toFixed(0)}°
                 </span>
 
                 <input
-                  aria-label="Master rotation"
+                  aria-label="XYZ rotation"
                   className="w-28"
                   type="range"
                   min="-180"
                   max="180"
                   step="1"
-                  value={rotationControls.master}
+                  value={rotationControls.xyz}
                   onChange={(event) =>
-                    updateRotationControl("master", Number(event.target.value))
+                    updateRotationControl("xyz", Number(event.target.value))
                   }
                 />
               </label>

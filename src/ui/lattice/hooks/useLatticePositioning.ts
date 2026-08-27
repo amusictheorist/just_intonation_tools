@@ -7,7 +7,7 @@ import {
 } from "../../../lib/lattice/state/latticePositioningConfiguration";
 import type { LatticeRatio } from "../../../lib/lattice/state/latticeRatio";
 import type {
-  CubicLocalRotation,
+  CubicRotation,
   LowerRadialSymmetry,
 } from "../../../lib/lattice/state/latticeGeometry";
 
@@ -16,7 +16,7 @@ type UseLatticePositioningResult = {
   positionedRatios: ReturnType<typeof createPositionedLatticeRatios>;
   setIncludeHigherPrimes: (includeHigherPrimes: boolean) => void;
   setHigherPrimeRadius: (higherPrimeRadius: number) => void;
-  setLocalRotation: (rotation: CubicLocalRotation) => void;
+  setHigherPrimeRotation: (rotation: CubicRotation) => void;
   setVisualizationType: (type: "cubic" | "radial") => void;
   setIncludeLowerOctave: (includeLowerOctave: boolean) => void;
   setIncludeGeneratorHeight: (includeGeneratorHeight: boolean) => void;
@@ -79,8 +79,8 @@ export function useLatticePositioning(
     [],
   );
 
-  const setLocalRotation = useCallback(
-    (localRotation: CubicLocalRotation): void => {
+  const setHigherPrimeRotation = useCallback(
+    (higherPrimeRotation: CubicRotation): void => {
       setConfiguration((previous) => {
         if (previous.visualization.type !== "cubic") return previous;
         if (previous.geometry.type !== "cubic") return previous;
@@ -89,7 +89,7 @@ export function useLatticePositioning(
           visualization: previous.visualization,
           geometry: {
             ...previous.geometry,
-            localRotation,
+            higherPrimeRotation: higherPrimeRotation,
           },
         };
       });
@@ -167,7 +167,7 @@ export function useLatticePositioning(
     positionedRatios,
     setIncludeHigherPrimes,
     setHigherPrimeRadius,
-    setLocalRotation,
+    setHigherPrimeRotation: setHigherPrimeRotation,
     setVisualizationType,
     setIncludeLowerOctave,
     setIncludeGeneratorHeight,

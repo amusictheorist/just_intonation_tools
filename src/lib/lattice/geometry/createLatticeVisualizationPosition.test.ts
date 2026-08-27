@@ -5,7 +5,7 @@ import { createLatticeVisualizationPosition } from "./createLatticeVisualization
 import { createRadialPosition } from "./createRadialPosition";
 import { resolveTestPrimeAnchorVector } from "./test/resolveTestPrimeAnchorVector";
 import {
-  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_CUBIC_ROTATION,
   DEFAULT_HIGHER_PRIME_RADIUS,
   RADIAL_HORIZONTAL_SPACING,
   RADIAL_VERTICAL_SPACING,
@@ -28,7 +28,7 @@ describe("createLatticeVisualizationPosition", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
       },
     });
 
@@ -60,7 +60,7 @@ describe("createLatticeVisualizationPosition", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         },
         resolveTestPrimeAnchorVector,
@@ -152,7 +152,7 @@ describe("createLatticeVisualizationPosition", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 3,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         },
         resolveTestPrimeAnchorVector,
@@ -160,7 +160,7 @@ describe("createLatticeVisualizationPosition", () => {
     ).toEqual({ x: 12, y: 0, z: 0 });
   });
 
-  it("rotates local expanded-cubic coordinates without rotating the anchor", () => {
+  it("rotates the expanded higher-prime lattice around the global origin", () => {
     const position = createLatticeVisualizationPosition(
       {
         placement: {
@@ -176,14 +176,14 @@ describe("createLatticeVisualizationPosition", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-          localRotation: { x: 0, y: 0, z: 90 },
+          higherPrimeRotation: { x: 0, y: 0, z: 90 },
         },
       },
       resolveTestPrimeAnchorVector,
     );
 
-    expect(position.x).toBeCloseTo(4);
-    expect(position.y).toBeCloseTo(2);
+    expect(position.x).toBeCloseTo(0);
+    expect(position.y).toBeCloseTo(6);
     expect(position.z).toBeCloseTo(0);
   });
 });

@@ -3,7 +3,7 @@ import { createTestRatio } from "../../ji/test/ratioTestHelpers";
 import { createPositionedLatticeRatios } from "./createPositionedLatticeRatios";
 import { createExpandedRadialPosition } from "../geometry/createExpandedRadialPosition";
 import {
-  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_CUBIC_ROTATION,
   DEFAULT_HIGHER_PRIME_RADIUS,
   RADIAL_HORIZONTAL_SPACING,
   RADIAL_VERTICAL_SPACING,
@@ -26,7 +26,7 @@ describe("createPositionedLatticeRatios", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+          higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
         },
       }),
     ).toEqual([
@@ -116,7 +116,7 @@ describe("createPositionedLatticeRatios", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+          higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
         },
       }),
     ).toEqual([
@@ -155,7 +155,7 @@ describe("createPositionedLatticeRatios", () => {
         geometry: {
           type: "cubic",
           higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-          localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+          higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
         },
       }),
     ).toEqual([

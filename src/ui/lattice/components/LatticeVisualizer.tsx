@@ -15,7 +15,7 @@ function LatticeVisualizer() {
     configuration,
     setIncludeHigherPrimes,
     setHigherPrimeRadius,
-    setLocalRotation,
+    setHigherPrimeRotation,
     setVisualizationType,
     setIncludeLowerOctave,
     setIncludeGeneratorHeight,
@@ -85,7 +85,7 @@ function LatticeVisualizer() {
             onHigherPrimeRadiusChange={setHigherPrimeRadius}
             higherPrimeColor={higherPrimeColor}
             onHigherPrimeColorChange={setHigherPrimeColor}
-            onLocalRotationChange={setLocalRotation}
+            onHigherPrimeRotationChange={setHigherPrimeRotation}
             onIncludeLowerOctaveChange={setIncludeLowerOctave}
             onIncludeGeneratorHeightChange={setIncludeGeneratorHeight}
             onLowerSymmetryChange={setLowerSymmetry}

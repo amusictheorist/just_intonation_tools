@@ -6,7 +6,7 @@ import { createTestRatio } from "../../../lib/ji/test/ratioTestHelpers";
 import { act, renderHook } from "@testing-library/react";
 import { useLatticePositioning } from "./useLatticePositioning";
 import {
-  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_CUBIC_ROTATION,
   DEFAULT_HIGHER_PRIME_RADIUS,
 } from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
@@ -30,7 +30,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
       },
     });
 
@@ -53,7 +53,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
       },
     });
   });
@@ -165,7 +165,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: 3,
-        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
       },
     });
   });
@@ -193,7 +193,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-        localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+        higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
       },
     });
   });
@@ -202,7 +202,7 @@ describe("useLatticePositioning", () => {
     const { result } = renderHook(() => useLatticePositioning(ratios));
 
     act(() => {
-      result.current.setLocalRotation({ x: 10, y: 20, z: 30 });
+      result.current.setHigherPrimeRotation({ x: 10, y: 20, z: 30 });
     });
 
     expect(result.current.configuration).toEqual({
@@ -213,7 +213,7 @@ describe("useLatticePositioning", () => {
       geometry: {
         type: "cubic",
         higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-        localRotation: { x: 10, y: 20, z: 30 },
+        higherPrimeRotation: { x: 10, y: 20, z: 30 },
       },
     });
   });

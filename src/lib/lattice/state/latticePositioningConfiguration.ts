@@ -1,5 +1,5 @@
 import {
-  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_CUBIC_ROTATION,
   DEFAULT_HIGHER_PRIME_RADIUS,
 } from "../geometry/latticeGeometryConstants";
 import type { LatticeGeometry } from "./latticeGeometry";
@@ -28,7 +28,7 @@ export const DEFAULT_CUBIC_POSITIONING_CONFIGURATION: LatticePositioningConfigur
     geometry: {
       type: "cubic",
       higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-      localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+      higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
     },
   };
 

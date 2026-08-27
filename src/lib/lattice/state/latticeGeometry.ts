@@ -7,7 +7,7 @@
  */
 export type LowerRadialSymmetry = "continuous" | "aligned";
 
-export type CubicLocalRotation = Readonly<{
+export type CubicRotation = Readonly<{
   x: number;
   y: number;
   z: number;
@@ -17,7 +17,7 @@ export type LatticeGeometry =
   | Readonly<{
       type: "cubic";
       higherPrimeRadius: number;
-      localRotation: CubicLocalRotation;
+      higherPrimeRotation: CubicRotation;
     }>
   | Readonly<{
       type: "radial";

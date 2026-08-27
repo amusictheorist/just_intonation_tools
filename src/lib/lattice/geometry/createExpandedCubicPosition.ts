@@ -1,4 +1,4 @@
-import type { CubicLocalRotation } from "../state/latticeGeometry";
+import type { CubicRotation } from "../state/latticeGeometry";
 import type { ExpandedCubicAddress } from "../symbolic/cubic/createExpandedCubicAddress";
 import { createAnchorPositionFromPrimePath } from "./createAnchorPositionFromPrimePath";
 import type { PrimeAnchorVectorResolver } from "./createAnchorPositionsFromPrimePath";
@@ -14,7 +14,7 @@ import { addVectors } from "./vector";
  *
  * @param address The symbolic expanded-cubic address to resolve.
  * @param initialPosition The origin from which the higher-prime anchor path is resolved.
- * @param localRotation The Euler rotation applied to the local 3-5-7 coordinates.
+ * @param higherPrimeRotation The Euler rotation applied to the local 3-5-7 coordinates.
  * @param resolveAnchorVector Resolves each higher-prime step to its signed global anchor vector.
  * @returns The final geometric position for the expanded-cubic address.
  *
@@ -24,7 +24,7 @@ import { addVectors } from "./vector";
 export function createExpandedCubicPosition(
   address: ExpandedCubicAddress,
   initialPosition: Vector3,
-  localRotation: CubicLocalRotation,
+  higherPrimeRotation: CubicRotation,
   resolveAnchorVector: PrimeAnchorVectorResolver = resolvePrimeAnchorVector,
 ): Vector3 {
   const anchorPosition = createAnchorPositionFromPrimePath(
@@ -33,10 +33,10 @@ export function createExpandedCubicPosition(
     resolveAnchorVector,
   );
 
-  const rotatedLocalPosition = rotateVector(
-    address.coordinates357,
-    localRotation,
-  );
+  if (address.anchorPath.length === 0)
+    return addVectors(anchorPosition, address.coordinates357);
 
-  return addVectors(anchorPosition, rotatedLocalPosition);
+  const unrotatedPosition = addVectors(anchorPosition, address.coordinates357);
+
+  return rotateVector(unrotatedPosition, higherPrimeRotation);
 }

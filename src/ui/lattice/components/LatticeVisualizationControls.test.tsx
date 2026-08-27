@@ -4,7 +4,7 @@ import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import LatticeVisualizationControls from "./LatticeVisualizationControls";
 import {
-  DEFAULT_CUBIC_LOCAL_ROTATION,
+  DEFAULT_CUBIC_ROTATION,
   DEFAULT_HIGHER_PRIME_RADIUS,
 } from "../../../lib/lattice/geometry/latticeGeometryConstants";
 
@@ -24,7 +24,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -32,7 +32,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -67,7 +67,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -102,7 +102,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={onVisualizationTypeChange}
@@ -110,7 +110,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -132,7 +132,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -140,7 +140,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -161,7 +161,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -169,7 +169,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -203,7 +203,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -211,7 +211,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -235,7 +235,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -243,7 +243,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={onHigherPrimeRadiusChange}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -278,7 +278,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={onIncludeLowerOctaveChange}
         onIncludeGeneratorHeightChange={onIncludeGeneratorHeightChange}
         onLowerSymmetryChange={vi.fn()}
@@ -310,7 +310,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={onLowerSymmetryChange}
@@ -331,7 +331,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: { x: 0, y: 0, z: 0 },
+            higherPrimeRotation: { x: 0, y: 0, z: 0 },
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -339,7 +339,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -356,7 +356,7 @@ describe("LatticeVisualizationControls", () => {
       screen.getByRole("slider", { name: "Rotate Z" }),
     ).toBeInTheDocument();
     expect(
-      screen.getByRole("slider", { name: "Master rotation" }),
+      screen.getByRole("slider", { name: "XYZ rotation" }),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("slider", { name: "Rotate XY" }),
@@ -370,7 +370,7 @@ describe("LatticeVisualizationControls", () => {
   });
 
   it("changes local cubic rotation", () => {
-    const onLocalRotationChange = vi.fn();
+    const onHigherPrimeRotationChange = vi.fn();
     render(
       <LatticeVisualizationControls
         configuration={{
@@ -381,7 +381,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: { x: 10, y: 20, z: 30 },
+            higherPrimeRotation: { x: 10, y: 20, z: 30 },
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -389,7 +389,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={onLocalRotationChange}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -402,11 +402,15 @@ describe("LatticeVisualizationControls", () => {
       target: { value: "45" },
     });
 
-    expect(onLocalRotationChange).toHaveBeenCalledWith({ x: 45, y: 20, z: 30 });
+    expect(onHigherPrimeRotationChange).toHaveBeenCalledWith({
+      x: 45,
+      y: 20,
+      z: 30,
+    });
   });
 
   it("combines coupled rotation controls into local cubic rotation", () => {
-    const onLocalRotationChange = vi.fn();
+    const onHigherPrimeRotationChange = vi.fn();
     render(
       <LatticeVisualizationControls
         configuration={{
@@ -417,7 +421,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: { x: 0, y: 0, z: 0 },
+            higherPrimeRotation: { x: 0, y: 0, z: 0 },
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -425,7 +429,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={onLocalRotationChange}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -438,11 +442,15 @@ describe("LatticeVisualizationControls", () => {
       target: { value: "30" },
     });
 
-    expect(onLocalRotationChange).toHaveBeenCalledWith({ x: 30, y: 30, z: 0 });
+    expect(onHigherPrimeRotationChange).toHaveBeenCalledWith({
+      x: 30,
+      y: 30,
+      z: 0,
+    });
   });
 
-  it("applies master rotation to all three axes", () => {
-    const onLocalRotationChange = vi.fn();
+  it("applies xyz rotation to all three axes", () => {
+    const onHigherPrimeRotationChange = vi.fn();
     render(
       <LatticeVisualizationControls
         configuration={{
@@ -453,7 +461,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: { x: 0, y: 0, z: 0 },
+            higherPrimeRotation: { x: 0, y: 0, z: 0 },
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -461,7 +469,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={onLocalRotationChange}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -470,15 +478,19 @@ describe("LatticeVisualizationControls", () => {
 
     openHigherPrimePlacement();
 
-    fireEvent.change(screen.getByRole("slider", { name: "Master rotation" }), {
+    fireEvent.change(screen.getByRole("slider", { name: "XYZ rotation" }), {
       target: { value: "30" },
     });
 
-    expect(onLocalRotationChange).toHaveBeenCalledWith({ x: 30, y: 30, z: 30 });
+    expect(onHigherPrimeRotationChange).toHaveBeenCalledWith({
+      x: 30,
+      y: 30,
+      z: 30,
+    });
   });
 
   it("resets local rotation controls when cubic configuration is reset", () => {
-    const onLocalRotationChange = vi.fn();
+    const onHigherPrimeRotationChange = vi.fn();
     const { rerender } = render(
       <LatticeVisualizationControls
         configuration={{
@@ -489,7 +501,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: { x: 45, y: 0, z: 0 },
+            higherPrimeRotation: { x: 45, y: 0, z: 0 },
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -497,7 +509,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={onLocalRotationChange}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -518,7 +530,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -526,7 +538,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={onLocalRotationChange}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -537,7 +549,7 @@ describe("LatticeVisualizationControls", () => {
   });
 
   it("preserves coupled rotation controls when their combined rotation is reflected in configuration", () => {
-    const onLocalRotationChange = vi.fn();
+    const onHigherPrimeRotationChange = vi.fn();
     const { rerender } = render(
       <LatticeVisualizationControls
         configuration={{
@@ -548,7 +560,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -556,7 +568,7 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={onLocalRotationChange}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -565,7 +577,7 @@ describe("LatticeVisualizationControls", () => {
 
     openHigherPrimePlacement();
 
-    fireEvent.change(screen.getByRole("slider", { name: "Master rotation" }), {
+    fireEvent.change(screen.getByRole("slider", { name: "XYZ rotation" }), {
       target: { value: "30" },
     });
 
@@ -579,7 +591,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: 1,
-            localRotation: { x: 30, y: 30, z: 30 },
+            higherPrimeRotation: { x: 30, y: 30, z: 30 },
           },
         }}
         onVisualizationTypeChange={vi.fn()}
@@ -587,13 +599,13 @@ describe("LatticeVisualizationControls", () => {
         onHigherPrimeRadiusChange={vi.fn()}
         higherPrimeColor="#000080"
         onHigherPrimeColorChange={vi.fn()}
-        onLocalRotationChange={onLocalRotationChange}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
       />,
     );
-    expect(screen.getByRole("slider", { name: "Master rotation" })).toHaveValue(
+    expect(screen.getByRole("slider", { name: "XYZ rotation" })).toHaveValue(
       "30",
     );
   });
@@ -611,7 +623,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         higherPrimeColor="#000080"
@@ -619,7 +631,7 @@ describe("LatticeVisualizationControls", () => {
         onVisualizationTypeChange={vi.fn()}
         onIncludeHigherPrimesChange={vi.fn()}
         onHigherPrimeRadiusChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
@@ -644,7 +656,7 @@ describe("LatticeVisualizationControls", () => {
           geometry: {
             type: "cubic",
             higherPrimeRadius: DEFAULT_HIGHER_PRIME_RADIUS,
-            localRotation: DEFAULT_CUBIC_LOCAL_ROTATION,
+            higherPrimeRotation: DEFAULT_CUBIC_ROTATION,
           },
         }}
         higherPrimeColor="#000080"
@@ -652,7 +664,7 @@ describe("LatticeVisualizationControls", () => {
         onVisualizationTypeChange={vi.fn()}
         onIncludeHigherPrimesChange={vi.fn()}
         onHigherPrimeRadiusChange={vi.fn()}
-        onLocalRotationChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
         onIncludeLowerOctaveChange={vi.fn()}
         onIncludeGeneratorHeightChange={vi.fn()}
         onLowerSymmetryChange={vi.fn()}
