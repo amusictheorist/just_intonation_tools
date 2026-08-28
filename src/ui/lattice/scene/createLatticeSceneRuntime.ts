@@ -4,7 +4,10 @@ import { LatticeSceneViewport } from "./LatticeSceneViewport";
 import type { LatticeSceneRenderer } from "./LatticeSceneRenderer";
 import type { LatticePointHover } from "./latticePointHover";
 
-type LatticeSceneSource = Pick<LatticeSceneRenderer, "scene" | "pointMeshes">;
+type LatticeSceneSource = Pick<
+  LatticeSceneRenderer,
+  "scene" | "pointMeshes" | "update"
+>;
 
 type LatticeSceneRuntimeInteractionOptions = Readonly<{
   onPointHover?: (hover: LatticePointHover) => void;
@@ -23,6 +26,7 @@ type LatticeSceneRuntimeDependencies = {
       getPointMeshes: () => readonly THREE.Mesh[];
       onPointHover?: (hover: LatticePointHover) => void;
       onPointRemove?: (pointId: string) => void;
+      onFrame?: (deltaSeconds: number) => void;
     },
   ) => LatticeSceneViewport;
 };
@@ -79,6 +83,7 @@ export function createLatticeSceneRuntime(
       getPointMeshes: () => sceneRenderer.pointMeshes,
       onPointHover: interactionOptions.onPointHover,
       onPointRemove: interactionOptions.onPointRemove,
+      onFrame: (deltaSeconds) => sceneRenderer.update(deltaSeconds),
     },
   );
 

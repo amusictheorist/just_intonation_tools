@@ -151,6 +151,7 @@ describe("createLatticeSceneRuntime", () => {
       getPointMeshes: () => readonly THREE.Mesh[];
       onPointHover?: (hover: LatticePointHover) => void;
       onPointRemove?: (pointId: string) => void;
+      onFrame?: (deltaSeconds: number) => void;
     };
 
     let interactionOptions: TestViewportInteractionOptions | undefined;
@@ -239,5 +240,70 @@ describe("createLatticeSceneRuntime", () => {
         onPointHover,
       }),
     );
+  });
+
+  it("updates the scene renderer on each viewport frame", () => {
+    const container = {} as HTMLElement;
+    const sceneRenderer = new LatticeSceneRenderer([], []);
+    const update = vi.spyOn(sceneRenderer, "update");
+
+    const domElement = {} as HTMLCanvasElement;
+
+    const webGLRenderer = {
+      domElement,
+      setPixelRatio: vi.fn(),
+    } as unknown as THREE.WebGLRenderer;
+
+    const cameraSystem = {} as CameraSystem;
+
+    const viewport = {
+      start: vi.fn(),
+    } as unknown as LatticeSceneViewport;
+
+    const createWebGLRenderer = vi.fn(() => webGLRenderer);
+    const createCameraSystem = vi.fn(() => cameraSystem);
+
+    type TestViewportInteractionOptions = {
+      getPointMeshes: () => readonly THREE.Mesh[];
+      onPointHover?: (hover: LatticePointHover) => void;
+      onPointRemove?: (pointId: string) => void;
+      onFrame?: (deltaSeconds: number) => void;
+    };
+
+    let viewportOptions: TestViewportInteractionOptions | undefined;
+
+    const createViewport = vi.fn(
+      (
+        ...args: [
+          HTMLElement,
+          THREE.WebGLRenderer,
+          THREE.Scene,
+          CameraSystem,
+          TestViewportInteractionOptions,
+        ]
+      ) => {
+        viewportOptions = args[4];
+        return viewport;
+      },
+    );
+
+    createLatticeSceneRuntime(
+      container,
+      sceneRenderer,
+      {},
+      {
+        createWebGLRenderer,
+        createCameraSystem,
+        createViewport,
+      },
+    );
+
+    if (!viewportOptions?.onFrame) {
+      throw new Error("Expected viewport frame callback");
+    }
+
+    viewportOptions.onFrame(0.016);
+
+    expect(update).toHaveBeenCalledWith(0.016);
   });
 });

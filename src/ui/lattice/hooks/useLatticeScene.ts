@@ -17,7 +17,12 @@ type UseLatticeSceneOptions = {
 
 type LatticeSceneRendererHandle = Pick<
   LatticeSceneRenderer,
-  "scene" | "setScene" | "setHigherPrimeColor" | "dispose" | "pointMeshes"
+  | "scene"
+  | "setScene"
+  | "setHigherPrimeColor"
+  | "dispose"
+  | "pointMeshes"
+  | "update"
 >;
 
 type LatticeSceneRuntimeHandle = Pick<

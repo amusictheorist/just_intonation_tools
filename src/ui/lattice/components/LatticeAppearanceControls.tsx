@@ -14,10 +14,10 @@ function LatticeAppearanceControls({
   onConnectionPrimeVisibilityChange,
 }: LatticeAppearanceControlsProps) {
   return (
-    <fieldset className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
+    <fieldset className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm">
       <legend className="px-1 font-medium text-gray-700">Connections</legend>
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div className="flex max-w-64 flex-wrap items-center gap-x-2 gap-y-1">
         <label className="flex items-center gap-1">
           <input
             type="checkbox"

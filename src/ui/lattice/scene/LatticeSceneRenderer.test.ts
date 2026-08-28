@@ -572,4 +572,212 @@ describe("LatticeSceneRenderer", () => {
 
     expect(lights.length).toBeGreaterThan(0);
   });
+
+  it("preserves an existing point mesh when its target position changes", () => {
+    const ratio = createTestRatio(11n, 8n);
+
+    const initialScenePoints = [
+      {
+        id: "ratio-1",
+        rawInput: "11/8",
+        ratio,
+        labelRatio: ratio,
+        position: { x: 1, y: 0, z: 0 },
+        hasHigherPrimeFactors: true,
+        radialSide: null,
+      },
+    ] satisfies readonly LatticeScenePoint[];
+
+    const nextScenePoints = [
+      {
+        ...initialScenePoints[0],
+        position: { x: 0, y: 1, z: 0 },
+      },
+    ] satisfies readonly LatticeScenePoint[];
+
+    const renderer = new LatticeSceneRenderer(initialScenePoints);
+
+    const originalMesh = renderer.pointMeshes[0];
+
+    if (!originalMesh) {
+      throw new Error("Expected point mesh");
+    }
+
+    const geometryDispose = vi.spyOn(originalMesh.geometry, "dispose");
+
+    renderer.setScene(nextScenePoints, []);
+
+    expect(renderer.pointMeshes[0]).toBe(originalMesh);
+    expect(geometryDispose).not.toHaveBeenCalled();
+  });
+
+  it("updates the target position of an existing point mesh", () => {
+    const ratio = createTestRatio(11n, 8n);
+
+    const initialScenePoints = [
+      {
+        id: "ratio-1",
+        rawInput: "11/8",
+        ratio,
+        labelRatio: ratio,
+        position: { x: 1, y: 0, z: 0 },
+        hasHigherPrimeFactors: true,
+        radialSide: null,
+      },
+    ] satisfies readonly LatticeScenePoint[];
+
+    const nextScenePoints = [
+      {
+        ...initialScenePoints[0],
+        position: { x: 0, y: 1, z: 0 },
+      },
+    ] satisfies readonly LatticeScenePoint[];
+
+    const renderer = new LatticeSceneRenderer(initialScenePoints);
+    const mesh = renderer.pointMeshes[0];
+
+    if (!mesh) {
+      throw new Error("Expected point mesh");
+    }
+
+    renderer.setScene(nextScenePoints, []);
+
+    expect(mesh.userData.targetPosition).toEqual({
+      x: 0,
+      y: 1,
+      z: 0,
+    });
+  });
+
+  it("moves point meshes toward their target positions", () => {
+    const ratio = createTestRatio(11n, 8n);
+
+    const scenePoints = [
+      {
+        id: "ratio-1",
+        rawInput: "11/8",
+        ratio,
+        labelRatio: ratio,
+        position: { x: 0, y: 0, z: 0 },
+        hasHigherPrimeFactors: true,
+        radialSide: null,
+      },
+    ] satisfies readonly LatticeScenePoint[];
+
+    const renderer = new LatticeSceneRenderer(scenePoints);
+    const mesh = renderer.pointMeshes[0];
+
+    if (!mesh) {
+      throw new Error("Expected point mesh");
+    }
+
+    mesh.userData.targetPosition = {
+      x: 10,
+      y: 0,
+      z: 0,
+    };
+
+    renderer.update(1 / 60);
+
+    expect(mesh.position.x).toBeGreaterThan(0);
+    expect(mesh.position.x).toBeLessThan(10);
+    expect(mesh.position.y).toBeCloseTo(0);
+    expect(mesh.position.z).toBeCloseTo(0);
+  });
+
+  it("moves farther toward the target with a larger frame delta", () => {
+    const ratio = createTestRatio(11n, 8n);
+
+    const scenePoints = [
+      {
+        id: "ratio-1",
+        rawInput: "11/8",
+        ratio,
+        labelRatio: ratio,
+        position: { x: 0, y: 0, z: 0 },
+        hasHigherPrimeFactors: true,
+        radialSide: null,
+      },
+    ] satisfies readonly LatticeScenePoint[];
+
+    const renderer = new LatticeSceneRenderer(scenePoints);
+    const mesh = renderer.pointMeshes[0];
+
+    if (!mesh) {
+      throw new Error("Expected point mesh");
+    }
+
+    mesh.userData.targetPosition = { x: 10, y: 0, z: 0 };
+
+    renderer.update(1 / 120);
+    const smallStepX = mesh.position.x;
+
+    mesh.position.set(0, 0, 0);
+
+    renderer.update(1 / 30);
+    const largeStepX = mesh.position.x;
+
+    expect(largeStepX).toBeGreaterThan(smallStepX);
+    expect(largeStepX).toBeLessThan(10);
+  });
+
+  it("updates connection endpoints from the current point-mesh positions", () => {
+    const ratio1 = createTestRatio(3n, 2n);
+    const ratio2 = createTestRatio(5n, 4n);
+
+    const scenePoints = [
+      {
+        id: "ratio-1",
+        rawInput: "3/2",
+        ratio: ratio1,
+        labelRatio: ratio1,
+        position: { x: 0, y: 0, z: 0 },
+        hasHigherPrimeFactors: false,
+        radialSide: null,
+      },
+      {
+        id: "ratio-2",
+        rawInput: "5/4",
+        ratio: ratio2,
+        labelRatio: ratio2,
+        position: { x: 1, y: 0, z: 0 },
+        hasHigherPrimeFactors: false,
+        radialSide: null,
+      },
+    ] satisfies readonly LatticeScenePoint[];
+
+    const sceneConnections = [
+      {
+        fromId: "ratio-1",
+        toId: "ratio-2",
+        fromPosition: { x: 0, y: 0, z: 0 },
+        toPosition: { x: 1, y: 0, z: 0 },
+      },
+    ] satisfies readonly LatticeSceneConnection[];
+
+    const renderer = new LatticeSceneRenderer(scenePoints, sceneConnections);
+
+    const fromMesh = renderer.pointMeshes[0];
+    const toMesh = renderer.pointMeshes[1];
+    const line = renderer.connectionLines[0];
+
+    if (!fromMesh || !toMesh || !line) {
+      throw new Error("Expected point meshes and connection line");
+    }
+
+    fromMesh.position.set(2, 3, 4);
+    toMesh.position.set(5, 6, 7);
+
+    renderer.update(0);
+
+    const positions = line.geometry.getAttribute("position");
+
+    expect(positions.getX(0)).toBeCloseTo(2);
+    expect(positions.getY(0)).toBeCloseTo(3);
+    expect(positions.getZ(0)).toBeCloseTo(4);
+
+    expect(positions.getX(1)).toBeCloseTo(5);
+    expect(positions.getY(1)).toBeCloseTo(6);
+    expect(positions.getZ(1)).toBeCloseTo(7);
+  });
 });

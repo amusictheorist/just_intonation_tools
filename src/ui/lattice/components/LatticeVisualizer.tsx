@@ -70,7 +70,7 @@ function LatticeVisualizer() {
   return (
     <div className="flex min-h-0 flex-1 flex-col gap-2">
       <div className="shrink-0 rounded-lg border border-gray-200 bg-gray-100 p-2">
-        <div className="grid gap-3 lg:grid-cols-[auto_minmax(0,1fr)_auto] lg:items-start">
+        <div className="grid gap-3 lg:grid-cols-[auto_minmax(0,1fr)_10rem] lg:items-start">
           <LatticeRatioControls
             onAdd={handleAdd}
             onUndo={undo}

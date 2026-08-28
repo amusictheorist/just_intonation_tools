@@ -46,6 +46,7 @@ function createTestDependencies() {
     setScene: vi.fn(),
     setHigherPrimeColor: vi.fn(),
     dispose: vi.fn(),
+    update: vi.fn(),
   };
 
   const sceneRuntime = {

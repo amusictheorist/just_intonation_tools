@@ -376,6 +376,22 @@ function LatticeVisualizationControls({
               </label>
             </div>
 
+            <div
+              aria-label="Effective rotation"
+              className="mt-2 text-xs text-gray-600"
+            >
+              Effective rotation:{" "}
+              <span>
+                X {configuration.geometry.higherPrimeRotation.x.toFixed(0)}°
+              </span>{" "}
+              <span>
+                Y {configuration.geometry.higherPrimeRotation.y.toFixed(0)}°
+              </span>{" "}
+              <span>
+                Z {configuration.geometry.higherPrimeRotation.z.toFixed(0)}°
+              </span>
+            </div>
+
             <div className="mt-2 flex justify-end">
               <button
                 type="button"

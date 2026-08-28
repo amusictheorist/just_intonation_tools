@@ -673,4 +673,81 @@ describe("LatticeVisualizationControls", () => {
 
     expect(screen.queryByLabelText("Color")).not.toBeInTheDocument();
   });
+
+  it("shows the effective higher-prime rotation", () => {
+    render(
+      <LatticeVisualizationControls
+        configuration={{
+          visualization: {
+            type: "cubic",
+            includeHigherPrimes: true,
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: 1,
+            higherPrimeRotation: { x: 30, y: 40, z: 5 },
+          },
+        }}
+        onVisualizationTypeChange={vi.fn()}
+        onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
+        higherPrimeColor="#000080"
+        onHigherPrimeColorChange={vi.fn()}
+        onHigherPrimeRotationChange={vi.fn()}
+        onIncludeLowerOctaveChange={vi.fn()}
+        onIncludeGeneratorHeightChange={vi.fn()}
+        onLowerSymmetryChange={vi.fn()}
+      />,
+    );
+    openHigherPrimePlacement();
+
+    const effectiveRotation = screen.getByLabelText("Effective rotation");
+
+    expect(effectiveRotation).toHaveTextContent("X 30°");
+    expect(effectiveRotation).toHaveTextContent("Y 40°");
+    expect(effectiveRotation).toHaveTextContent("Z 5°");
+  });
+
+  it("shows compound rotation contributions and effective rotation together", () => {
+    const onHigherPrimeRotationChange = vi.fn();
+
+    render(
+      <LatticeVisualizationControls
+        configuration={{
+          visualization: {
+            type: "cubic",
+            includeHigherPrimes: true,
+          },
+          geometry: {
+            type: "cubic",
+            higherPrimeRadius: 1,
+            higherPrimeRotation: { x: 0, y: 0, z: 0 },
+          },
+        }}
+        onVisualizationTypeChange={vi.fn()}
+        onIncludeHigherPrimesChange={vi.fn()}
+        onHigherPrimeRadiusChange={vi.fn()}
+        higherPrimeColor="#000080"
+        onHigherPrimeColorChange={vi.fn()}
+        onHigherPrimeRotationChange={onHigherPrimeRotationChange}
+        onIncludeLowerOctaveChange={vi.fn()}
+        onIncludeGeneratorHeightChange={vi.fn()}
+        onLowerSymmetryChange={vi.fn()}
+      />,
+    );
+
+    openHigherPrimePlacement();
+
+    fireEvent.change(screen.getByLabelText("Rotate XY"), {
+      target: { value: "15" },
+    });
+
+    expect(screen.getByText("XY 15°")).toBeInTheDocument();
+
+    expect(onHigherPrimeRotationChange).toHaveBeenCalledWith({
+      x: 15,
+      y: 15,
+      z: 0,
+    });
+  });
 });

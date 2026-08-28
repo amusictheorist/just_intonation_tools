@@ -60,6 +60,7 @@ function createViewportFixture(options?: {
     camera: THREE.Camera,
     pointMeshes: readonly THREE.Mesh[],
   ) => string | null;
+  onFrame?: (deltaSeconds: number) => void;
 }) {
   const container = options?.container ?? createTestContainer();
   const canvas = options?.canvas ?? createTestCanvas();
@@ -80,6 +81,7 @@ function createViewportFixture(options?: {
       onPointHover: options?.onPointHover,
       onPointRemove: options?.onPointRemove,
       findPointAtPointer: options?.findPointAtPointer,
+      onFrame: options?.onFrame,
     },
   );
 
@@ -400,5 +402,47 @@ describe("LatticeSceneViewport", () => {
 
     expect(findPointAtPointer).not.toHaveBeenCalled();
     expect(onPointRemove).not.toHaveBeenCalled();
+  });
+
+  it("reports frame delta before rendering", () => {
+    let frameCallback: FrameRequestCallback | undefined;
+
+    const requestAnimationFrame = vi.fn((callback: FrameRequestCallback) => {
+      frameCallback = callback;
+      return 1;
+    });
+
+    vi.stubGlobal("requestAnimationFrame", requestAnimationFrame);
+
+    const onFrame = vi.fn();
+
+    const { viewport, renderer } = createViewportFixture({
+      onFrame,
+    });
+
+    viewport.start();
+
+    if (!frameCallback) {
+      throw new Error("Expected animation frame callback");
+    }
+
+    frameCallback(1000);
+
+    if (!frameCallback) {
+      throw new Error("Expected next animation frame callback");
+    }
+
+    frameCallback(1016);
+
+    expect(onFrame).toHaveBeenLastCalledWith(0.016);
+
+    const onFrameOrder = onFrame.mock.invocationCallOrder.at(-1);
+    const renderOrder = vi
+      .mocked(renderer.render)
+      .mock.invocationCallOrder.at(-1);
+
+    expect(onFrameOrder).toBeDefined();
+    expect(renderOrder).toBeDefined();
+    expect(onFrameOrder!).toBeLessThan(renderOrder!);
   });
 });

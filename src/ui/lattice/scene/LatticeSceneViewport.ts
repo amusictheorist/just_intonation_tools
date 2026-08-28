@@ -23,10 +23,16 @@ type LatticeSceneViewportInteractionOptions = Readonly<{
   onPointHover?: LatticePointHoverHandler;
   onPointRemove?: (pointId: string) => void;
   findPointAtPointer?: LatticePointPicker;
+  onFrame?: (deltaSeconds: number) => void;
 }>;
 
 /**
- * Manages the WebGL viewport and animation lifecycle for a lattice scene.
+ * Manages the WebGL viewport, animation timing, and pointer interaction for a
+ * lattice scene.
+ *
+ * The viewport owns the request-animation-frame loop, reports frame deltas
+ * before rendering, and translates pointer interactions into lattice-point
+ * hover and removal events.
  */
 
 export class LatticeSceneViewport {
@@ -39,6 +45,8 @@ export class LatticeSceneViewport {
   private readonly onPointHover: LatticePointHoverHandler | undefined;
   private readonly onPointRemove: ((pointId: string) => void) | undefined;
   private readonly findPointAtPointer: LatticePointPicker;
+  private readonly onFrame: ((deltaSeconds: number) => void) | undefined;
+  private previousFrameTime: number | null = null;
 
   constructor(
     container: HTMLElement,
@@ -57,6 +65,7 @@ export class LatticeSceneViewport {
     this.onPointRemove = interactionOptions.onPointRemove;
     this.findPointAtPointer =
       interactionOptions.findPointAtPointer ?? findLatticePointAtPointer;
+    this.onFrame = interactionOptions.onFrame;
 
     this.container.appendChild(this.renderer.domElement);
     this.renderer.domElement.addEventListener(
@@ -100,10 +109,7 @@ export class LatticeSceneViewport {
    */
 
   start(): void {
-    this.animationFrameId = requestAnimationFrame(() => {
-      this.render();
-      this.start();
-    });
+    this.animationFrameId = requestAnimationFrame(this.animate);
   }
 
   /**
@@ -117,7 +123,40 @@ export class LatticeSceneViewport {
 
     cancelAnimationFrame(this.animationFrameId);
     this.animationFrameId = null;
+    this.previousFrameTime = null;
   }
+
+  /**
+   * Advances the viewport animation loop using the current frame timestamp.
+   *
+   * The elapsed frame time is reported before the scene is rendered so
+   * frame-dependent scene updates can be applied first.
+   *
+   * @param time The requestAnimationFrame timestamp in milliseconds.
+   * @returns Nothing.
+   */
+
+  private readonly animate = (time: number): void => {
+    const deltaSeconds =
+      this.previousFrameTime === null
+        ? 0
+        : (time - this.previousFrameTime) / 1000;
+
+    this.previousFrameTime = time;
+
+    this.onFrame?.(deltaSeconds);
+    this.render();
+
+    this.animationFrameId = requestAnimationFrame(this.animate);
+  };
+
+  /**
+   * Reports the lattice point currently under the pointer, or clears the hover
+   * state when no point is intersected.
+   *
+   * @param event The pointer-move event used to locate a lattice point.
+   * @returns Nothing.
+   */
 
   private readonly handlePointerMove = (event: PointerEvent): void => {
     if (!this.onPointHover) return;
@@ -140,6 +179,16 @@ export class LatticeSceneViewport {
       clientY: event.clientY,
     });
   };
+
+  /**
+   * Reports a lattice point for removal when it is clicked with a supported
+   * modifier key.
+   *
+   * Plain clicks are ignored so they remain available for other interactions.
+   *
+   * @param event The mouse click event used to locate the selected lattice point.
+   * @returns Nothing.
+   */
 
   private readonly handleClick = (event: MouseEvent): void => {
     if (!this.onPointRemove) return;
