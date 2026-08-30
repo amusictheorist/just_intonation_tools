@@ -4,6 +4,7 @@ import type { LatticeSceneConnection } from "../../../lib/lattice/presentation/l
 import type { LatticeScenePoint } from "../../../lib/lattice/presentation/latticeScenePoint";
 import { useLatticeScene } from "../hooks/useLatticeScene";
 import type { LatticePointHover } from "../scene/latticePointHover";
+import { ratioToCents } from "../../../lib/ji/ratio/ratioToCents";
 
 type LatticeCanvasProps = {
   scenePoints: readonly LatticeScenePoint[];
@@ -86,6 +87,10 @@ function LatticeCanvas({
               Entered as {hoveredPoint.rawInput}
             </div>
           )}
+
+          <div className="text-gray-600">
+            {ratioToCents(hoveredPoint.labelRatio).toFixed(2)} cents from 1/1
+          </div>
         </div>
       )}
     </div>

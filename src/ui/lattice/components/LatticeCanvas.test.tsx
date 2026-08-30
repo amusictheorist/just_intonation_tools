@@ -97,6 +97,7 @@ describe("LatticeCanvas", () => {
 
     expect(screen.getByText("3/2")).toBeInTheDocument();
     expect(screen.getByText("Entered as 3")).toBeInTheDocument();
+    expect(screen.getByText("701.96 cents from 1/1")).toBeInTheDocument();
   });
 
   it("does not repeat the raw input when it matches the displayed ratio", () => {
@@ -125,6 +126,7 @@ describe("LatticeCanvas", () => {
 
     expect(screen.getByText("3/2")).toBeInTheDocument();
     expect(screen.queryByText("Entered as 3/2")).not.toBeInTheDocument();
+    expect(screen.getByText("701.96 cents from 1/1")).toBeInTheDocument();
   });
 
   it("hides the tooltip when no lattice point is hovered", () => {
@@ -157,6 +159,7 @@ describe("LatticeCanvas", () => {
       options.onPointHover(null);
     });
 
-    expect(screen.queryByText("Entered as 3/2")).not.toBeInTheDocument();
+    expect(screen.queryByText("3/2")).not.toBeInTheDocument();
+    expect(screen.queryByText("701.96 cents from 1/1")).not.toBeInTheDocument();
   });
 });
