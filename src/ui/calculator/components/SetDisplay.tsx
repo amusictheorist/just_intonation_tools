@@ -1,5 +1,5 @@
-import type { PartialClassSet } from "../../../lib/ji/partialClassSet";
-import type { PartialSet } from "../../../lib/ji/partialSet";
+import type { PartialClassSet } from "../../../lib/ji/set/partialClassSet";
+import type { PartialSet } from "../../../lib/ji/set/partialSet";
 
 type SetDisplayProps = {
   value: PartialSet | PartialClassSet;

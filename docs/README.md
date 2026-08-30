@@ -12,15 +12,15 @@ The normative mathematical source of truth for the shared Just Intonation domain
 
 Implementation and tests must conform to this document.
 
-The current shared TypeScript domain primitives and operations are implemented
-under `src/lib/ji/`. Their public contracts are documented with JSDoc alongside
-the source.
+The shared TypeScript domain primitives and operations are implemented under `src/lib/ji/`. Their public contracts are documented with JSDoc alongside the source.
 
 ### Testing
 
 [`testing/TESTING_STRATEGY.md`](./testing/TESTING_STRATEGY.md)
 
-The accepted project-wide testing strategy. It defines test layers, tooling, TDD workflow, assertion policy, file organization, quality gates, and the initial test matrix.
+The accepted project-wide testing strategy. It defines test layers, tooling, TDD workflow, assertion policy, file organization, quality gates, and the test matrix.
+
+The strategy is implemented with Vitest, fast-check, React/component and hook tests, scene-runtime tests, and Playwright end-to-end coverage.
 
 ### Documentation conventions
 
@@ -36,10 +36,10 @@ Cross-project architecture documentation belongs here.
 
 The planned `architecture/OVERVIEW.md` will describe:
 
-- the `data/`, `lib/`, and `ui/` boundaries
-- allowed dependency directions
-- separation of domain, placement, rendering, and interface code
-- relationships among the calculator, lattice, spiral, and shared domain
+- the `data/`, `lib/`, and `ui/` boundaries;
+- allowed dependency directions;
+- separation of domain, symbolic placement, geometry, presentation, rendering, and interface code;
+- relationships among the calculator, lattice, spiral, and shared domain.
 
 ### Architecture decisions
 
@@ -54,12 +54,14 @@ Current foundation decisions:
 - [`0003-shared-core-ji-domain.md`](./architecture/decisions/0003-shared-core-ji-domain.md)
 - [`0004-testing-stack.md`](./architecture/decisions/0004-testing-stack.md)
 - [`0005-use-bigint-for-exact-ji-domain-values.md`](./architecture/decisions/0005-use-bigint-for-exact-ji-domain-values.md)
+- [`0006-separate-lattice-addressing-from-geometry.md`](./architecture/decisions/0006-separate-lattice-addressing-from-geometry.md)
 
-Accepted migration plans for replacing legacy mathematical helpers with the
-shared JI domain:
+Legacy migration records:
 
-- [`architecture/LEGACY_RATIO_MIGRATION.md`](./architecture/LEGACY_RATIO_MIGRATION.md) — separates legacy lattice and spiral ratio helpers from the shared exact ratio domain
-- [`architecture/LEGACY_PARTIAL_MIGRATION.md`](./architecture/LEGACY_PARTIAL_MIGRATION.md) — inventories legacy partial and partial-class helpers and defines their migration to shared domain operations
+- [`architecture/LEGACY_RATIO_MIGRATION.md`](./architecture/LEGACY_RATIO_MIGRATION.md) — records the transition from legacy lattice and spiral ratio helpers to the shared exact ratio domain;
+- [`architecture/LEGACY_PARTIAL_MIGRATION.md`](./architecture/LEGACY_PARTIAL_MIGRATION.md) — records the migration of legacy partial and partial-class helpers to shared domain operations.
+
+These documents preserve migration context and should not be treated as the current architectural source of truth where later specifications, ADRs, tests, or implementation supersede them.
 
 ### Subsystems
 
@@ -67,7 +69,7 @@ shared JI domain:
 
 Tool-specific specifications and design documents belong here.
 
-Planned categories include:
+Expected categories include:
 
 ```text
 subsystems/
@@ -76,9 +78,11 @@ subsystems/
 └── spiral/
 ```
 
-Examples of appropriate subsystem documents include lattice placement rules, spiral drawing behaviour, scene-management responsibilities, tool-specific limits, and user-interaction behaviour.
+Appropriate subsystem documents include lattice placement rules, spiral drawing behaviour, scene-management responsibilities, tool-specific limits, and user-interaction behaviour.
 
 Subsystem documents must not redefine the shared JI domain.
+
+The lattice is currently implemented with separate symbolic-placement, geometry, presentation, scene-rendering, and browser-interaction responsibilities. Those architectural boundaries should be documented here as subsystem documentation is added.
 
 ## Authority
 

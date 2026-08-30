@@ -1,4 +1,4 @@
-import type { Ratio } from "../../lib/ji/ratio";
+import type { Ratio } from "../../lib/ji/ratio/ratio";
 
 type IntervalMatrixProps = {
   members: readonly bigint[];

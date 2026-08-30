@@ -1,8 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { createPartialSet } from "../ji/partialSet";
-import { createPartial } from "../ji/partial";
-import { createPositiveInteger } from "../ji/positiveInteger";
+import { createPartialSet } from "../ji/set/partialSet";
+import { createPartial } from "../ji/partial/partial";
 import { transposeCalculatorResult } from "./transposeCalculatorResult";
+import { createPositiveInteger } from "../ji/integer/positiveInteger";
 
 describe("transposeCalculatorResult", () => {
   it("returns a complete calculator result for the transposed partial set", () => {

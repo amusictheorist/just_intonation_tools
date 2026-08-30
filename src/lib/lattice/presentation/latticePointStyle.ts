@@ -1,0 +1,2 @@
+export const DEFAULT_LATTICE_POINT_COLOR = "red";
+export const DEFAULT_HIGHER_PRIME_POINT_COLOR = "#00008b";

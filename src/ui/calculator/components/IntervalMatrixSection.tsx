@@ -1,8 +1,8 @@
 import { useState } from "react";
 import type { CalculatorResult } from "../../../lib/calculator/types";
 import IntervalMatrix from "../../components/IntervalMatrix";
-import { partialSetIntervalMatrix } from "../../../lib/ji/partialSetIntervalMatrix";
-import { partialClassSetIntervalMatrix } from "../../../lib/ji/partialClassSetIntervalMatrix";
+import { partialSetIntervalMatrix } from "../../../lib/ji/interval/partialSetIntervalMatrix";
+import { partialClassSetIntervalMatrix } from "../../../lib/ji/interval/partialClassSetIntervalMatrix";
 
 type IntervalMatrixSectionProps = {
   result: CalculatorResult;

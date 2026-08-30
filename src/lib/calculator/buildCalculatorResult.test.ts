@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { createPartialSet } from "../ji/partialSet";
-import { createPartial } from "../ji/partial";
+import { createPartialSet } from "../ji/set/partialSet";
+import { createPartial } from "../ji/partial/partial";
 import { buildCalculatorResult } from "./buildCalculatorResult";
 
 describe("buildCalculatorResult", () => {

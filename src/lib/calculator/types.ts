@@ -1,5 +1,5 @@
-import type { PartialClassSet } from "../ji/partialClassSet";
-import type { PartialSet } from "../ji/partialSet";
+import type { PartialClassSet } from "../ji/set/partialClassSet";
+import type { PartialSet } from "../ji/set/partialSet";
 
 export type CalculatorResult = {
   partial: {

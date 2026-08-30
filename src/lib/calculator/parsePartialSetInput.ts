@@ -1,5 +1,5 @@
-import { createPartial } from "../ji/partial";
-import { createPartialSet, type PartialSet } from "../ji/partialSet";
+import { createPartial } from "../ji/partial/partial";
+import { createPartialSet, type PartialSet } from "../ji/set/partialSet";
 
 export function parsePartialSetInput(input: string): PartialSet {
   const members = input
