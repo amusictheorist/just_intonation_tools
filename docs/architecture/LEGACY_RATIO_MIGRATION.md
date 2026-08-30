@@ -1,35 +1,51 @@
 # Legacy Ratio Migration
 
-**Status:** Accepted
+**Status:** Superseded as an implementation plan
 
 ## 1. Purpose
 
-This document defines the planned migration from the existing lattice and
-spiral ratio helpers to the shared Just Intonation domain under `src/lib/ji/`.
+This document records the migration analysis that preceded replacement of the
+legacy lattice ratio system with the shared JI domain and rebuilt lattice
+subsystem.
 
-The migration is intended to:
+It is retained as historical architectural context. References to legacy files,
+types, consumers, and proposed migration stages describe the codebase at the
+time this plan was written and should not be treated as descriptions of the
+current implementation.
 
-- remove duplicated exact-ratio logic;
-- separate mathematical domain values from parsing, UI state, identifiers,
-  decimal approximation, and placement data;
-- move lattice and spiral consumers toward the shared exact `bigint` ratio
-  representation;
-- preserve tool-specific behavior only where it belongs;
-- establish clear removal conditions for legacy helpers and types.
+The current sources of truth are:
 
-This document does not redefine ratio mathematics. The normative source of
-truth remains the
-[core JI domain specification](../domain/CORE_JI_DOMAIN.md).
+- `docs/domain/CORE_JI_DOMAIN.md` for shared ratio mathematics;
+- ADR 0005 for exact `bigint` domain values;
+- ADR 0006 for the separation of lattice addressing from geometry;
+- current lattice subsystem specifications and tests for lattice-specific
+  behaviour.
 
-The exact numeric and domain-value representation is established by
-[ADR 0005](./decisions/0005-use-bigint-for-exact-ji-domain-values.md).
+  ## 2. Outcome
 
-## 2. Current legacy responsibilities
+The lattice migration described here was ultimately completed as a
+domain-driven rebuild rather than a direct migration of the legacy architecture.
+
+The rebuilt lattice:
+
+- uses the shared exact `Ratio` domain;
+- keeps raw input and UI state outside the shared ratio value;
+- performs exact factorization and symbolic addressing before geometry;
+- separates symbolic lattice addressing from floating-point geometry;
+- separates deterministic placement and presentation data from Three.js scene
+  management;
+- does not preserve the legacy `SceneManager`, `ConnectionSystem`,
+  `useSceneManager`, or mixed legacy lattice `Ratio` architecture.
+
+The remaining sections are retained as a record of the legacy system and the
+migration concerns that informed the rebuild.
+
+## 3. Current legacy responsibilities
 
 The existing lattice ratio code combines several responsibilities that must
 be separated during migration.
 
-### 2.1 Exact ratio operations
+### 3.1 Exact ratio operations
 
 `src/lib/lattice/math/fractions.ts` currently contains:
 
@@ -41,7 +57,7 @@ be separated during migration.
 The local greatest-common-divisor and fraction-reduction behavior duplicate
 functionality now provided by the shared JI domain.
 
-### 2.2 Parsing and approximation
+### 3.2 Parsing and approximation
 
 `src/lib/lattice/math/parseRatio.ts` currently:
 
@@ -56,7 +72,7 @@ functionality now provided by the shared JI domain.
 Parsing and decimal approximation are adapter concerns and must remain outside
 the shared mathematical domain.
 
-### 2.3 Lattice UI and application state
+### 3.3 Lattice UI and application state
 
 The legacy lattice ratio factory also:
 
@@ -71,7 +87,7 @@ The legacy lattice ratio factory also:
 These responsibilities belong to lattice input and application-state models,
 not to the shared `Ratio` value.
 
-### 2.4 Factorization and placement
+### 3.4 Factorization and placement
 
 `src/lib/lattice/math/factors.ts` currently:
 
@@ -84,7 +100,7 @@ These operations are mathematical consumers of ratio values, but several are
 specific to lattice placement. Their migration must preserve the distinction
 between shared exact-domain behavior and lattice-only geometry preparation.
 
-### 2.5 Spiral duplication
+### 3.5 Spiral duplication
 
 `src/lib/spiral/sets.ts` contains a separate fraction-simplification helper.
 
@@ -92,9 +108,9 @@ This indicates that exact ratio reduction is duplicated outside the lattice as
 well. Spiral migration should therefore be reviewed after the shared ratio
 adapters and consumer boundaries are established.
 
-## 3. Dependency inventory
+## 4. Dependency inventory
 
-### 3.1 Lattice input and state
+### 4.1 Lattice input and state
 
 `src/ui/lattice/hooks/useRatios.ts`:
 
@@ -106,7 +122,7 @@ adapters and consumer boundaries are established.
 This hook is the primary boundary between raw user input and stored lattice
 ratio state.
 
-### 3.2 Lattice factorization consumers
+### 4.2 Lattice factorization consumers
 
 The legacy `factorRatio` operation is consumed by:
 
@@ -118,7 +134,7 @@ The legacy `factorRatio` operation is consumed by:
 
 These consumers currently expect the mixed legacy lattice `Ratio` shape.
 
-### 3.3 Placement consumers
+### 4.3 Placement consumers
 
 The legacy lattice `Ratio` type is passed through:
 
@@ -132,7 +148,7 @@ Placement migration depends on first defining whether these modules consume a
 shared `Ratio` directly or a lattice-specific adapter containing both exact
 domain data and placement-facing derived data.
 
-### 3.4 Scene consumers
+### 4.4 Scene consumers
 
 The scene layer depends on legacy ratio fields through:
 
@@ -145,7 +161,7 @@ The scene layer depends on legacy ratio fields through:
 `ConnectionSystem.ts` also calls the legacy `reduceFraction` helper directly
 when reconstructing ratios from prime-factor maps.
 
-### 3.5 UI consumers
+### 4.5 UI consumers
 
 The legacy `Ratio` type flows through:
 
@@ -158,7 +174,7 @@ UI migration must preserve identifiers, removal behavior, history, validation
 feedback, and display values without embedding those concerns in the shared
 domain object.
 
-### 3.6 Legacy type dependencies
+### 4.6 Legacy type dependencies
 
 The principal legacy types are defined in `src/lib/lattice/types.ts`:
 
@@ -176,12 +192,12 @@ and floating-point display data.
 These types should remain in place only until all consumers have migrated to
 separate domain, adapter, and UI-state representations.
 
-## 4. Target boundaries
+## 5. Target boundaries
 
 The migrated design should separate exact mathematical values from lattice
 adapter data and user-interface state.
 
-### 4.1 Shared JI domain
+### 5.1 Shared JI domain
 
 `src/lib/ji/` owns:
 
@@ -202,7 +218,7 @@ Shared domain values must not contain:
 - placement coordinates;
 - automatically derived octave representatives.
 
-### 4.2 Parsing adapters
+### 5.2 Parsing adapters
 
 Parsing adapters own:
 
@@ -216,7 +232,7 @@ Parsing adapters own:
 A parser result may contain either a shared `Ratio` or structured parser-error
 data. It must not redefine canonical reduction independently.
 
-### 4.3 Lattice application state
+### 5.3 Lattice application state
 
 The lattice may define an adapter or state model that combines:
 
@@ -230,7 +246,7 @@ The lattice may define an adapter or state model that combines:
 This model must contain shared domain values rather than duplicate their
 numerator and denominator logic.
 
-### 4.4 Lattice placement
+### 5.4 Lattice placement
 
 Placement modules may consume:
 
@@ -243,7 +259,7 @@ floating-point geometry remain under `src/lib/lattice/`.
 Exact domain values should be converted to `number` only at an explicit
 geometry boundary.
 
-### 4.5 Spiral consumers
+### 5.5 Spiral consumers
 
 Spiral code should consume shared exact ratio operations wherever its
 mathematical behavior matches the shared domain.
@@ -252,7 +268,7 @@ Spiral-specific set construction, ordering, and drawing behavior remain
 separate. The existing `simplifyFraction` helper should be removed only after
 its callers have been reviewed against the shared ratio contract.
 
-### 4.6 Temporary compatibility code
+### 5.6 Temporary compatibility code
 
 Temporary compatibility adapters are permitted when they:
 
@@ -264,7 +280,7 @@ Temporary compatibility adapters are permitted when they:
 
 Temporary adapters must not become a second permanent ratio API.
 
-## 5. Helper-by-helper migration plan
+## 6. Helper-by-helper migration plan
 
 | Legacy item                      | Current responsibility                                                            | Target responsibility                           | Migration action                                                                                                               | Removal condition                                                    |
 | -------------------------------- | --------------------------------------------------------------------------------- | ----------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------------------- |
@@ -285,11 +301,11 @@ Temporary adapters must not become a second permanent ratio API.
 | `RatioResult` and `InvalidRatio` | Represent success or parser failure                                               | Parser or hook result types                     | Redefine without pretending invalid input is a domain ratio                                                                    | Legacy factory is removed                                            |
 | spiral `simplifyFraction`        | Reduces integer pairs locally                                                     | Shared canonical ratio construction             | Review callers and replace where semantics match                                                                               | No duplicate exact reduction remains in spiral code                  |
 
-## 6. Migration sequence
+## 7. Migration sequence
 
 The migration should proceed in small, independently testable stages.
 
-### 6.1 Define the new lattice state model
+### 7.1 Define the new lattice state model
 
 Introduce a lattice-specific state type that contains a shared canonical
 `Ratio` rather than duplicating canonical numerator and denominator fields.
@@ -306,7 +322,7 @@ current consumers, such as:
 The final shape should be chosen after reviewing current rendering and control
 consumers in detail.
 
-### 6.2 Replace the parsing boundary
+### 7.2 Replace the parsing boundary
 
 Rewrite lattice ratio parsing so that successful parsing produces validated
 shared domain values.
@@ -319,7 +335,7 @@ This stage should:
 - stop performing independent canonical reduction;
 - avoid generating IDs inside the parser itself.
 
-### 6.3 Add explicit octave reduction
+### 7.3 Add explicit octave reduction
 
 Implement octave reduction as a separate operation over a shared `Ratio`.
 
@@ -333,7 +349,7 @@ This stage should define and test:
 
 The operation must not occur automatically during shared ratio construction.
 
-### 6.4 Migrate factorization
+### 7.4 Migrate factorization
 
 Introduce exact factorization over `bigint` values, then update `factorRatio`
 to consume a shared `Ratio`.
@@ -341,7 +357,7 @@ to consume a shared `Ratio`.
 Placement-specific filtering, including removal of powers of two, should remain
 explicit rather than being hidden inside general factorization.
 
-### 6.5 Migrate lattice placement
+### 7.5 Migrate lattice placement
 
 Update placement modules in dependency order:
 
@@ -355,7 +371,7 @@ Update placement modules in dependency order:
 Each migration should preserve existing placement behavior with focused
 characterization tests before changing representations.
 
-### 6.6 Migrate scene consumers
+### 7.6 Migrate scene consumers
 
 Update scene types and operations after placement accepts the new ratio model.
 
@@ -370,12 +386,12 @@ This includes:
 
 Number conversion must occur only where rendering or geometry APIs require it.
 
-### 6.7 Remove legacy lattice helpers
+### 7.7 Remove legacy lattice helpers
 
 Delete legacy helpers and types only after all production consumers have
 migrated and the full test suite confirms preserved behavior.
 
-### 6.8 Review spiral fraction reduction
+### 7.8 Review spiral fraction reduction
 
 Review each use of `simplifyFraction` in `src/lib/spiral/sets.ts`.
 
@@ -383,7 +399,7 @@ Replace it with shared ratio construction only where the operation represents
 the same positive rational-domain behavior. Spiral-specific tuple or display
 representations may still require a thin adapter.
 
-## 7. Temporary compatibility rules
+## 8. Temporary compatibility rules
 
 During migration:
 
@@ -402,7 +418,7 @@ During migration:
 - temporary adapters should include a removal note tied to the relevant
   migration stage.
 
-## 8. Removal conditions
+## 9. Removal conditions
 
 The legacy ratio system may be removed when all of the following are true:
 
@@ -422,17 +438,17 @@ The legacy ratio system may be removed when all of the following are true:
   appropriate;
 - focused tests and the full quality gate pass.
 
-## 9. Deferred questions
+## 10. Deferred questions
 
 The following questions should be resolved during the relevant migration
 stage rather than guessed in advance.
 
-### 9.1 Lattice state shape
+### 10.1 Lattice state shape
 
 Should the lattice store both the canonical ratio and octave representative,
 or derive the octave representative when needed?
 
-### 9.2 Decimal input
+### 10.2 Decimal input
 
 Should decimal approximation remain supported by the lattice input, and if so:
 
@@ -440,12 +456,12 @@ Should decimal approximation remain supported by the lattice input, and if so:
 - how should approximation be communicated to the user;
 - should approximate and exact text input produce visibly different states?
 
-### 9.3 Parser errors
+### 10.3 Parser errors
 
 Should parser failures use simple discriminated unions, custom error objects,
 or shared application error codes?
 
-### 9.4 Octave-reduction ownership
+### 10.4 Octave-reduction ownership
 
 Is octave reduction a generally useful shared JI operation, or should it
 remain a lattice-specific adapter until another subsystem requires it?
@@ -455,17 +471,17 @@ remain a lattice-specific adapter until another subsystem requires it?
 Should prime-factor maps use `bigint` prime keys, and what exponent type should
 they use?
 
-### 9.6 Derived decimal values
+### 10.6 Derived decimal values
 
 Should floating-point ratio values be stored in lattice state or derived only
 at rendering and display boundaries?
 
-### 9.7 Connection reconstruction
+### 10.7 Connection reconstruction
 
 Should `ConnectionSystem.ts` reconstruct a shared ratio from factor maps, or
 should connection data remain factor-based until the final rendering boundary?
 
-### 9.8 Spiral representation
+### 10.8 Spiral representation
 
 Does the spiral require full shared `Ratio` objects, or only exact canonical
 integer pairs adapted from them?

@@ -289,21 +289,29 @@ React tests should call real library functions where the integration matters, bu
 
 ### 5.7 End-to-end tests
 
-A small end-to-end suite should verify essential workflows in a real browser.
+A small end-to-end suite verifies essential workflows in a real browser.
 
-Initial candidate workflows include:
+Current end-to-end coverage includes:
 
-1. navigating among the calculator, spiral, and lattice tools
-2. entering valid calculator input and receiving expected results
-3. receiving useful feedback for invalid input
-4. drawing a spiral and selecting partials
-5. creating lattice points from entered ratios
-6. changing a lattice placement mode
-7. refreshing or directly loading important routes
+1. entering valid calculator input and receiving expected results;
+2. transposing calculator results;
+3. recovering from invalid calculator input;
+4. creating lattice points from entered ratios;
+5. enabling higher-prime lattice placement and accessing its controls;
+6. recovering from invalid lattice input.
 
-End-to-end tests should remain limited to high-value workflows.
+Additional end-to-end coverage should be added only for high-value user workflows that are not already protected more effectively at a lower test layer.
 
-They should not be used for exhaustive mathematical coverage.
+Likely future candidates include:
+
+- navigating among the calculator, spiral, and lattice tools;
+- drawing a spiral and selecting partials;
+- switching representative lattice visualization modes where browser-level integration needs protection;
+- refreshing or directly loading important routes.
+
+End-to-end tests should remain limited to user-observable workflows.
+
+They should not be used for exhaustive mathematical, placement, geometry, rendering, or animation coverage when those behaviours can be tested more precisely and reliably at lower layers.
 
 ### 5.8 Static checks
 
@@ -419,22 +427,24 @@ Use exact equality for:
 
 Use approximate equality for:
 
-- trigonometric coordinates
-- vector lengths
-- normalized vectors
-- dot products
-- rotations
-- Euclidean distances
-- animated intermediate values
-- other calculated floating-point geometry
+- trigonometric coordinates;
+- vector lengths;
+- normalized vectors;
+- dot products;
+- rotations;
+- Euclidean distances;
+- animated intermediate values;
+- other calculated floating-point geometry.
 
-A shared geometry tolerance should be defined for the test suite, for example:
+Floating-point geometry tests should use a shared tolerance where repeated comparison logic would otherwise be duplicated.
+
+A shared geometry tolerance may be represented by a constant such as:
 
 `GEOMETRY_EPSILON`
 
-The exact tolerance will be selected when the testing infrastructure is implemented.
+Tests should use the smallest tolerance that is stable across supported environments and appropriate to the calculation under test.
 
-Tests should use the smallest tolerance that is stable across supported environments.
+Approximate assertions should remain explicit about what is being compared. Tests should not use unnecessarily loose tolerances merely to make unstable expectations pass.
 
 ### 8.3 Comparing vectors
 
@@ -449,93 +459,124 @@ Tests should not repeat ad hoc floating-point comparison code.
 
 ## 9. Lattice placement testing
 
+Lattice placement tests should distinguish symbolic placement from geometric placement.
+
+Symbolic tests verify the exact structural identity of a ratio within a lattice mode. Geometric tests verify the conversion of that symbolic representation into floating-point coordinates.
+
+Placement tests should remain independent of React, Three.js scenes, camera state, and browser interaction.
+
 ### 9.1 Cubic placement
 
 Cubic placement tests should verify:
 
-- the identity ratio is placed at the origin
-- factors of 3 determine the first lattice axis
-- factors of 5 determine the second lattice axis
-- factors of 7 determine the third lattice axis
-- denominator exponents subtract from numerator exponents
-- octave-equivalent ratios receive the same placement
-- unsupported prime factors return no cubic placement
-- `lattice`, `latticeType`, and `primeAnchor` are correct
+- the identity ratio is placed at the origin;
+- factors of 3 determine the x-axis;
+- factors of 5 determine the y-axis;
+- factors of 7 determine the z-axis;
+- denominator exponents produce movement in the negative axis direction;
+- powers of 2 do not affect cubic coordinates;
+- octave-equivalent ratios receive the same placement;
+- standard cubic placement rejects ratios containing primes above 7;
+- results are deterministic.
 
-Representative reviewed examples should be documented before they become normative tests.
+Exact cubic coordinates should use exact assertions.
 
 ### 9.2 Expanded cubic placement
 
-Expanded cubic tests should distinguish between two cases.
+Expanded cubic tests should distinguish symbolic addressing from geometric positioning.
 
-For ratios containing no prime above 7:
+Symbolic tests should verify:
 
-- expanded cubic placement should agree with cubic placement
+- ratios containing no prime above 7 have an empty higher-prime anchor path;
+- factors of 3, 5, and 7 determine local cubic coordinates;
+- higher-prime factors produce a canonical signed prime path;
+- positive and negative generator steps are distinguished;
+- repeated higher-prime powers produce repeated steps;
+- higher-prime steps follow the documented canonical prime ordering;
+- powers of 2 do not alter symbolic placement;
+- equivalent inputs produce the same canonical address.
 
-For ratios containing higher primes:
+Geometric tests should verify:
 
-- the intended anchor prime should be selected
-- the anchor sign should be respected
-- factors of 3, 5, and 7 should move within the local prime frame
-- additional higher primes should contribute the intended displacement
-- exponent magnitude should scale displacement
-- radius scaling should affect world position as intended
-- rotation should affect world coordinates
-- rotation should not alter lattice metadata
-- results should be deterministic
+- ratios with no higher-prime anchor path use the global 3–5–7 lattice directly;
+- each higher-prime step contributes its deterministic anchor vector;
+- negative higher-prime steps invert the corresponding anchor vector;
+- repeated powers of a higher prime remain collinear and equally spaced;
+- combinations of higher primes accumulate their anchor vectors deterministically;
+- local 3–5–7 coordinates are translated from the resulting higher-prime anchor;
+- local 3–5–7 axes remain parallel to the global axes;
+- higher-prime radius changes anchor distance as intended;
+- higher-prime rotation rotates the anchor and its attached local lattice together around the global origin;
+- higher-prime rotation does not rotate the global 3–5–7 lattice;
+- results are deterministic.
 
-The current `rotationAngle` argument in prime-frame construction requires clarification because it is accepted and cached but does not currently affect the computed frame.
-
-No permanent test should declare that omission correct until the intended behaviour is documented.
+Tests should distinguish exact symbolic expectations from approximate geometric expectations.
 
 ### 9.3 Radial placement
 
-Radial placement tests should verify
+Radial placement tests should verify both symbolic generator structure and resulting geometry.
 
-- identity placement
-- prime-direction contribution
-- exponent scaling
-- total vertical step count
-- numerator and denominator orientation
-- returned factor metadata
-- deterministic placement
+Symbolic tests should verify:
 
-A general vertical-position invariant should be tested once the intended formula is confirmed.
+- powers of 2 do not contribute generator steps;
+- signed odd-prime factors produce the expected canonical prime path;
+- generator distance equals the canonical path length;
+- repeated powers of a prime produce repeated generator steps;
+- numerator and denominator factors produce opposite directions;
+- results are deterministic.
+
+Geometric tests should verify:
+
+- the identity ratio is placed at the origin;
+- each odd prime has a deterministic radial direction;
+- powers of the same prime remain collinear;
+- negative generator steps reverse direction;
+- composite ratios accumulate their generator vectors;
+- standard radial placement uses the octave-normalized ratio;
+- generator distance affects vertical placement only when height is enabled;
+- disabling height removes the generator-distance contribution without changing horizontal placement;
+- results are deterministic.
+
+Floating-point radial coordinates should use approximate assertions.
 
 ### 9.4 Expanded radial placement
 
-Expanded radial tests should verify the intended treatment of ratios above and below unison.
+Expanded radial tests should verify the documented upper- and lower-side placement rules.
 
-The following require explicit placement documentation:
+Symbolic tests should verify:
 
-- vertical mirroring
-- reciprocal relationships
-- horizontal orientation
-- exponent reversal
-- treatment of octave-equivalent inputs
+- ratios are classified onto the intended upper or lower side;
+- the normalized ratio, canonical prime path, and generator distance are preserved in the expanded-radial address;
+- powers of 2 are handled according to the expanded-radial normalization rules;
+- results are deterministic.
 
-Current implementation behaviour may be characterized, but it should not become normative without review.
+Geometric tests should verify:
 
-### 9.5 Prime geometry
+- upper-side placement follows the standard radial geometry;
+- lower-side placement uses the documented symmetry mode;
+- continuous symmetry negates all coordinates of the corresponding upper placement;
+- aligned symmetry preserves x and z while negating y;
+- generator height is applied consistently on both sides;
+- changing symmetry mode changes geometry without changing symbolic placement;
+- results are deterministic.
 
-Prime-geometry tests should cover:
+### 9.5 Higher-prime geometry
 
-- supported-prime lookup
-- prime-position magnitude
-- radius scaling
-- finite coordinates
-- distinct prime positions
-- negative anchor positions
-- unit frame axes
-- orthogonal frame axes
-- frame handedness
-- step-direction normalization
-- horizontal step directions
-- invalid or unsupported prime handling
+Higher-prime geometry tests should verify:
 
-Testing every generated coordinate as a hard-coded decimal fixture should be avoided.
+- each prime receives a deterministic anchor vector;
+- repeated calls for the same prime produce the same vector;
+- anchor-vector magnitude follows the configured higher-prime radius;
+- positive generator steps use the canonical anchor vector;
+- negative generator steps use its inverse;
+- successive generator steps accumulate correctly;
+- empty higher-prime paths resolve to the origin;
+- anchor paths remain independent of local 3–5–7 coordinates;
+- all produced coordinates are finite.
 
-A small number of reviewed coordinate fixtures should be combined with broader geometric invariants.
+Testing every generated coordinate as a hard-coded floating-point fixture should be avoided.
+
+A small number of reviewed reference cases should be combined with broader invariants such as determinism, symmetry, collinearity, vector accumulation, and stable distance relationships.
 
 ## 10. Spiral mathematics testing
 
@@ -625,25 +666,37 @@ These tests should use a DOM test environment rather than a real browser unless 
 
 ## 12. Three.js and scene-management testing
 
-Three.js scene tests should focus on application-owned behaviour rather than retesting Three.js.
+Three.js scene tests should focus on application-owned behaviour rather than retesting Three.js itself.
 
-Candidate responsibilities include:
+Scene and runtime tests should verify responsibilities such as:
 
-- point creation
-- label creation
-- connection creation
-- addition and removal of scene objects
-- updating positions
-- updating visual state
-- mapping domain identifiers to scene objects
-- selection behaviour
-- camera-centering inputs
-- cleanup and resource-disposal
-- event-listener cleanup
+- creating lattice point meshes from scene-point descriptions;
+- creating connection lines from scene-connection descriptions;
+- preserving existing point meshes when scene-point identities remain stable;
+- creating meshes for newly introduced scene points;
+- removing and disposing meshes for removed scene points;
+- assigning and updating target positions for point meshes;
+- interpolating point meshes toward target positions using frame-delta timing;
+- updating connection endpoints from the current interpolated point-mesh positions;
+- updating higher-prime appearance without rebuilding unrelated scene objects;
+- mapping lattice-scene identifiers to rendered objects;
+- reporting frame deltas before rendering;
+- coordinating camera updates and rendering;
+- locating lattice points from pointer coordinates;
+- forwarding hover and modified-click interactions through the scene runtime;
+- adding and removing browser event listeners;
+- starting and stopping the animation-frame loop;
+- disposing geometries, materials, textures, camera controls, renderers, and other owned graphical resources.
 
-Where possible, scene systems should consume plain serializable placement or scene-description objects.
+Scene-management tests should verify application-owned state transitions and resource ownership directly. They should not assert internal Three.js implementation details unless those details form part of the application's own contract.
 
-Testing compact scene descriptions is preferable to snapshotting entire Three.js object graphs.
+Where possible, scene systems should consume plain serializable scene-description objects rather than reconstructing mathematical placement semantics.
+
+Testing compact scene descriptions, object identity, observable positions, event behaviour, and disposal effects is preferable to snapshotting entire Three.js object graphs.
+
+Animation tests should use controlled frame deltas and observable intermediate positions rather than relying on real-time delays.
+
+Exact lattice-placement correctness belongs in lower-level symbolic and geometry tests. Scene tests should verify that already-calculated placement data is represented and updated correctly.
 
 ## 13. Snapshot and visual-regression policy
 
@@ -874,21 +927,23 @@ The intended npm scripts are:
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "check": "npm run lint && npm run test:run && npm run build"
+    "check": "npm run lint && npm run test:coverage && npm run build && npm run test:e2e && git status"
   }
 }
 ```
 
-The default `check` command will initially exclude end-to-end tests because they require installed browser binaries and have a slower feedback cycle.
+`npm run check` is the complete local quality gate. It runs:
 
-Continuous integration should run:
+1. ESLint
+2. the Vitest suite coverage collection
+3. TypeScript compilation and the Vite production build
+4. the Playwright end-to-end suite
 
-```text
-npm run check
-npm run test:e2e
-```
+Because `npm run test:coverage` executes the Vitest suite, `npm run check` does not need to run `test:run` separately.
 
-Not every local edit requires running every browser test immediately, but the complete required suite should pass before merging or marking a task complete.
+The production build runs `tsc -b` before Vite builds the application, so a successful build also verifies TypeScript compilation.
+
+Focused tests should still be used during development for fast feedback, but npm run check should pass before a task is considered complete.
 
 ## 19. Coverage policy
 
@@ -932,37 +987,43 @@ Property-test generation limits should balance confidence with predictable runti
 
 ## 21. Continuous integration
 
-Continuous integration should eventually run:
+Continuous integration should run the same complete quality gate used locally:
+
+```text
+npm ci
+npm run check
+```
 
 1. dependency installation from the lockfile
 2. TypeScript checks
 3. ESLint
-4. unit and property tests
-5. DOM and component tests
-6. production build
-7. end-to-end tests
-8. visual-regression tests when configured
+4. unit, property, DOM, component and hook tests with coverage collection
+5. TypeScript compilation
+6. the production build
+7. Playwright end-to-end tests
+
+Visual-regression tests may be added later if they protect behaviour that is not adequately covered by structural, mathematical, or interaction tests.
 
 Failures should identify the responsible layer as clearly as possible.
 
-The initial CI setup may introduce these stages incrementally.
+The exact CI provider and workflow configuration remain implementation decisions.
 
 ## 22. Selected testing tools
 
-The project will use the following testing stack.
+The project uses the following testing stack.
 
 ### 22.1 Vitest
 
-Vitest will be the unit-test runner for:
+Vitest is the unit-test runner for:
 
-- core-domain specification tests
-- pure unit tests
-- property and invariant tests
-- placement tests
-- DOM tests
-- React component and hook tests
+- core-domain specification tests;
+- pure unit tests;
+- property and invariant tests;
+- placement tests;
+- DOM tests;
+- React component and hook tests.
 
-Vitest test function will be imported explicitly rather than enabled as globals:
+Vitest test functions are imported explicitly rather than enabled as globals:
 
 ```ts
 import { describe, expect, it } from "vitest";
@@ -984,7 +1045,7 @@ Pure mathematical and placement tests should remain in the default Node environm
 
 ### 22.3 Testing Library
 
-The project will use:
+The project uses:
 
 - `@testing-library/dom` for direct DOM and SVG adapters
 - `@testing-library/react` for React components and hooks
@@ -995,30 +1056,30 @@ Testing Library tests should emphasize user-observable behaviour rather than com
 
 ### 22.4 fast-check
 
-The project will use `fast-check` for property-based testing.
+The project uses `fast-check` for property-based testing.
 
 Reusable domain arbitraries should be composed from the same validated public constructors used by production code and should live with the domain they support.
 
 ### 22.5 Playwright
 
-The project will use Playwright Test for:
+The project uses Playwright Test for:
 
 - real-browser end-to-end workflows
 - route and refresh behaviour
 - browser-level keyboard interaction
 - selected visual-regression screenshots
 
-Playwright will not replace unit, placement, DOM, or component tests.
+Playwright does not replace unit, placement, DOM, or component tests.
 
 ### 22.6 Coverage
 
-Vitest's V8 coverage provider will be used through `@vitest/coverage-v8`.
+Vitest's V8 coverage provider is used through `@vitest/coverage-v8`.
 
-Coverage reports will initially be collected without enforcing numeric thresholds.
+Coverage reports are collected without enforcing numeric thresholds.
 
 ### 22.7 Current Infrastructure configuration
 
-The initial testing infrastructure is configured as follows:
+The testing infrastructure is configured as follows:
 
 - Vitest uses Node as its default environment
 - DOM-dependent Vitest files opt into jsdom with:
@@ -1031,96 +1092,104 @@ The initial testing infrastructure is configured as follows:
 - Vitest excludes the root-level `e2e/` directory so Playwright specifications are not collected by both runners
 - V8 coverage produces text and HTML reports
 - Playwright runs the end-to-end suite in Chromium against the Vite production preview server
-- Generated coverage and Playwright report directories are ignored by Git and ESLint where applicable
-
-Coverage reports will initially be collected without enforcing numeric thresholds.
+- generated coverage and Playwright report directories are ignored by Git and ESLint where applicable
+- the full `npm run check` command includes linting, Vitest coverage, the production build, Playwright end-to-end tests, and Git status.
 
 ## 23. Open decisions
 
-The following decisions remain to be made:
+The following testing-policy decisions remain to be made:
 
-1. shared geometry tolerance
-2. eventual coverage thresholds
-3. continuous-integration workflow details
-4. intended use of `rotationAngle` in prime-frame construction
-5. normative behaviour of expanded radial placement
-6. normative high-prime placement examples
+1. whether a shared geometry tolerance should be introduced for repeated floating-point assertions;
+2. whether numeric coverage thresholds should eventually be enforced;
+3. the exact continuous-integration provider and workflow configuration;
+4. whether selected visual-regression tests provide enough additional value to justify maintaining them.
 
 These open decisions do not change the testing principles or selected stack established in this document.
 
 ## 24. Testing infrastructure status
 
-The initial testing infrastructure is installed and operational.
+The testing infrastructure is installed and operational.
 
-Completed infrastructure includes:
+Current infrastructure includes:
 
-- Vitest with TypeScript and Vite integration
-- Node as the default Vitest environment
-- per-file jsdom opt-in
-- Testing Library and `jest-dom`
-- fast-check
-- Playwright Test with Chromium
-- separate Vitest and Playwright test discovery
-- smoke tests for Node, property, DOM and browser execution
-- combined lint, unit-test, and production-build quality checks
+- Vitest with TypeScript and Vite integration;
+- Node as the default Vitest environment;
+- per-file jsdom opt-in;
+- Testing Library and `jest-dom`;
+- fast-check property testing;
+- Playwright Test with Chromium;
+- separate Vitest and Playwright test discovery;
+- shared domain arbitraries and test support;
+- unit and property coverage for the shared JI domain;
+- placement and geometry coverage for the lattice subsystem;
+- React component and hook coverage;
+- Three.js scene-renderer and runtime coverage;
+- calculator end-to-end workflows;
+- lattice end-to-end workflows;
+- coverage reporting;
+- a complete local quality gate through `npm run check`.
 
-The next implementation sequence is:
+Testing work now proceeds alongside implementation and refactoring rather than as a separate infrastructure phase.
 
-1. add shared geometry assertions and test existing pure visualization mathematics
-2. add DOM, React, and browser workflow coverage as corresponding code is reviewed or rewritten
+New or substantially rewritten behaviour should receive coverage at the lowest appropriate layer, with higher-level integration and end-to-end tests added only where they protect additional user-observable behaviour.
 
-## 25. Initial test matrix
+## 25. Test matrix
 
-The following matrix identifies the first required areas of coverage as the refactor proceeds.
+The following matrix summarizes the principal areas of testing responsibility across the application.
 
-It is a planning baseline rather than an exhaustive inventory of every future test.
+It is not an exhaustive inventory of every test. It identifies the kinds of behaviour that should be protected and the most appropriate test layer for each area.
 
-| Area                                          | Initial behaviours                                                                                                                | Test approach                                                                           | Authority                                                       |
-| --------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------- | --------------------------------------------------------------- |
-| Positive integers and ratios                  | reject invalid values; construct valid values; reduce equivalent ratios; preserve exact rational value                            | example tests and property tests                                                        | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Octave equivalence and reduction              | identify octave-equivalent ratios; reduce to the canonical octave range; preserve rational equivalence up to powers of 2          | example tests and property tests                                                        | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Partials and parcs                            | validate partials; remove all powers of 2; produce positive odd parcs                                                             | example tests and property tests                                                        | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Parsets and parcsets                          | reject empty sets; remove duplicate input members; expose deterministic ascending order; preserve set semantics                   | example tests and property tests                                                        | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Set equivalence and canonical representatives | identify equivalent parsets and parcsets; compute canonical representatives; preserve representatives under valid transformations | example tests and property tests                                                        | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Ratio multiplication and directed intervals   | multiply exactly; preserve identity; compute directed interval ratios; retain canonical forms                                     | example tests and property tests                                                        | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Transposition and low inversion               | transpose parsets correctly; preserve domain validity; compute defined low inversions; reject or report undefined cases           | example tests and property tests                                                        | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Spectral Extension                            | calculate exact Parspace and Parcspace values; calculate exact cardinality-scaled values                                          | example tests and property tests where useful                                           | `docs/domain/CORE_JI_DOMAIN.md`                                 |
-| Tool-specific parsing                         | accept only intentionally supported syntax; reject malformed input; convert successful results into valid domain values           | unit tests                                                                              | documented parser requirements                                  |
-| Vector mathematics                            | add, subtract, scale, normalize, rotate, calculate dot products, and calculate cross products                                     | unit tests and invariants                                                               | mathematical definitions                                        |
-| Prime factorization and geometry              | factor valid domain ratios; calculate finite prime positions; preserve radius; construct orthonormal frames                       | unit tests and invariants                                                               | mathematical definitions and reviewed geometry rules            |
-| Cubic lattice placement                       | place identity and 3-, 5-, and 7-axis ratios; preserve octave-equivalent placement; reject unsupported primes                     | reviewed examples and invariants                                                        | documented placement rules                                      |
-| Expanded cubic placement                      | fall back to cubic placement; select high-prime anchors; apply local-frame movement, scaling, and rotation                        | reviewed examples, invariants, and temporary characterization tests                     | documented placement rules and unresolved implementation review |
-| Radial placement                              | place identity; accumulate prime directions; scale by exponent; calculate vertical steps                                          | reviewed examples and invariants                                                        | documented placement rules                                      |
-| Expanded radial placement                     | distinguish above- and below-unison placement; define reciprocal and orientation relationships                                    | characterization tests until behaviour is approved, then regression and invariant tests | future placement specification                                  |
-| Spiral mathematics                            | convert polar coordinates; calculate radius and angle; preserve inverse relationships                                             | example tests and property tests                                                        | mathematical definitions                                        |
-| Spiral SVG drawing                            | construct paths; draw octave lines; create and remove points and labels; support keyboard interaction                             | DOM tests                                                                               | documented UI behaviour                                         |
-| Lattice scene management                      | create, update, connect, select, and remove scene objects; dispose of owned resources                                             | unit and integration tests with focused Three.js objects                                | documented scene responsibilities                               |
-| React tools                                   | accept input; show output and errors; switch modes; coordinate controls and visualizations                                        | component and hook tests                                                                | user-observable application behaviour                           |
-| Application workflows                         | navigate routes; use calculator; interact with spiral; create and modify lattice views                                            | Playwright end-to-end tests                                                             | product requirements                                            |
-| Selected visual views                         | protect a small number of canonical spiral, lattice, and responsive-layout states                                                 | Playwright screenshot comparisons                                                       | reviewed visual baselines                                       |
+| Area                                                | Behaviours                                                                                                                                                               | Test approach                                            | Authority                                       |
+| --------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | -------------------------------------------------------- | ----------------------------------------------- |
+| Positive integers and ratios                        | reject invalid values; construct valid values; reduce equivalent ratios; preserve exact rational value                                                                   | example tests and property tests                         | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Octave equivalence and reduction                    | identify octave-equivalent ratios; reduce to the canonical octave range; preserve equivalence up to powers of 2                                                          | example tests and property tests                         | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Partials and partial classes                        | validate values; remove powers of 2 where required; preserve domain invariants                                                                                           | example tests and property tests                         | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Partial sets and partial-class sets                 | reject invalid sets; remove duplicate members; preserve deterministic ordering and set semantics                                                                         | example tests and property tests                         | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Set equivalence and canonical representatives       | identify equivalent sets; compute canonical representatives; preserve representatives under valid transformations                                                        | example tests and property tests                         | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Ratio multiplication and directed intervals         | multiply exactly; preserve identity; compute directed interval ratios; retain canonical forms                                                                            | example tests and property tests                         | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Transposition and low inversion                     | transpose sets correctly; preserve domain validity; compute defined low inversions                                                                                       | example tests and property tests                         | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Spectral Extension                                  | calculate exact Parspace and Parcspace values; calculate exact cardinality-scaled values                                                                                 | example tests and property tests where useful            | `docs/domain/CORE_JI_DOMAIN.md`                 |
+| Tool-specific parsing                               | accept intentionally supported syntax; reject malformed input; produce validated domain values                                                                           | unit tests                                               | documented parser requirements                  |
+| Vector mathematics                                  | add, scale, normalize, rotate, and combine vectors correctly                                                                                                             | unit tests and invariants                                | mathematical definitions                        |
+| Prime factorization and symbolic lattice addressing | factor valid ratios; ignore powers of 2 where specified; produce deterministic signed prime paths and mode-specific addresses                                            | unit tests and invariants                                | lattice placement specification and ADR 0006    |
+| Cubic lattice placement                             | place 3-, 5-, and 7-limit ratios; preserve octave-equivalent placement; reject unsupported higher primes in standard cubic mode                                          | reviewed examples and invariants                         | documented lattice placement rules              |
+| Expanded cubic placement                            | produce canonical higher-prime anchor paths; preserve local 3–5–7 coordinates; accumulate deterministic anchor vectors; apply higher-prime radius and rotation correctly | symbolic tests, geometry tests, and invariants           | documented lattice placement rules and ADR 0006 |
+| Radial placement                                    | produce canonical generator structure; calculate deterministic prime directions; accumulate generator vectors; apply optional generator height                           | symbolic tests, geometry tests, and invariants           | documented lattice placement rules              |
+| Expanded radial placement                           | distinguish upper and lower sides; preserve symbolic identity; apply continuous or aligned lower-side symmetry                                                           | symbolic tests, geometry tests, and invariants           | documented lattice placement rules              |
+| Spiral mathematics                                  | convert polar coordinates; calculate radius and angle; preserve inverse relationships                                                                                    | example tests and property tests                         | mathematical definitions                        |
+| Spiral SVG drawing                                  | construct paths; draw octave lines; create and remove points and labels; support keyboard interaction                                                                    | DOM tests                                                | documented UI behaviour                         |
+| Lattice presentation                                | convert placed ratios into scene points and semantic connections; filter connections by prime                                                                            | unit tests                                               | documented lattice presentation rules           |
+| Lattice scene management                            | create and reconcile meshes; update target positions; interpolate movement; update connection endpoints; handle pointer interaction; dispose owned resources             | unit and integration tests with focused Three.js objects | documented scene responsibilities               |
+| React tools                                         | accept input; show output and errors; switch modes; coordinate controls and visualizations                                                                               | component and hook tests                                 | user-observable application behaviour           |
+| Application workflows                               | use calculator workflows; recover from invalid input; create lattice views; access higher-prime controls                                                                 | Playwright end-to-end tests                              | product requirements                            |
+| Selected visual views                               | protect a small number of canonical or responsive visual states when structural tests are insufficient                                                                   | Playwright screenshot comparisons if introduced          | reviewed visual baselines                       |
 
-### 25.1 Priority order
+### 25.1 Testing order
 
-Initial test implementation should proceed in the following order:
+Testing should generally proceed from the lowest deterministic layer outward:
 
-1. shared core-domain values and operations
-2. shared mathematical helpers required by the domain
-3. pure spiral and lattice mathematics
-4. reviewed placement behaviour
-5. DOM and rendering adapters
-6. React integration
-7. essential browser workflows
-8. selected visual-regression cases
+1. shared core-domain values and operations;
+2. pure mathematical helpers;
+3. symbolic placement and addressing;
+4. geometric placement;
+5. presentation and rendering adapters;
+6. React integration;
+7. essential browser workflows;
+8. visual-regression cases only when they protect additional value.
 
 This order places the greatest confidence at the lowest deterministic layer and prevents visual inspection from becoming the primary means of validating mathematical behaviour.
 
+Higher-level tests should not duplicate behaviour that is already more precisely protected at a lower layer.
+
 ### 25.2 Normative and characterization coverage
 
-Rows whose authority is the core-domain specification or an approved placement rule should receive normative tests.
+Behaviour whose authority is the core-domain specification, an accepted architectural decision, or an approved subsystem specification should receive normative tests.
 
-Rows that depend on unresolved visualization behaviour should initially receive characterization tests only where preserving current behaviour is necessary for safe refactoring.
+Characterization tests may be used temporarily when existing behaviour must be understood before it is replaced or formally approved.
 
 Characterization coverage must not be mistaken for approval of the recorded behaviour.
+
+When the relevant behaviour becomes specified, characterization tests should be replaced, promoted to intentional regression tests, or removed as appropriate.
 
 ## 26. Definition of done for testing work
 

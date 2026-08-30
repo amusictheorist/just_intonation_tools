@@ -4,20 +4,17 @@
 
 ## 1. Purpose
 
-This document defines the planned migration from legacy partial, partial-class, set, and related helper logic to the shared JI domain under `src/lib/ji/`.
+This document records the migration from legacy partial, partial-class, set,
+and related helper logic to the shared JI domain under `src/lib/ji/`, and
+identifies remaining migration work in the spiral subsystem.
 
-The migration is intended to:
+Most shared-domain operations described by the original plan have now been
+implemented. Sections that describe those operations as future work are
+retained as migration history unless explicitly marked as remaining work.
 
-- replace duplicated partial and partial-class validation with shared domain values
-- replace duplicated partial-to-partial-class reduction with the shared conversion operation
-- separate single-value domain operations from set construction, canonicalization, harmonic-complexity calculations, and UI concerns
-- migrate remaining spiral consumers away from local `number`-based mathematical helpers
-- identify legacy behaviour that must not be preserved when it conflicts with the normative domain specification
-- establish removal conditions for obsolete helpers
-
-This document does not redefine partial or partial-class mathematics. The normative source of truth remains the [core JI domain specification](../domain/CORE_JI_DOMAIN.md).
-
-The implementation terminology convention is defined in [Documentation Conventions](../DOCUMENTATION_CONVENTIONS.md).
+The remaining migration concern is primarily the removal of duplicated
+number-based partial, partial-class, set, and interval mathematics from the
+spiral where equivalent shared-domain operations now exist.
 
 ## 2. Current legacy responsibilities
 
@@ -106,31 +103,38 @@ the corresponding shared set and interval operations are defined.
 
 ## 3. Dependency inventory and target equivalents
 
-The legacy and current implementations contain several helpers whose
-responsibilities should move to shared-domain operations over time.
+The shared JI domain now implements most of the mathematical responsibilities
+identified by the original migration plan.
 
-| Legacy or current item         | Current responsibility                                                      | Target shared responsibility                                                    | Status                    |
-| ------------------------------ | --------------------------------------------------------------------------- | ------------------------------------------------------------------------------- | ------------------------- |
-| Python `PartialSet`            | Validates positive integer collections, removes duplicates                  | Future shared partial-set construction                                          | Not yet implemented       |
-| Python `PartialClassSet`       | Validates positive odd integer collections, removes duplicates              | Future shared partial-class-set construction                                    | Not yet implemented       |
-| Python `PartialSetClass`       | Computes a GCD-reduced partial-set representative                           | Future shared partial-set-class canonicalization                                | Not yet implemented       |
-| Python `PartialClassSetClass`  | Converts inputs and computes a GCD-reduced partial-class-set representative | Explicit conversion plus future partial-class-set-class canonicalization        | Not yet implemented       |
-| Python `par_to_parc`           | Converts collections of partials to deduplicated partial classes            | `partialToPartialClass` plus future partial-class-set construction              | Partially replaced        |
-| Python `HCp` / `HCpc`          | Sums canonical set-class representatives                                    | Future harmonic-complexity modules                                              | Not yet implemented       |
-| Python `cardHCp` / `cardHCpc`  | Computes cardinality-scaled harmonic complexity                             | Future harmonic-complexity modules                                              | Not yet implemented       |
-| Python `low_inverse`           | Computes low inverses over raw sets                                         | Future shared low-inversion operation                                           | Not yet implemented       |
-| spiral `gcd`                   | Number-based greatest common divisor                                        | `greatestCommonDivisor`                                                         | Shared replacement exists |
-| spiral `gcdArray`              | Greatest common divisor across a collection                                 | Future exact collection-GCD helper or set-class canonicalization                | Not yet implemented       |
-| spiral `stripPowersOf2`        | Removes factors of 2 from a partial                                         | `partialToPartialClass`                                                         | Shared replacement exists |
-| spiral `getParset`             | Sorts partial collections                                                   | Future shared partial-set construction / deterministic exposure                 | Not yet implemented       |
-| spiral `getParcset`            | Converts partials, removes duplicates, sorts partial classes                | Explicit conversion plus future partial-class-set construction                  | Partially replaced        |
-| spiral `getParSC`              | Computes a GCD-reduced partial-set representative                           | Future shared partial-set-class canonicalization                                | Not yet implemented       |
-| spiral `getParcSC`             | Reduces a set and derives deduplicated partial classes                      | Explicit shared set and class operations                                        | Not yet implemented       |
-| spiral interval-matrix helpers | Derive and format partial or partial-class interval ratios                  | Future shared interval-ratio operations plus spiral-specific display formatting | Not yet implemented       |
+The remaining migration work is primarily concerned with moving spiral
+consumers away from duplicated number-based helpers and onto the shared domain.
 
-The presence of a shared replacement does not mean the legacy helper can be
-removed immediately. Removal depends on all production consumers being migrated
-to the shared representation or to an explicit adapter around it.
+| Legacy or current item         | Current responsibility                                                    | Shared replacement                                                                              | Status                                              |
+| ------------------------------ | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------- | --------------------------------------------------- |
+| Python `PartialSet`            | Validates positive integer collections and removes duplicates             | shared partial-set construction                                                                 | Replaced                                            |
+| Python `PartialClassSet`       | Validates positive odd integer collections and removes duplicates         | shared partial-class-set construction                                                           | Replaced                                            |
+| Python `PartialSetClass`       | Computes a GCD-reduced partial-set representative                         | shared partial-set canonicalization                                                             | Replaced                                            |
+| Python `PartialClassSetClass`  | Converts inputs and computes a canonical partial-class-set representative | explicit partial-to-partial-class conversion plus shared partial-class-set canonicalization     | Replaced                                            |
+| Python `par_to_parc`           | Converts collections of partials to deduplicated partial classes          | `partialToPartialClass` plus shared partial-class-set construction                              | Replaced                                            |
+| Python `HCp` / `HCpc`          | Sums canonical set-class representatives                                  | shared Spectral Extension operations                                                            | Replaced                                            |
+| Python `cardHCp` / `cardHCpc`  | Computes cardinality-scaled harmonic complexity                           | shared cardinality-scaled Spectral Extension operations                                         | Replaced                                            |
+| Python `low_inverse`           | Computes low inverses over raw sets                                       | shared partial-set and partial-class-set low-inversion operations                               | Replaced                                            |
+| spiral `gcd`                   | Number-based greatest common divisor                                      | `greatestCommonDivisor`                                                                         | Shared replacement exists; spiral migration remains |
+| spiral `gcdArray`              | Greatest common divisor across a collection                               | shared canonicalization operations where the semantics match                                    | Shared replacement exists; spiral migration remains |
+| spiral `stripPowersOf2`        | Removes factors of 2 from a partial                                       | `partialToPartialClass`                                                                         | Shared replacement exists; spiral migration remains |
+| spiral `getParset`             | Normalizes and sorts partial collections                                  | shared partial-set construction and deterministic exposure                                      | Shared replacement exists; spiral migration remains |
+| spiral `getParcset`            | Converts partials, removes duplicates, and sorts partial classes          | explicit conversion plus shared partial-class-set construction                                  | Shared replacement exists; spiral migration remains |
+| spiral `getParSC`              | Computes a canonical partial-set representative                           | shared partial-set canonicalization                                                             | Shared replacement exists; spiral migration remains |
+| spiral `getParcSC`             | Reduces a set and derives canonical partial classes                       | shared partial-class conversion, set construction, and canonicalization                         | Shared replacement exists; spiral migration remains |
+| spiral interval-matrix helpers | Derive and format partial or partial-class interval ratios                | shared directed-interval and interval-matrix operations plus spiral-specific display formatting | Shared replacement exists; spiral migration remains |
+
+The existence of a shared replacement does not by itself mean that a legacy
+spiral helper can be removed.
+
+A helper should be removed only after all of its production consumers have
+migrated to the shared domain or to an explicit spiral-specific adapter around
+shared operations. Display formatting and other genuinely subsystem-specific
+behaviour may remain in the spiral.
 
 ## 4. Migration rules
 
